@@ -25,9 +25,12 @@
 
 rootProject.name = "Sluwe Plugins"
 
-include("autodropper")
 include("autodialog")
+include("autodropper")
+include("autoshop")
+include("menuentryswapperextended")
 include("utils")
+include("woodcutting")
 
 for (project in rootProject.children) {
     project.apply {
