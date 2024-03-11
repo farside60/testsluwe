@@ -57,7 +57,7 @@ allprojects {
         compileOnly("net.unethicalite:runelite-client:$unethicaliteVersion+")
         compileOnly("net.unethicalite.rs:runescape-api:$unethicaliteVersion+")
 
-        if (!project.name.equals("utils")) {
+        if (project.name != "utils") {
             compileOnly(project(":utils"))
         }
 
