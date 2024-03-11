@@ -162,11 +162,11 @@ public abstract class TickScript extends Plugin implements KeyListener {
   public void setActivity(Activity activity) {
     if (activity == Activity.IDLE && currentActivity != Activity.IDLE) {
       previousActivity = currentActivity;
-      log.debug("Setting previous activity: " + previousActivity);
+      getLogger().debug("Setting previous activity: " + previousActivity);
     }
 
     currentActivity = activity;
-    log.debug("Setting current activity: " + currentActivity);
+    getLogger().debug("Setting current activity: " + currentActivity);
 
     if (activity != Activity.IDLE) {
       lastActionTick = Static.getClient().getTickCount();
@@ -201,7 +201,7 @@ public abstract class TickScript extends Plugin implements KeyListener {
   }
 
   public final void start() {
-    log.info("Starting " + this.getName());
+    getLogger().info("Starting " + this.getName());
     running = true;
 
     previousActivity = Activity.IDLE;
@@ -216,7 +216,7 @@ public abstract class TickScript extends Plugin implements KeyListener {
   }
 
   public final void stop() {
-    log.info("Stopping " + this.getName());
+    getLogger().info("Stopping " + this.getName());
     running = false;
 
     for (Task task : tasks) {
@@ -284,7 +284,7 @@ public abstract class TickScript extends Plugin implements KeyListener {
     }
 
     if (idleClientTicks > 12500) {
-      log.debug("Resetting idle");
+      getLogger().debug("Resetting idle");
 
       Keyboard.type((char) KeyEvent.VK_BACK_SPACE);
 
