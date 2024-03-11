@@ -6,6 +6,7 @@ import java.awt.event.KeyEvent;
 import java.util.List;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.DialogOption;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.widgets.Widget;
 import net.runelite.client.config.ConfigManager;
@@ -56,12 +57,28 @@ public class AutoDialog extends Plugin implements KeyListener {
       return;
     }
 
-    // Choose Quest Helper option
+    if (config.silkMerchant()
+        && Dialog.canContinue() && Dialog.getText().startsWith("Hello. I have some fine silk")) {
+      Dialog.invokeDialog(
+          DialogOption.PLAYER_CONTINUE,
+          DialogOption.NPC_CONTINUE,
+          DialogOption.CHAT_OPTION_THREE,
+          DialogOption.PLAYER_CONTINUE,
+          DialogOption.NPC_CONTINUE,
+          DialogOption.CHAT_OPTION_TWO,
+          DialogOption.PLAYER_CONTINUE,
+          DialogOption.NPC_CONTINUE
+      );
+
+      return;
+    }
+
     if (Dialog.isViewingOptions()) {
       List<Widget> options = Dialog.getOptions();
 
       for (Widget opt : options) {
-        if (opt.getText().startsWith("[")) {
+        if ((config.questHelper() && opt.getText().startsWith("["))
+            || (config.phialsExchangeAll() && opt.getText().startsWith("Exchange All:"))) {
           Dialog.chooseOption(opt.getIndex());
           return;
         }

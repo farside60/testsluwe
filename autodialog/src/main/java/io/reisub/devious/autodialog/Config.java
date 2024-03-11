@@ -35,9 +35,35 @@ public interface Config extends net.runelite.client.config.Config {
       keyName = "disableHotkey",
       name = "Temporary disable hotkey",
       description = "Hold this hotkey to temporarily disable auto continue.",
-      position = 0
-  )
+      position = 0)
   default Keybind disableHotkey() {
     return Keybind.NOT_SET;
+  }
+
+  @ConfigItem(
+      keyName = "questHelper",
+      name = "Quest helper",
+      description = "Choose the correct chat option highlighted by the Quest helper plugin.",
+      position = 1)
+  default boolean questHelper() {
+    return true;
+  }
+
+  @ConfigItem(
+      keyName = "phialsExchangeAll",
+      name = "Phials exchange all",
+      description = "Choose the Exchange all: option of Phial's dialogue.",
+      position = 2)
+  default boolean phialsExchangeAll() {
+    return true;
+  }
+
+  @ConfigItem(
+      keyName = "silkMerchant",
+      name = "Silk merchant",
+      description = "Get 60 coins per silk.",
+      position = 3)
+  default boolean silkMerchant() {
+    return true;
   }
 }
