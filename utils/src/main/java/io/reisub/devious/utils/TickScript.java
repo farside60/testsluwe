@@ -25,8 +25,6 @@ import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.ItemContainerChanged;
 import net.runelite.api.events.StatChanged;
-import net.runelite.api.events.WidgetHiddenChanged;
-import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.input.KeyListener;
 import net.runelite.client.input.KeyManager;
@@ -35,8 +33,6 @@ import net.unethicalite.api.commons.Rand;
 import net.unethicalite.api.entities.Players;
 import net.unethicalite.api.input.Keyboard;
 import net.unethicalite.api.utils.MessageUtils;
-import net.unethicalite.api.widgets.Dialog;
-import net.unethicalite.api.widgets.Widgets;
 import net.unethicalite.client.Static;
 import org.slf4j.Logger;
 
@@ -107,15 +103,6 @@ public abstract class TickScript extends Plugin implements KeyListener {
       checkIdleLogout();
     } catch (Exception e) {
       e.printStackTrace();
-    }
-  }
-
-  @Subscribe
-  private void onWidgetHiddenChanged(WidgetHiddenChanged event) {
-    if (Widgets.isVisible(Widgets.get(WidgetInfo.LEVEL_UP_LEVEL))) {
-      Dialog.continueSpace();
-      Dialog.continueSpace();
-      setActivity(Activity.IDLE);
     }
   }
 
