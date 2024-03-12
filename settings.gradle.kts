@@ -30,6 +30,7 @@ include("autodropper")
 include("autoshop")
 include("menuentryswapperextended")
 include("utils")
+include("wintertodt")
 include("woodcutting")
 
 for (project in rootProject.children) {
