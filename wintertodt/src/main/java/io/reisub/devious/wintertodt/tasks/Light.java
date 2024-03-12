@@ -3,6 +3,7 @@ package io.reisub.devious.wintertodt.tasks;
 import io.reisub.devious.utils.api.Activity;
 import io.reisub.devious.utils.tasks.Task;
 import io.reisub.devious.wintertodt.Wintertodt;
+import java.time.Instant;
 import javax.inject.Inject;
 import net.runelite.api.NpcID;
 import net.runelite.api.TileObject;
@@ -35,6 +36,7 @@ public class Light extends Task {
 
     return brazier != null
         && (plugin.getBossHealth() > 0 || plugin.getRespawnTimer() == 0)
+        && Instant.now().isAfter(plugin.getLastWin().plusSeconds(3))
         && !plugin.isCurrentActivity(Wintertodt.LIGHTING_BRAZIER)
         && NPCs.getNearest(
                 n ->

@@ -49,7 +49,7 @@ public class GoToBank extends Task {
       return;
     }
 
-    final WorldPoint target = new WorldPoint(1630, 3970, 0);
+    final WorldPoint target = new WorldPoint(1630, 3975, 0);
 
     if (Players.getLocal().getWorldLocation().getY() > doorsOfDinh.getY()
         && Players.getLocal().distanceTo(doorsOfDinh) > 8) {

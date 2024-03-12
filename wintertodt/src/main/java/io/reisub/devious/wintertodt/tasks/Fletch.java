@@ -28,7 +28,9 @@ public class Fletch extends Task {
       return false;
     }
 
-    if (plugin.wasPreviousActivity(Wintertodt.WOODCUTTING)
+    if ((plugin.wasPreviousActivity(Wintertodt.WOODCUTTING)
+            || plugin.wasPreviousActivity(Activity.EATING))
+        && Players.getLocal().distanceTo(plugin.getNearestSide().getPositionNearRoots()) <= 3
         && !Inventory.isFull()
         && !plugin.shouldStartFletching()) {
       return false;

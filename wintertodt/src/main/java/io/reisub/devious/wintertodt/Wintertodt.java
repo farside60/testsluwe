@@ -1,10 +1,10 @@
 package io.reisub.devious.wintertodt;
 
-import com.google.inject.Inject;
 import com.google.inject.Provides;
 import io.reisub.devious.utils.TickScript;
 import io.reisub.devious.utils.Utils;
 import io.reisub.devious.utils.api.Activity;
+import io.reisub.devious.utils.api.Stats;
 import io.reisub.devious.utils.tasks.Eat;
 import io.reisub.devious.wintertodt.tasks.Burn;
 import io.reisub.devious.wintertodt.tasks.ChangeSide;
@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.inject.Inject;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -50,6 +51,7 @@ import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.PluginDependency;
 import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.ui.overlay.OverlayManager;
 import net.unethicalite.api.commons.Predicates;
 import net.unethicalite.api.entities.Players;
 import net.unethicalite.api.game.Skills;
@@ -70,6 +72,8 @@ public class Wintertodt extends TickScript {
   public static final int WINTERTODT_HEALTH_PACKED_ID = 25952276;
   @Getter private final List<WintertodtProjectile> projectiles = new ArrayList<>();
   @Inject public Config config;
+  @Inject private OverlayManager overlayManager;
+  @Inject private WintertodtOverlay overlay;
   @Getter private int respawnTimer;
   @Getter private int bossHealth;
   @Getter @Setter private boolean tooCold;
@@ -78,6 +82,19 @@ public class Wintertodt extends TickScript {
   private int fmLevel;
   private int wcLevel;
   private int fletchLevel;
+  private int constructionLevel;
+  @Getter private int wonGames;
+  @Getter private int lostGames;
+  private int startFiremakingExperience;
+  private int startFiremakingLevel;
+  private int startWoodcuttingExperience;
+  private int startWoodcuttingLevel;
+  private int startFletchingExperience;
+  private int startFletchingLevel;
+  private int startConstructionExperience;
+  private int startConstructionLevel;
+  @Getter private Instant startTime;
+  @Getter private Instant lastWin;
 
   public static Activity FEEDING_BRAZIER = new Activity("Feeding brazier");
   public static Activity FIXING_BRAZIER = new Activity("Fixing brazier");
@@ -98,6 +115,7 @@ public class Wintertodt extends TickScript {
     fmLevel = Skills.getLevel(Skill.FIREMAKING);
     wcLevel = Skills.getLevel(Skill.WOODCUTTING);
     fletchLevel = Skills.getLevel(Skill.FLETCHING);
+    constructionLevel = Skills.getLevel(Skill.CONSTRUCTION);
 
     if (config.hop()) {
       scouter = injector.getInstance(Scouter.class);
@@ -126,12 +144,31 @@ public class Wintertodt extends TickScript {
     addTask(ChangeSide.class);
     addTask(Burn.class);
     addTask(Chop.class);
+
+    reset();
+    this.overlayManager.add(overlay);
   }
 
   @Override
   protected void onStop() {
     super.onStop();
     scouter = null;
+    startTime = null;
+    this.overlayManager.remove(overlay);
+  }
+
+  private void reset() {
+    startTime = Instant.now();
+    wonGames = 0;
+    lostGames = 0;
+    startFiremakingExperience = Skills.getExperience(Skill.FIREMAKING);
+    startWoodcuttingExperience = Skills.getExperience(Skill.WOODCUTTING);
+    startFletchingExperience = Skills.getExperience(Skill.FLETCHING);
+    startConstructionExperience = Skills.getExperience(Skill.CONSTRUCTION);
+    startFiremakingLevel = Skills.getLevel(Skill.FIREMAKING);
+    startWoodcuttingLevel = Skills.getLevel(Skill.WOODCUTTING);
+    startFletchingLevel = Skills.getLevel(Skill.FLETCHING);
+    startConstructionLevel = Skills.getLevel(Skill.CONSTRUCTION);
   }
 
   @SuppressWarnings("unused")
@@ -188,6 +225,13 @@ public class Wintertodt extends TickScript {
     if (messageNode.getValue().startsWith("You carefully fletch the root")) {
       setActivity(FLETCHING);
       return;
+    }
+
+    if (messageNode.getValue().startsWith("You have gained a supply crate")) {
+      wonGames++;
+      lastWin = Instant.now();
+    } else if (messageNode.getValue().startsWith("You did not earn enough points")) {
+      lostGames++;
     }
 
     if (messageNode.getValue().startsWith("The cold of")) {
@@ -346,6 +390,30 @@ public class Wintertodt extends TickScript {
           projectiles.add(new WintertodtProjectile(x, y, false, Instant.now()));
         }
       }
+    }
+  }
+
+  public String getTimeRunning() {
+    return startTime != null ? Stats.getFormattedDurationBetween(startTime, Instant.now()) : "";
+  }
+
+  public int getExperienceGained(Skill skill) {
+    switch (skill) {
+      case FIREMAKING: return Skills.getExperience(skill) - startFiremakingExperience;
+      case WOODCUTTING: return Skills.getExperience(skill) - startWoodcuttingExperience;
+      case FLETCHING: return Skills.getExperience(skill) - startFletchingExperience;
+      case CONSTRUCTION: return Skills.getExperience(skill) - startConstructionExperience;
+      default: return 0;
+    }
+  }
+
+  public int getLevelsGained(Skill skill) {
+    switch (skill) {
+      case FIREMAKING: return Skills.getLevel(skill) - startFiremakingLevel;
+      case WOODCUTTING: return Skills.getLevel(skill) - startWoodcuttingLevel;
+      case FLETCHING: return Skills.getLevel(skill) - startFletchingLevel;
+      case CONSTRUCTION: return Skills.getLevel(skill) - startConstructionLevel;
+      default: return 0;
     }
   }
 

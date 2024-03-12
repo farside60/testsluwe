@@ -139,10 +139,19 @@ public interface Config extends net.runelite.client.config.Config {
   }
 
   @ConfigItem(
+      position = Integer.MAX_VALUE - 1,
+      keyName = "enableOverlay",
+      name = "Enable overlay",
+      description = "Enable the plugin's overlay.")
+  default boolean enableOverlay() {
+    return true;
+  }
+
+  @ConfigItem(
       keyName = "startButton",
       name = "Start/Stop",
       description = "Start the script",
-      position = 100)
+      position = Integer.MAX_VALUE)
   default Button startButton() {
     return new Button();
   }
