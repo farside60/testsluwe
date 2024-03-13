@@ -19,7 +19,9 @@ public class HandleBank extends BankTask {
   public boolean validate() {
     return !plugin.isInWintertodtRegion()
         && isBankObjectAvailable()
-        && (!config.openCrates() || !Inventory.contains(ItemID.SUPPLY_CRATE))
+        && (!config.openCrates()
+            || !Inventory.contains(ItemID.SUPPLY_CRATE)
+            || Inventory.getFreeSlots() < 5)
         && Inventory.getCount(i -> i.hasAction("Eat", "Drink")) <= 1;
   }
 
@@ -30,30 +32,40 @@ public class HandleBank extends BankTask {
     SluweBank.depositAllExcept(
         false,
         i -> {
-          int[] ids = new int[]{
-              ItemID.BRONZE_AXE,
-              ItemID.IRON_AXE,
-              ItemID.STEEL_AXE,
-              ItemID.BLACK_AXE,
-              ItemID.MITHRIL_AXE,
-              ItemID.ADAMANT_AXE,
-              ItemID.RUNE_AXE,
-              ItemID.DRAGON_AXE,
-              ItemID.HAMMER,
-              ItemID.KNIFE,
-              ItemID.TINDERBOX,
-              ItemID._23_CAKE,
-              ItemID.SLICE_OF_CAKE,
-          };
+          int[] ids =
+              new int[] {
+                ItemID.BRONZE_AXE,
+                ItemID.IRON_AXE,
+                ItemID.STEEL_AXE,
+                ItemID.BLACK_AXE,
+                ItemID.MITHRIL_AXE,
+                ItemID.ADAMANT_AXE,
+                ItemID.RUNE_AXE,
+                ItemID.DRAGON_AXE,
+                ItemID.HAMMER,
+                ItemID.KNIFE,
+                ItemID.TINDERBOX,
+                ItemID._23_CAKE,
+                ItemID.SLICE_OF_CAKE,
+              };
 
           boolean match = Arrays.stream(ids).anyMatch(id -> i.getId() == id);
           if (match) {
             return true;
           }
 
+          if (config.openCrates() && i.getId() == ItemID.SUPPLY_CRATE) {
+            return true;
+          }
+
           return i.getName().equals(config.food());
-        }
-    );
+        });
+
+    if (config.openCrates() && Inventory.contains(ItemID.SUPPLY_CRATE)) {
+      Bank.close();
+      Time.sleepTick();
+      return;
+    }
 
     Bank.withdraw(config.food(), config.foodQuantity(), Bank.WithdrawMode.ITEM);
     Time.sleepTicksUntil(() -> Inventory.getCount(i -> i.hasAction("Eat", "Drink")) > 1, 6);

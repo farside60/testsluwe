@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import net.runelite.api.Item;
 import net.runelite.api.ItemID;
 import net.unethicalite.api.commons.Time;
+import net.unethicalite.api.items.Bank;
 import net.unethicalite.api.items.Equipment;
 import net.unethicalite.api.items.Inventory;
 
@@ -23,11 +24,17 @@ public class OpenCrates extends Task {
   public boolean validate() {
     return !plugin.isInWintertodtRegion()
         && config.openCrates()
+        && Inventory.getFreeSlots() >= 5
         && Inventory.contains(ItemID.SUPPLY_CRATE);
   }
 
   @Override
   public void execute() {
+    if (Bank.isOpen()) {
+      Bank.close();
+      Time.sleepTick();
+    }
+
     Inventory.getAll(ItemID.SUPPLY_CRATE)
         .forEach(
             crate -> {
