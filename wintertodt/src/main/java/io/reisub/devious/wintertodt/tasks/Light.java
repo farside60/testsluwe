@@ -36,7 +36,8 @@ public class Light extends Task {
 
     return brazier != null
         && (plugin.getBossHealth() > 0 || plugin.getRespawnTimer() == 0)
-        && Instant.now().isAfter(plugin.getLastWin().plusSeconds(3))
+        && (plugin.getLastWin() == null
+            || Instant.now().isAfter(plugin.getLastWin().plusSeconds(3)))
         && !plugin.isCurrentActivity(Wintertodt.LIGHTING_BRAZIER)
         && NPCs.getNearest(
                 n ->
