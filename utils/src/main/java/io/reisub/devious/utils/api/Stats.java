@@ -19,7 +19,7 @@ public class Stats {
   public static long getExperiencePerHour(int experienceGained, Instant start) {
     long seconds = Duration.between(start, Instant.now()).toSeconds();
     seconds = Math.max(1, seconds);
-    return experienceGained / seconds * 3600;
+    return experienceGained * 3600L / seconds;
   }
 
   public static long getExperiencePerHourInThousands(int experienceGained, Instant start) {
