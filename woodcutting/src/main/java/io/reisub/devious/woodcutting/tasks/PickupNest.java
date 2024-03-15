@@ -22,12 +22,10 @@ import net.unethicalite.client.Static;
 
 public class PickupNest extends Task {
 
-  @Inject
-  private Config config;
-  @Inject
-  private Chop chopTask;
-  private int birdNestAppeared;
   private final Map<TileItem, Integer> nestMap = Maps.newHashMap();
+  @Inject private Config config;
+  @Inject private Chop chopTask;
+  private int birdNestAppeared;
 
   @Override
   public String getStatus() {
@@ -36,9 +34,7 @@ public class PickupNest extends Task {
 
   @Override
   public boolean validate() {
-    return config.birdNests()
-        && !Inventory.isFull()
-        && getNestToPickUp() != null;
+    return config.birdNests() && !Inventory.isFull() && getNestToPickUp() != null;
   }
 
   @Override
@@ -52,17 +48,18 @@ public class PickupNest extends Task {
     GameThread.invoke(() -> nest.interact("Take"));
 
     Time.sleepTicksUntil(
-        () -> TileItems.getFirstAt(
-            nest.getWorldLocation(),
-            Predicates.nameContains("nest", false)
-        ) == null, 20);
+        () ->
+            TileItems.getFirstAt(nest.getWorldLocation(), Predicates.nameContains("nest", false))
+                == null,
+        20);
 
-    final TileObject tree = TileObjects.getFirstAt(
-        chopTask.getCurrentTreePosition()
-            .dx(config.location().getXoffset())
-            .dy(config.location().getYoffset()),
-        Predicates.ids(config.location().getTreeIds())
-    );
+    final TileObject tree =
+        TileObjects.getFirstAt(
+            chopTask
+                .getCurrentTreePosition()
+                .dx(config.location().getXoffset())
+                .dy(config.location().getYoffset()),
+            Predicates.ids(config.location().getTreeIds()));
 
     if (tree == null) {
       chopTask.setCurrentTreePosition(null);

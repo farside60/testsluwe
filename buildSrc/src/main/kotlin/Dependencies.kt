@@ -30,9 +30,9 @@ object ProjectVersions {
 
 object Libraries {
     object Versions {
-        const val apacheCommonsText = "1.2"
+        const val apacheCommonsText = "1.8"
         const val checkstyle = "10.12.5"
-        const val gson = "2.8.5"
+        const val gson = "2.8.8"
         const val guice = "5.0.1"
         const val javax = "1.3.2"
         const val lombok = "1.18.20"

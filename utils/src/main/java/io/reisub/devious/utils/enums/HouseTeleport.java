@@ -71,8 +71,12 @@ public enum HouseTeleport {
   @Getter
   public enum TeleportItem {
     DIGSITE_PENDANT(WidgetID.ADVENTURE_LOG_ID, "Teleport menu", "Digsite Pendant"),
-    JEWELLERY_BOX(WidgetID.JEWELLERY_BOX_GROUP_ID,
-        "Teleport Menu", "Basic Jewellery Box", "Fancy Jewellery Box", "Ornate Jewellery Box"),
+    JEWELLERY_BOX(
+        WidgetID.JEWELLERY_BOX_GROUP_ID,
+        "Teleport Menu",
+        "Basic Jewellery Box",
+        "Fancy Jewellery Box",
+        "Ornate Jewellery Box"),
     ;
 
     private final int widgetGroupId;
@@ -85,5 +89,4 @@ public enum HouseTeleport {
       this.names = names;
     }
   }
-
 }

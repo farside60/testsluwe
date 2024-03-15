@@ -14,8 +14,7 @@ public interface Config extends net.runelite.client.config.Config {
       keyName = "minDelay",
       name = "Minimum delay",
       description = "Minimum delay in ms for actions to run after start of a game tick",
-      position = 0
-  )
+      position = 0)
   default int minDelay() {
     return 250;
   }
@@ -25,8 +24,7 @@ public interface Config extends net.runelite.client.config.Config {
       keyName = "maxDelay",
       name = "Maximum delay",
       description = "Maximum delay in ms for actions to run after start of a game tick",
-      position = 1
-  )
+      position = 1)
   default int maxDelay() {
     return 300;
   }
@@ -35,8 +33,7 @@ public interface Config extends net.runelite.client.config.Config {
       keyName = "walkingInterruptHotkey",
       name = "Walking interrupt hotkey",
       description = "Hotkey to interrupt walking with",
-      position = 2
-  )
+      position = 2)
   default Keybind walkingInterruptHotkey() {
     return new Keybind(KeyEvent.VK_F12, InputEvent.CTRL_DOWN_MASK + InputEvent.ALT_DOWN_MASK);
   }

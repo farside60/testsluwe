@@ -29,7 +29,7 @@ project.extra["PluginName"] = "Menu Entry Swapper Extended"
 project.extra["PluginDescription"] = "Change the default option that is displayed when hovering over objects"
 
 dependencies {
-	compileOnly(group = "net.sf.jopt-simple", name = "jopt-simple", version = "5.0.4")
+    compileOnly(group = "net.sf.jopt-simple", name = "jopt-simple", version = "5.0.4")
 }
 
 tasks {

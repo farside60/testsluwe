@@ -19,13 +19,13 @@ public class SluwePredicates {
     return itemConfigList(configList, false);
   }
 
-  public static <T extends Item> Predicate<T> itemConfigList(ConfigList configList,
-      boolean stringContains) {
+  public static <T extends Item> Predicate<T> itemConfigList(
+      ConfigList configList, boolean stringContains) {
     return itemConfigList(configList, stringContains, true);
   }
 
-  public static <T extends Item> Predicate<T> itemConfigList(ConfigList configList,
-      boolean stringContains, boolean caseSensitive) {
+  public static <T extends Item> Predicate<T> itemConfigList(
+      ConfigList configList, boolean stringContains, boolean caseSensitive) {
     final Predicate<T> identifiablePredicate = Predicates.ids(configList.getIntegers().keySet());
 
     if (!stringContains) {
@@ -33,9 +33,10 @@ public class SluwePredicates {
 
       return nameablePredicate.or(identifiablePredicate);
     } else {
-      final Predicate<T> nameablePredicate = caseSensitive
-          ? Predicates.nameContains(configList.getStrings().keySet())
-          : Predicates.nameContains(configList.getStrings().keySet(), false);
+      final Predicate<T> nameablePredicate =
+          caseSensitive
+              ? Predicates.nameContains(configList.getStrings().keySet())
+              : Predicates.nameContains(configList.getStrings().keySet(), false);
 
       return nameablePredicate.or(identifiablePredicate);
     }
@@ -45,13 +46,13 @@ public class SluwePredicates {
     return entityConfigList(configList, false);
   }
 
-  public static <T extends SceneEntity> Predicate<T> entityConfigList(ConfigList configList,
-      boolean stringContains) {
+  public static <T extends SceneEntity> Predicate<T> entityConfigList(
+      ConfigList configList, boolean stringContains) {
     return entityConfigList(configList, stringContains, true);
   }
 
-  public static <T extends SceneEntity> Predicate<T> entityConfigList(ConfigList configList,
-      boolean stringContains, boolean caseSensitive) {
+  public static <T extends SceneEntity> Predicate<T> entityConfigList(
+      ConfigList configList, boolean stringContains, boolean caseSensitive) {
     final Predicate<T> identifiablePredicate = Predicates.ids(configList.getIntegers().keySet());
 
     if (!stringContains) {
@@ -59,9 +60,10 @@ public class SluwePredicates {
 
       return nameablePredicate.or(identifiablePredicate);
     } else {
-      final Predicate<T> nameablePredicate = caseSensitive
-          ? Predicates.nameContains(configList.getStrings().keySet())
-          : Predicates.nameContains(configList.getStrings().keySet(), false);
+      final Predicate<T> nameablePredicate =
+          caseSensitive
+              ? Predicates.nameContains(configList.getStrings().keySet())
+              : Predicates.nameContains(configList.getStrings().keySet(), false);
 
       return nameablePredicate.or(identifiablePredicate);
     }

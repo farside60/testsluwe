@@ -41,8 +41,7 @@ public class ChangeSide extends Task {
             != null;
 
     boolean nearBurningBrazier =
-        TileObjects.getFirstSurrounding(
-                Players.getLocal().getWorldLocation(), 8, "Burning brazier")
+        TileObjects.getFirstSurrounding(Players.getLocal().getWorldLocation(), 8, "Burning brazier")
             != null;
 
     if (incapPyroFound && !nearBurningBrazier) {
@@ -63,14 +62,18 @@ public class ChangeSide extends Task {
   public void execute() {
     lastIncap = null;
 
-    final WorldPoint nearBrazier = plugin.getFurthestSide().getPositionNearBrazier();;
+    final WorldPoint nearBrazier = plugin.getFurthestSide().getPositionNearBrazier();
+    ;
 
     Movement.walk(nearBrazier);
     if (!Time.sleepTicksUntil(() -> Players.getLocal().isMoving(), 3)) {
       return;
     }
 
-    Time.sleepTicksUntil(() -> !Players.getLocal().isMoving()
-        || Players.getLocal().getWorldLocation().equals(nearBrazier), 20);
+    Time.sleepTicksUntil(
+        () ->
+            !Players.getLocal().isMoving()
+                || Players.getLocal().getWorldLocation().equals(nearBrazier),
+        20);
   }
 }

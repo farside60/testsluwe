@@ -35,10 +35,8 @@ import org.pf4j.Extension;
     enabledByDefault = false)
 @Slf4j
 public class AutoDropper extends Plugin implements KeyListener {
-  @Inject
-  private Config config;
-  @Inject
-  private KeyManager keyManager;
+  @Inject private Config config;
+  @Inject private KeyManager keyManager;
   private ScheduledExecutorService executor;
   private ConfigList configList;
 

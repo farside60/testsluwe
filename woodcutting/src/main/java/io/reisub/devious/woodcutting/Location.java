@@ -31,8 +31,7 @@ public enum Location {
           ObjectID.YEW_TREE_8510,
           ObjectID.YEW_TREE_8511,
           ObjectID.YEW_TREE_8512,
-          ObjectID.YEW_TREE_8513
-      ),
+          ObjectID.YEW_TREE_8513),
       -1,
       -1,
       new ArrayDeque<>() {
@@ -45,23 +44,17 @@ public enum Location {
         }
       },
       null,
-      false
-  ),
+      false),
   HARDWOOD_FOSSIL_ISLAND(
       new WorldPoint(3708, 3836, 0),
       10,
       new WorldPoint(3741, 3805, 0),
-      ImmutableSet.of(
-          NullObjectID.NULL_30480,
-          NullObjectID.NULL_30481,
-          NullObjectID.NULL_30482
-      ),
+      ImmutableSet.of(NullObjectID.NULL_30480, NullObjectID.NULL_30481, NullObjectID.NULL_30482),
       -1,
       -1,
       null,
       null,
-      false
-  ),
+      false),
   TEAK_CASTLE_WARS(
       new WorldPoint(2334, 3048, 0),
       5,
@@ -71,14 +64,12 @@ public enum Location {
       0,
       null,
       ImmutableList.of(
-              new WorldPoint(2335, 3047, 0),
-              new WorldPoint(2335, 3049, 0),
-              new WorldPoint(2334, 3048, 0),
-              new WorldPoint(2335, 3046, 0),
-              new WorldPoint(2333, 3050, 0)
-      ),
-      false
-  ),
+          new WorldPoint(2335, 3047, 0),
+          new WorldPoint(2335, 3049, 0),
+          new WorldPoint(2334, 3048, 0),
+          new WorldPoint(2335, 3046, 0),
+          new WorldPoint(2333, 3050, 0)),
+      false),
   ;
 
   private final WorldPoint woodcuttingAreaPoint;

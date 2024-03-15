@@ -4,11 +4,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import lombok.Getter;
 
+@Getter
 public class ConfigList {
 
-  @Getter
   private final Map<Integer, Integer> integers;
-  @Getter
   private final Map<String, Integer> strings;
 
   private ConfigList() {
@@ -20,7 +19,7 @@ public class ConfigList {
     final ConfigList configList = new ConfigList();
 
     for (String string : list.split("[\\n;,]")) {
-      if (string.equals("")) {
+      if (string.isEmpty()) {
         continue;
       }
 

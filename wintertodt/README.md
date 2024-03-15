@@ -6,7 +6,7 @@ Plays the Wintertodt minigame on mass worlds.
 * Configurable food and quantity
 * Select your favorite side (east side, beast side)
 * Timeout to wait for pyromancer healing, once it's reached it will automatically switch sides when a pyromancer
-continues to be incapacitated.
+  continues to be incapacitated.
 * Optionally fletch near brazier for quicker fixing/re-lighting
 * Optionally dodge projectiles for less damage
 * Optionally unpack crates

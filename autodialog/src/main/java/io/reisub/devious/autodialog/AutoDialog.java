@@ -24,14 +24,11 @@ import org.pf4j.Extension;
 @PluginDescriptor(
     name = "Sluwe Auto Dialog",
     description = "Automatically continues dialogs",
-    enabledByDefault = false
-)
+    enabledByDefault = false)
 @Slf4j
 public class AutoDialog extends Plugin implements KeyListener {
-  @Inject
-  private Config config;
-  @Inject
-  private KeyManager keyManager;
+  @Inject private Config config;
+  @Inject private KeyManager keyManager;
   private boolean disable = false;
 
   @Provides
@@ -58,7 +55,8 @@ public class AutoDialog extends Plugin implements KeyListener {
     }
 
     if (config.silkMerchant()
-        && Dialog.canContinue() && Dialog.getText().startsWith("Hello. I have some fine silk")) {
+        && Dialog.canContinue()
+        && Dialog.getText().startsWith("Hello. I have some fine silk")) {
       Dialog.invokeDialog(
           DialogOption.PLAYER_CONTINUE,
           DialogOption.NPC_CONTINUE,
@@ -67,8 +65,7 @@ public class AutoDialog extends Plugin implements KeyListener {
           DialogOption.NPC_CONTINUE,
           DialogOption.CHAT_OPTION_TWO,
           DialogOption.PLAYER_CONTINUE,
-          DialogOption.NPC_CONTINUE
-      );
+          DialogOption.NPC_CONTINUE);
 
       return;
     }
@@ -91,9 +88,7 @@ public class AutoDialog extends Plugin implements KeyListener {
   }
 
   @Override
-  public void keyTyped(KeyEvent e) {
-
-  }
+  public void keyTyped(KeyEvent e) {}
 
   @Override
   public void keyPressed(KeyEvent e) {

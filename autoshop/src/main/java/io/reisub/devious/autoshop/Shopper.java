@@ -134,15 +134,13 @@ public class Shopper extends TickScript {
           new WorldPoint(
               Integer.parseInt(bankLocationSplit[0]),
               Integer.parseInt(bankLocationSplit[1]),
-              Integer.parseInt(bankLocationSplit[2])
-          );
+              Integer.parseInt(bankLocationSplit[2]));
 
       npcLocation =
           new WorldPoint(
               Integer.parseInt(npcLocationSplit[0]),
               Integer.parseInt(npcLocationSplit[1]),
-              Integer.parseInt(npcLocationSplit[2])
-          );
+              Integer.parseInt(npcLocationSplit[2]));
     } catch (Exception e) {
       log.error("Bank or NPC location format is invalid.");
     }

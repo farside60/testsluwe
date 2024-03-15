@@ -10,28 +10,17 @@ public interface Config extends net.runelite.client.config.Config {
       keyName = "location",
       name = "Location",
       description = "Choose what to chop and where",
-      position = 0
-  )
+      position = 0)
   default Location location() {
     return Location.YEW_WOODCUTTING_GUILD;
   }
 
-  @ConfigItem(
-          keyName = "drop",
-          name = "Drop",
-          description = "Drop logs",
-          position = 1
-  )
+  @ConfigItem(keyName = "drop", name = "Drop", description = "Drop logs", position = 1)
   default boolean drop() {
     return false;
   }
 
-  @ConfigItem(
-          keyName = "burn",
-          name = "Burn",
-          description = "Burn logs",
-          position = 2
-  )
+  @ConfigItem(keyName = "burn", name = "Burn", description = "Burn logs", position = 2)
   default boolean burn() {
     return false;
   }
@@ -40,8 +29,7 @@ public interface Config extends net.runelite.client.config.Config {
       keyName = "birdNests",
       name = "Pick up bird nests",
       description = "Pick up bird nests",
-      position = 3
-  )
+      position = 3)
   default boolean birdNests() {
     return true;
   }
@@ -52,8 +40,7 @@ public interface Config extends net.runelite.client.config.Config {
       description = "Don't pick up other people's nests, useful for ironmen",
       hidden = true,
       unhide = "birdNests",
-      position = 4
-  )
+      position = 4)
   default boolean onlyPickUpOurs() {
     return false;
   }
@@ -62,8 +49,7 @@ public interface Config extends net.runelite.client.config.Config {
       keyName = "startButton",
       name = "Start/Stop",
       description = "Start the script",
-      position = Integer.MAX_VALUE
-  )
+      position = Integer.MAX_VALUE)
   default Button startButton() {
     return new Button();
   }

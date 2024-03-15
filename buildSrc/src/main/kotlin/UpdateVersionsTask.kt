@@ -16,28 +16,28 @@ open class UpdateVersionsTask : DefaultTask() {
 
     private fun hash(file: ByteArray): String {
         return MessageDigest.getInstance("SHA-512").digest(file).fold("", { str, it -> str + "%02x".format(it) })
-            .toUpperCase()
+                .toUpperCase()
     }
 
     private fun getBootstrap(): JSONArray? {
         val client = OkHttpClient()
         val url = "https://raw.githubusercontent.com/${project.rootProject.extra.get("GithubUserName")}/${
             project.rootProject.extra.get(
-                "GithubRepoName"
+                    "GithubRepoName"
             )
         }/master/plugins.json"
         val request = Request.Builder()
-            .url(url)
-            .build()
+                .url(url)
+                .build()
 
         client.newCall(request).execute()
-            .use { response -> return JSONObject("{\"plugins\":${response.body!!.string()}}").getJSONArray("plugins") }
+                .use { response -> return JSONObject("{\"plugins\":${response.body!!.string()}}").getJSONArray("plugins") }
     }
 
     private fun readFile(fileName: Path): List<String> = fileName.toFile().useLines { it.toList() }
 
     private fun writeFile(fileName: Path, content: List<String>) =
-        fileName.toFile().writeText(content.joinToString(separator = System.lineSeparator()))
+            fileName.toFile().writeText(content.joinToString(separator = System.lineSeparator()))
 
     private fun bumpVersion(path: Path) {
         val content = mutableListOf<String>()

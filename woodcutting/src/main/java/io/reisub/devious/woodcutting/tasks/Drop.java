@@ -11,8 +11,7 @@ import net.unethicalite.api.items.Inventory;
 
 public class Drop extends Task {
 
-  @Inject
-  private Config config;
+  @Inject private Config config;
 
   @Override
   public String getStatus() {
@@ -21,8 +20,7 @@ public class Drop extends Task {
 
   @Override
   public boolean validate() {
-    return Inventory.isFull()
-        && config.drop();
+    return Inventory.isFull() && config.drop();
   }
 
   @Override

@@ -16,8 +16,7 @@ import net.unethicalite.api.entities.TileObjects;
 import net.unethicalite.api.items.Inventory;
 
 public class Burn extends Task {
-  @Inject
-  private Woodcutting plugin;
+  @Inject private Woodcutting plugin;
 
   private WorldPoint current;
 
@@ -42,8 +41,7 @@ public class Burn extends Task {
       return false;
     }
 
-    return plugin.isCurrentActivity(Woodcutting.BURNING)
-        && Inventory.contains(ItemID.TINDERBOX);
+    return plugin.isCurrentActivity(Woodcutting.BURNING) && Inventory.contains(ItemID.TINDERBOX);
   }
 
   @Override

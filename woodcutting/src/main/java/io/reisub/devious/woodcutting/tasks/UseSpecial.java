@@ -18,19 +18,17 @@ import net.unethicalite.api.items.Equipment;
 
 public class UseSpecial extends Task {
 
-  private static final Set<Integer> SPECIAL_AXE_IDS = ImmutableSet.of(
-      ItemID.DRAGON_AXE,
-      ItemID.DRAGON_AXE_OR,
-      ItemID.INFERNAL_AXE,
-      ItemID.INFERNAL_AXE_OR,
-      ItemID.CRYSTAL_AXE,
-      ItemID.CRYSTAL_AXE_INACTIVE
-  );
+  private static final Set<Integer> SPECIAL_AXE_IDS =
+      ImmutableSet.of(
+          ItemID.DRAGON_AXE,
+          ItemID.DRAGON_AXE_OR,
+          ItemID.INFERNAL_AXE,
+          ItemID.INFERNAL_AXE_OR,
+          ItemID.CRYSTAL_AXE,
+          ItemID.CRYSTAL_AXE_INACTIVE);
 
-  @Inject
-  private Chop chopTask;
-  @Inject
-  private Config config;
+  @Inject private Chop chopTask;
+  @Inject private Config config;
 
   @Override
   public String getStatus() {
@@ -50,12 +48,13 @@ public class UseSpecial extends Task {
   public void execute() {
     Combat.toggleSpec();
 
-    final TileObject tree = TileObjects.getFirstAt(
-        chopTask.getCurrentTreePosition()
-            .dx(config.location().getXoffset())
-            .dy(config.location().getYoffset()),
-        Predicates.ids(config.location().getTreeIds())
-    );
+    final TileObject tree =
+        TileObjects.getFirstAt(
+            chopTask
+                .getCurrentTreePosition()
+                .dx(config.location().getXoffset())
+                .dy(config.location().getYoffset()),
+            Predicates.ids(config.location().getTreeIds()));
 
     if (tree == null) {
       chopTask.setCurrentTreePosition(null);

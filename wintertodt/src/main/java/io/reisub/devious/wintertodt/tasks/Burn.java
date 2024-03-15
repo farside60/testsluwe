@@ -35,8 +35,9 @@ public class Burn extends Task {
       return false;
     }
 
-    brazier = TileObjects.getFirstSurrounding(
-        Players.getLocal().getWorldLocation(), 8, "Burning brazier");
+    brazier =
+        TileObjects.getFirstSurrounding(
+            Players.getLocal().getWorldLocation(), 8, "Burning brazier");
 
     return plugin.isCurrentActivity(Activity.IDLE)
         && Inventory.contains(ItemID.BRUMA_ROOT, ItemID.BRUMA_KINDLING)
@@ -49,8 +50,13 @@ public class Burn extends Task {
         && !Players.getLocal().getWorldLocation().equals(Side.WEST.getPositionNearBrazier())) {
       Movement.walk(Side.WEST.getPositionNearBrazier());
       Time.sleepTick();
-      Time.sleepTicksUntil(() -> !Players.getLocal().isMoving()
-          || Players.getLocal().getWorldLocation().equals(Side.WEST.getPositionNearBrazier()), 20);
+      Time.sleepTicksUntil(
+          () ->
+              !Players.getLocal().isMoving()
+                  || Players.getLocal()
+                      .getWorldLocation()
+                      .equals(Side.WEST.getPositionNearBrazier()),
+          20);
     }
 
     brazier.interact("Feed");

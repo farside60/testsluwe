@@ -79,10 +79,8 @@ public enum ConstructionMode {
       });
 
   private final String name;
-  @Getter
-  private final String[] options;
-  @Getter
-  private final String[] targets;
+  @Getter private final String[] options;
+  @Getter private final String[] targets;
 
   ConstructionMode(String name, String[] options, String[] targets) {
     this.name = name;

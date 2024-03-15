@@ -70,6 +70,11 @@ import org.pf4j.Extension;
 public class Wintertodt extends TickScript {
   public static final int WINTERTODT_REGION = 6462;
   public static final int WINTERTODT_HEALTH_PACKED_ID = 25952276;
+  public static Activity FEEDING_BRAZIER = new Activity("Feeding brazier");
+  public static Activity FIXING_BRAZIER = new Activity("Fixing brazier");
+  public static Activity FLETCHING = new Activity("Fletching");
+  public static Activity LIGHTING_BRAZIER = new Activity("Lightning brazier");
+  public static Activity WOODCUTTING = new Activity("Woodcutting");
   @Getter private final List<WintertodtProjectile> projectiles = new ArrayList<>();
   @Inject public Config config;
   @Inject private OverlayManager overlayManager;
@@ -95,12 +100,6 @@ public class Wintertodt extends TickScript {
   private int startConstructionLevel;
   @Getter private Instant startTime;
   @Getter private Instant lastWin;
-
-  public static Activity FEEDING_BRAZIER = new Activity("Feeding brazier");
-  public static Activity FIXING_BRAZIER = new Activity("Fixing brazier");
-  public static Activity FLETCHING = new Activity("Fletching");
-  public static Activity LIGHTING_BRAZIER = new Activity("Lightning brazier");
-  public static Activity WOODCUTTING = new Activity("Woodcutting");
 
   @SuppressWarnings("unused")
   @Provides
@@ -399,21 +398,31 @@ public class Wintertodt extends TickScript {
 
   public int getExperienceGained(Skill skill) {
     switch (skill) {
-      case FIREMAKING: return Skills.getExperience(skill) - startFiremakingExperience;
-      case WOODCUTTING: return Skills.getExperience(skill) - startWoodcuttingExperience;
-      case FLETCHING: return Skills.getExperience(skill) - startFletchingExperience;
-      case CONSTRUCTION: return Skills.getExperience(skill) - startConstructionExperience;
-      default: return 0;
+      case FIREMAKING:
+        return Skills.getExperience(skill) - startFiremakingExperience;
+      case WOODCUTTING:
+        return Skills.getExperience(skill) - startWoodcuttingExperience;
+      case FLETCHING:
+        return Skills.getExperience(skill) - startFletchingExperience;
+      case CONSTRUCTION:
+        return Skills.getExperience(skill) - startConstructionExperience;
+      default:
+        return 0;
     }
   }
 
   public int getLevelsGained(Skill skill) {
     switch (skill) {
-      case FIREMAKING: return Skills.getLevel(skill) - startFiremakingLevel;
-      case WOODCUTTING: return Skills.getLevel(skill) - startWoodcuttingLevel;
-      case FLETCHING: return Skills.getLevel(skill) - startFletchingLevel;
-      case CONSTRUCTION: return Skills.getLevel(skill) - startConstructionLevel;
-      default: return 0;
+      case FIREMAKING:
+        return Skills.getLevel(skill) - startFiremakingLevel;
+      case WOODCUTTING:
+        return Skills.getLevel(skill) - startWoodcuttingLevel;
+      case FLETCHING:
+        return Skills.getLevel(skill) - startFletchingLevel;
+      case CONSTRUCTION:
+        return Skills.getLevel(skill) - startConstructionLevel;
+      default:
+        return 0;
     }
   }
 

@@ -42,9 +42,7 @@ public class SluweMovement {
   }
 
   public static void walk(WorldPoint destination, final int x, final int y) {
-    destination = destination
-        .dx(Rand.nextInt(-x, x + 1))
-        .dy(Rand.nextInt(-y, y + 1));
+    destination = destination.dx(Rand.nextInt(-x, x + 1)).dy(Rand.nextInt(-y, y + 1));
 
     Movement.walk(destination);
   }
@@ -94,7 +92,7 @@ public class SluweMovement {
         && Players.getLocal().distanceTo(destination) > destinationDistance
         && Static.getClient().getTickCount() <= start + tickTimeout
         && (Static.getClient().getGameState() == GameState.LOADING
-        || Static.getClient().getGameState() == GameState.LOGGED_IN));
+            || Static.getClient().getGameState() == GameState.LOGGED_IN));
 
     interrupted = false;
   }
@@ -111,21 +109,22 @@ public class SluweMovement {
     return openDoor(target, Integer.MAX_VALUE, ignoreLocations);
   }
 
-  public static boolean openDoor(Locatable target,
-      final int maxDistance, final Set<WorldPoint> ignoreLocations) {
+  public static boolean openDoor(
+      Locatable target, final int maxDistance, final Set<WorldPoint> ignoreLocations) {
     if (target == null) {
       return false;
     }
 
     final WorldPoint targetLocation = target.getWorldLocation();
 
-    final TileObject door = TileObjects.getNearest(
-        targetLocation,
-        o -> o.getName().equals("Door")
-            && o.hasAction("Open")
-            && o.distanceTo(targetLocation) <= maxDistance
-            && !ignoreLocations.contains(o.getWorldLocation())
-    );
+    final TileObject door =
+        TileObjects.getNearest(
+            targetLocation,
+            o ->
+                o.getName().equals("Door")
+                    && o.hasAction("Open")
+                    && o.distanceTo(targetLocation) <= maxDistance
+                    && !ignoreLocations.contains(o.getWorldLocation()));
 
     if (door == null) {
       return false;
@@ -144,19 +143,14 @@ public class SluweMovement {
     final WorldPoint tile = door.getWorldLocation();
 
     return Time.sleepTicksUntil(
-        () -> TileObjects.getFirstAt(tile, o -> o.hasAction("Open")) == null, 15
-    );
+        () -> TileObjects.getFirstAt(tile, o -> o.hasAction("Open")) == null, 15);
   }
 
   public static boolean teleportToHouse() {
     if (Inventory.contains(Predicates.ids(Constants.CONSTRUCTION_CAPE_IDS))
         || Equipment.contains(Predicates.ids(Constants.CONSTRUCTION_CAPE_IDS))) {
       Interact.interactWithInventoryOrEquipment(
-          Constants.CONSTRUCTION_CAPE_IDS,
-          "Tele to POH",
-          null,
-          -1
-      );
+          Constants.CONSTRUCTION_CAPE_IDS, "Tele to POH", null, -1);
     } else if (Standard.TELEPORT_TO_HOUSE.canCast()) {
       Standard.TELEPORT_TO_HOUSE.cast();
     } else if (Inventory.contains(ItemID.TELEPORT_TO_HOUSE)) {
@@ -165,8 +159,11 @@ public class SluweMovement {
       return false;
     }
 
-    return Time.sleepTicksUntil(() -> Static.getClient().isInInstancedRegion()
-        && TileObjects.getNearest(ObjectID.PORTAL_4525) != null, 10);
+    return Time.sleepTicksUntil(
+        () ->
+            Static.getClient().isInInstancedRegion()
+                && TileObjects.getNearest(ObjectID.PORTAL_4525) != null,
+        10);
   }
 
   public static boolean teleportThroughHouse(HouseTeleport houseTeleport) {
@@ -181,8 +178,8 @@ public class SluweMovement {
     return teleportThroughHouse(houseTeleport, forceNexus, 30);
   }
 
-  public static boolean teleportThroughHouse(HouseTeleport houseTeleport,
-      boolean forceNexus, int energyThreshold) {
+  public static boolean teleportThroughHouse(
+      HouseTeleport houseTeleport, boolean forceNexus, int energyThreshold) {
     if (!Static.getClient().isInInstancedRegion()) {
       if (!teleportToHouse()) {
         return false;
@@ -215,8 +212,8 @@ public class SluweMovement {
       if (pool != null) {
         GameThread.invoke(() -> pool.interact(0));
 
-        Time.sleepTicksUntil(() -> Movement.getRunEnergy() == 100
-            && Combat.getMissingHealth() == 0, 10);
+        Time.sleepTicksUntil(
+            () -> Movement.getRunEnergy() == 100 && Combat.getMissingHealth() == 0, 10);
         Time.sleepTick();
 
         if (!Movement.isRunEnabled()) {
@@ -235,8 +232,8 @@ public class SluweMovement {
   }
 
   public static boolean teleportThroughPortalNexus(HouseTeleport houseTeleport) {
-    final TileObject portalNexus
-        = TileObjects.getNearest(Predicates.ids(Constants.PORTAL_NEXUS_IDS));
+    final TileObject portalNexus =
+        TileObjects.getNearest(Predicates.ids(Constants.PORTAL_NEXUS_IDS));
 
     if (portalNexus == null) {
       return false;
@@ -282,8 +279,7 @@ public class SluweMovement {
         0,
         MenuAction.WIDGET_CONTINUE.getId(),
         destinationWidget.getIndex(),
-        destinationWidget.getId()
-    );
+        destinationWidget.getId());
 
     return Time.sleepTicksUntil(() -> !Static.getClient().isInInstancedRegion(), 10);
   }
@@ -339,25 +335,18 @@ public class SluweMovement {
           0,
           MenuAction.WIDGET_CONTINUE.getId(),
           destinationWidget.getIndex(),
-          destinationWidget.getId()
-      );
+          destinationWidget.getId());
     } else {
       destinationWidget.interact(
-          1,
-          MenuAction.CC_OP.getId(),
-          destinationWidget.getIndex(),
-          destinationWidget.getId()
-      );
+          1, MenuAction.CC_OP.getId(), destinationWidget.getIndex(), destinationWidget.getId());
     }
 
     return Time.sleepTicksUntil(() -> !Static.getClient().isInInstancedRegion(), 10);
   }
 
   public static WorldPoint toInstance(final WorldPoint point) {
-    final Collection<WorldPoint> instancePoints = WorldPoint.toLocalInstance(
-        Static.getClient(),
-        point
-    );
+    final Collection<WorldPoint> instancePoints =
+        WorldPoint.toLocalInstance(Static.getClient(), point);
 
     return instancePoints.stream().findFirst().orElse(null);
   }

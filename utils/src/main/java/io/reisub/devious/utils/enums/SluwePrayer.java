@@ -56,14 +56,6 @@ public enum SluwePrayer {
   private final int quickPrayerId;
   private final int requiredLevel;
 
-  public int getVarbit() {
-    return prayer.getVarbit();
-  }
-
-  public WidgetInfo getWidgetInfo() {
-    return prayer.getWidgetInfo();
-  }
-
   public static Set<SluwePrayer> getBestMeleeBuff() {
     final int level = Skills.getLevel(Skill.PRAYER);
     final boolean pietyUnlocked = Vars.getBit(Varbits.CAMELOT_TRAINING_ROOM_STATUS) == 8;
@@ -161,5 +153,13 @@ public enum SluwePrayer {
     }
 
     return ImmutableSet.of(bestDefense);
+  }
+
+  public int getVarbit() {
+    return prayer.getVarbit();
+  }
+
+  public WidgetInfo getWidgetInfo() {
+    return prayer.getWidgetInfo();
   }
 }

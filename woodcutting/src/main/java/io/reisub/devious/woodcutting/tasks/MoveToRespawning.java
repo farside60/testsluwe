@@ -22,11 +22,9 @@ import net.unethicalite.api.movement.Reachable;
 
 public class MoveToRespawning extends Task {
 
-  @Inject
-  private Woodcutting plugin;
-  @Inject
-  private Config config;
   private final ArrayDeque<WorldPoint> despawnedTreeLocations = new ArrayDeque<>();
+  @Inject private Woodcutting plugin;
+  @Inject private Config config;
 
   @Override
   public String getStatus() {
@@ -117,8 +115,10 @@ public class MoveToRespawning extends Task {
       return TileObjects.getNearest(Predicates.ids(config.location().getTreeIds())) == null;
     } else {
       return TileObjects.getNearest(
-          o -> config.location().getTreeIds().contains(o.getId())
-              && config.location().getTreePositions().contains(o.getWorldLocation())) == null;
+              o ->
+                  config.location().getTreeIds().contains(o.getId())
+                      && config.location().getTreePositions().contains(o.getWorldLocation()))
+          == null;
     }
   }
 }

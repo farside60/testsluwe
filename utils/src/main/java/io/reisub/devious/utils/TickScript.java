@@ -38,15 +38,8 @@ import org.slf4j.Logger;
 
 @Slf4j
 public abstract class TickScript extends Plugin implements KeyListener {
-  @Inject
-  private Config utilsConfig;
-  @Inject
-  private KeyManager keyManager;
-
   protected final List<Task> tasks = new ArrayList<>();
   protected final Map<Skill, Activity> idleCheckSkills = new HashMap<>();
-  private Activity currentActivity;
-  private Activity previousActivity;
   protected ScheduledExecutorService executor;
   protected int lastLoginTick = 0;
   protected int lastActionTick = 0;
@@ -54,11 +47,12 @@ public abstract class TickScript extends Plugin implements KeyListener {
   protected int lastExperienceTick = 0;
   protected int lastInventoryChangeTick = 0;
   protected boolean idleCheckInventoryChange = false;
-  @Getter
-  private boolean running;
-  @Getter
-  @Setter
-  private int lastHopTick;
+  @Inject private Config utilsConfig;
+  @Inject private KeyManager keyManager;
+  private Activity currentActivity;
+  private Activity previousActivity;
+  @Getter private boolean running;
+  @Getter @Setter private int lastHopTick;
   private ScheduledFuture<?> current;
   private ScheduledFuture<?> next;
 
@@ -223,13 +217,9 @@ public abstract class TickScript extends Plugin implements KeyListener {
     stop();
   }
 
-  protected void onStart() {
+  protected void onStart() {}
 
-  }
-
-  protected void onStop() {
-
-  }
+  protected void onStop() {}
 
   protected final void addTask(Task task) {
     Static.getEventBus().register(task);
@@ -295,16 +285,11 @@ public abstract class TickScript extends Plugin implements KeyListener {
     final int minDelay = Math.min(utilsConfig.minDelay(), utilsConfig.maxDelay());
     final int maxDelay = Math.max(utilsConfig.minDelay(), utilsConfig.maxDelay());
 
-    return executor.schedule(
-        runnable,
-        Rand.nextInt(minDelay, maxDelay), TimeUnit.MILLISECONDS
-    );
+    return executor.schedule(runnable, Rand.nextInt(minDelay, maxDelay), TimeUnit.MILLISECONDS);
   }
 
   @Override
-  public void keyTyped(KeyEvent e) {
-
-  }
+  public void keyTyped(KeyEvent e) {}
 
   @Override
   public void keyPressed(KeyEvent e) {
@@ -314,7 +299,5 @@ public abstract class TickScript extends Plugin implements KeyListener {
   }
 
   @Override
-  public void keyReleased(KeyEvent e) {
-
-  }
+  public void keyReleased(KeyEvent e) {}
 }

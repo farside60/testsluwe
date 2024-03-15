@@ -19,10 +19,8 @@ import net.unethicalite.client.Static;
 
 public class GoToChoppingArea extends Task {
 
-  @Inject
-  private Woodcutting plugin;
-  @Inject
-  private Config config;
+  @Inject private Woodcutting plugin;
+  @Inject private Config config;
 
   @Override
   public String getStatus() {
@@ -31,9 +29,9 @@ public class GoToChoppingArea extends Task {
 
   @Override
   public boolean validate() {
-    return
-        (!Inventory.isFull() || Static.getClient().getTickCount() - plugin.getLastBankTick() <= 2)
-            && Players.getLocal().distanceTo(config.location().getWoodcuttingAreaPoint())
+    return (!Inventory.isFull()
+            || Static.getClient().getTickCount() - plugin.getLastBankTick() <= 2)
+        && Players.getLocal().distanceTo(config.location().getWoodcuttingAreaPoint())
             > config.location().getWoodcuttingAreaRadius();
   }
 

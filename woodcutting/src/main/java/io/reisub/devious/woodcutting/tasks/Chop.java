@@ -24,9 +24,7 @@ public class Chop extends Task {
   private final Woodcutting plugin;
   private final Config config;
   private ArrayDeque<WorldPoint> treePositions;
-  @Getter
-  @Setter
-  private WorldPoint currentTreePosition;
+  @Getter @Setter private WorldPoint currentTreePosition;
 
   @Inject
   public Chop(Woodcutting plugin, Config config) {
@@ -56,15 +54,20 @@ public class Chop extends Task {
       currentTreePosition = null;
     }
 
-    final boolean isReady = currentTreePosition == null
-        || TileObjects.getFirstAt(
-        currentTreePosition.dx(config.location().getXoffset()).dy(config.location().getYoffset()),
-          o -> config.location().getTreeIds().contains(o.getId())
-            && o.hasAction("Chop down")) == null;
+    final boolean isReady =
+        currentTreePosition == null
+            || TileObjects.getFirstAt(
+                    currentTreePosition
+                        .dx(config.location().getXoffset())
+                        .dy(config.location().getYoffset()),
+                    o ->
+                        config.location().getTreeIds().contains(o.getId())
+                            && o.hasAction("Chop down"))
+                == null;
 
-    return
-        (!Inventory.isFull() || Static.getClient().getTickCount() - plugin.getLastBankTick() <= 2)
-            && isReady;
+    return (!Inventory.isFull()
+            || Static.getClient().getTickCount() - plugin.getLastBankTick() <= 2)
+        && isReady;
   }
 
   @Override
@@ -82,19 +85,20 @@ public class Chop extends Task {
   private TileObject getTree() {
     if (treePositions == null || treePositions.isEmpty()) {
       // return the nearest tree
-      return TileObjects.getNearest(o -> config.location().getTreeIds().contains(o.getId())
-          && o.hasAction("Chop down"));
+      return TileObjects.getNearest(
+          o -> config.location().getTreeIds().contains(o.getId()) && o.hasAction("Chop down"));
     } else {
       if (config.location().isOrdered()) {
         // return the first tree found according to the order of the tree positions
         while (!treePositions.isEmpty()) {
           WorldPoint point = treePositions.poll();
 
-          final TileObject tree = TileObjects.getFirstAt(
-              point,
-              o -> config.location().getTreeIds().contains(o.getId())
-                  && o.hasAction("Chop down")
-          );
+          final TileObject tree =
+              TileObjects.getFirstAt(
+                  point,
+                  o ->
+                      config.location().getTreeIds().contains(o.getId())
+                          && o.hasAction("Chop down"));
 
           if (tree != null) {
             if (treePositions.isEmpty()) {

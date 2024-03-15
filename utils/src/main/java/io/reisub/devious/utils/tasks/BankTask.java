@@ -241,8 +241,7 @@ public abstract class BankTask extends Task {
     }
 
     for (Map.Entry<String, Integer> entry : list.getStrings().entrySet()) {
-      if (Inventory.getCount(Predicates.nameContains(entry.getKey(), false))
-          < entry.getValue()) {
+      if (Inventory.getCount(Predicates.nameContains(entry.getKey(), false)) < entry.getValue()) {
         return false;
       }
     }

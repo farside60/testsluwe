@@ -41,8 +41,11 @@ public class Chop extends Task {
     if (!Players.getLocal().getWorldLocation().equals(nearRoots)) {
       Movement.walk(nearRoots);
       Time.sleepTicksUntil(() -> Players.getLocal().isMoving(), 3);
-      Time.sleepTicksUntil(() -> !Players.getLocal().isMoving()
-          || Players.getLocal().getWorldLocation().equals(nearRoots), 20);
+      Time.sleepTicksUntil(
+          () ->
+              !Players.getLocal().isMoving()
+                  || Players.getLocal().getWorldLocation().equals(nearRoots),
+          20);
     }
 
     final TileObject root = TileObjects.getNearest(ObjectID.BRUMA_ROOTS);

@@ -136,11 +136,7 @@ public enum TeleportLocation {
 
         if (farmingGuild != null) {
           farmingGuild.interact(
-              0,
-              MenuAction.WIDGET_CONTINUE.getId(),
-              farmingGuild.getIndex(),
-              farmingGuild.getId()
-          );
+              0, MenuAction.WIDGET_CONTINUE.getId(), farmingGuild.getIndex(), farmingGuild.getId());
         }
         break;
       case EDGEVILLE:

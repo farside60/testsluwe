@@ -25,8 +25,7 @@ public class GoToWintertodt extends Task {
 
   @Override
   public boolean validate() {
-    return !plugin.isInWintertodtRegion()
-        && Inventory.contains(i -> i.hasAction("Eat", "Drink"));
+    return !plugin.isInWintertodtRegion() && Inventory.contains(i -> i.hasAction("Eat", "Drink"));
   }
 
   @Override
@@ -60,7 +59,7 @@ public class GoToWintertodt extends Task {
           plugin.getRespawnTimer() >= 5
               ? side.getPositionNearBrazier().getWorldLocation()
               : side.getPositionNearRoots().getWorldLocation();
-      
+
       SluweMovement.walkTo(wintertodtSpot);
     }
   }

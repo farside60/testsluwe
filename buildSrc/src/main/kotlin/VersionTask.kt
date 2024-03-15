@@ -31,7 +31,7 @@ open class VersionsTask : DefaultTask() {
     private fun readFile(fileName: Path): List<String> = fileName.toFile().useLines { it.toList() }
 
     private fun writeFile(fileName: Path, content: List<String>) =
-        fileName.toFile().writeText(content.joinToString(separator = System.lineSeparator()))
+            fileName.toFile().writeText(content.joinToString(separator = System.lineSeparator()))
 
     private fun bumpVersion(path: Path) {
         val content = mutableListOf<String>()

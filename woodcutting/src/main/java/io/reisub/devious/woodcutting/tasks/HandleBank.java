@@ -13,12 +13,9 @@ import net.unethicalite.client.Static;
 
 public class HandleBank extends BankTask {
 
-  @Inject
-  private Woodcutting plugin;
-  @Inject
-  private Config config;
-  @Inject
-  private Chop chopTask;
+  @Inject private Woodcutting plugin;
+  @Inject private Config config;
+  @Inject private Chop chopTask;
 
   @Override
   public boolean validate() {

@@ -29,18 +29,13 @@ import org.slf4j.Logger;
 @PluginDescriptor(
     name = "Sluwe Woodcutting",
     description = "I hear digging but I don't hear chopping",
-    enabledByDefault = false
-)
+    enabledByDefault = false)
 @Slf4j
 public class Woodcutting extends TickScript {
-  @Inject
-  private Config config;
-  @Getter
-  @Setter
-  private int lastBankTick;
-
   public static final Activity CHOPPING = new Activity("Chopping");
   public static final Activity BURNING = new Activity("Burning");
+  @Inject private Config config;
+  @Getter @Setter private int lastBankTick;
 
   @Provides
   public Config getConfig(ConfigManager configManager) {

@@ -25,9 +25,9 @@ open class VersionTask : DefaultTask() {
     private fun filterPath(path: String): Boolean {
         val p = splitPath(path)
         val count = path.filter { it == '/' }
-            .groupingBy { it }
-            .eachCount()
-            .getOrElse('/') { 0 }
+                .groupingBy { it }
+                .eachCount()
+                .getOrElse('/') { 0 }
 
         if (count < 9 || p.startsWith(".") || p.startsWith("buildsrc")) {
             return false
@@ -38,7 +38,7 @@ open class VersionTask : DefaultTask() {
     private fun readFile(fileName: Path): List<String> = fileName.toFile().useLines { it.toList() }
 
     private fun writeFile(fileName: Path, content: List<String>) =
-        fileName.toFile().writeText(content.joinToString(separator = System.lineSeparator()))
+            fileName.toFile().writeText(content.joinToString(separator = System.lineSeparator()))
 
     private fun bumpVersion(path: Path) {
         val content = mutableListOf<String>()

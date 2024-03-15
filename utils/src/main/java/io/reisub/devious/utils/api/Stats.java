@@ -10,10 +10,8 @@ public class Stats {
   }
 
   public static String getFormattedDuration(Duration duration) {
-    return String.format("%d:%02d:%02d",
-        duration.toHours(),
-        duration.toMinutesPart(),
-        duration.toSecondsPart());
+    return String.format(
+        "%d:%02d:%02d", duration.toHours(), duration.toMinutesPart(), duration.toSecondsPart());
   }
 
   public static long getExperiencePerHour(int experienceGained, Instant start) {

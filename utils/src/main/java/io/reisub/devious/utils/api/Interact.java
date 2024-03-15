@@ -65,7 +65,7 @@ public class Interact {
   }
 
   public static boolean waitUntilInactive(final int ticks) {
-    return Time.sleepTicksUntil(() -> Players.getLocal().isMoving()
-        || Players.getLocal().isAnimating(), ticks);
+    return Time.sleepTicksUntil(
+        () -> Players.getLocal().isMoving() || Players.getLocal().isAnimating(), ticks);
   }
 }

@@ -30,16 +30,18 @@ public class GoToBank extends Task {
       return false;
     }
 
+    // Start moving to bank when we have no more food, and we're at the eating threshold
     if (!Inventory.contains(i -> i.hasAction("Eat", "Drink"))
-        && Combat.getHealthPercent() <= 90) {
+        && ((config.checkMissing() && Combat.getMissingHealth() >= config.eatThreshold())
+            || (!config.checkMissing() && Combat.getCurrentHealth() <= config.eatThreshold()))) {
       return true;
     }
 
     // Start moving to bank when nearing the end of the round and there's nothing left to do
     return Inventory.getCount(i -> i.hasAction("Eat", "Drink")) <= 1
         && (plugin.getRespawnTimer() > 0
-        || (plugin.getBossHealth() <= 4
-        && !Inventory.contains(ItemID.BRUMA_ROOT, ItemID.BRUMA_KINDLING)));
+            || (plugin.getBossHealth() <= 4
+                && !Inventory.contains(ItemID.BRUMA_ROOT, ItemID.BRUMA_KINDLING)));
   }
 
   @Override

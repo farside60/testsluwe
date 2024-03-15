@@ -19,8 +19,7 @@ import net.unethicalite.client.Static;
 
 public class GoToBank extends Task {
 
-  @Inject
-  private Config config;
+  @Inject private Config config;
 
   @Override
   public String getStatus() {

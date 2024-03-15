@@ -341,10 +341,10 @@ public class MenuEntrySwapperExtendedPlugin extends Plugin {
   }
 
   private void swap(
-          ArrayListMultimap<String, Integer> optionIndexes,
-          MenuEntry[] entries,
-          int index1,
-          int index2) {
+      ArrayListMultimap<String, Integer> optionIndexes,
+      MenuEntry[] entries,
+      int index1,
+      int index2) {
     if (index1 == index2) {
       return;
     }
