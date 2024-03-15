@@ -61,11 +61,12 @@ allprojects {
             compileOnly(project(":utils"))
         }
 
-        compileOnly(Libraries.okhttp3)
+        compileOnly(Libraries.apacheCommonsText)
         compileOnly(Libraries.gson)
         compileOnly(Libraries.guice)
         compileOnly(Libraries.javax)
         compileOnly(Libraries.lombok)
+        compileOnly(Libraries.okhttp3)
         compileOnly(Libraries.pf4j)
     }
 
