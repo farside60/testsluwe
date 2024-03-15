@@ -25,13 +25,21 @@
 
 rootProject.name = "Sluwe Plugins"
 
+include("alchemicalhydra")
 include("autodialog")
 include("autodropper")
 include("autoshop")
+include("cerberus")
+include("combathelper")
+include("demonicgorilla")
+include("gauntletextended")
+include("grotesqueguardians")
 include("menuentryswapperextended")
+include("stallstealer")
 include("utils")
 include("wintertodt")
 include("woodcutting")
+include("zulrah")
 
 for (project in rootProject.children) {
     project.apply {
