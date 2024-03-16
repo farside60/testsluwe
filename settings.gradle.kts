@@ -31,6 +31,7 @@ include("autodropper")
 include("autoshop")
 include("cerberus")
 include("combathelper")
+include("cooking")
 include("demonicgorilla")
 include("gauntletextended")
 include("grotesqueguardians")
@@ -50,3 +51,4 @@ for (project in rootProject.children) {
         require(buildFile.isFile) { "Project '${project.path} must have a $buildFile build script" }
     }
 }
+include("testtest")
