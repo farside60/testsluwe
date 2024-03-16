@@ -1,4 +1,4 @@
-package io.reisub.unethicalite.combathelper.prayer;
+package io.reisub.devious.combathelper.prayer;
 
 import lombok.AccessLevel;
 import lombok.Getter;

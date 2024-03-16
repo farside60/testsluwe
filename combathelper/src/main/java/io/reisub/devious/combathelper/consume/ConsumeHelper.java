@@ -1,7 +1,7 @@
-package io.reisub.unethicalite.combathelper.consume;
+package io.reisub.devious.combathelper.consume;
 
+import io.reisub.devious.combathelper.Helper;
 import io.reisub.devious.utils.Constants;
-import io.reisub.unethicalite.combathelper.Helper;
 import java.awt.event.KeyEvent;
 import java.util.Set;
 import javax.inject.Inject;

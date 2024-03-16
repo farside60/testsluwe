@@ -1,4 +1,4 @@
-package io.reisub.unethicalite.combathelper.prayer;
+package io.reisub.devious.combathelper.prayer;
 
 import java.util.Arrays;
 import java.util.List;

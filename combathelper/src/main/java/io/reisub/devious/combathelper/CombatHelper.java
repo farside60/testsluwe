@@ -1,19 +1,19 @@
-package io.reisub.unethicalite.combathelper;
+package io.reisub.devious.combathelper;
 
 import com.google.inject.Provides;
 import io.reisub.devious.alchemicalhydra.SluweAlchemicalHydra;
 import io.reisub.devious.cerberus.SluweCerberus;
+import io.reisub.devious.combathelper.alch.AlchHelper;
+import io.reisub.devious.combathelper.bones.BonesHelper;
+import io.reisub.devious.combathelper.boss.BossHelper;
+import io.reisub.devious.combathelper.consume.ConsumeHelper;
+import io.reisub.devious.combathelper.misc.MiscHelper;
+import io.reisub.devious.combathelper.prayer.PrayerHelper;
+import io.reisub.devious.combathelper.special.SpecialHelper;
+import io.reisub.devious.combathelper.swap.SwapHelper;
 import io.reisub.devious.gauntletextended.SluweGauntletExtended;
 import io.reisub.devious.grotesqueguardians.SluweGrotesqueGuardians;
 import io.reisub.devious.zulrah.SluweZulrah;
-import io.reisub.unethicalite.combathelper.alch.AlchHelper;
-import io.reisub.unethicalite.combathelper.bones.BonesHelper;
-import io.reisub.unethicalite.combathelper.boss.BossHelper;
-import io.reisub.unethicalite.combathelper.consume.ConsumeHelper;
-import io.reisub.unethicalite.combathelper.misc.MiscHelper;
-import io.reisub.unethicalite.combathelper.prayer.PrayerHelper;
-import io.reisub.unethicalite.combathelper.special.SpecialHelper;
-import io.reisub.unethicalite.combathelper.swap.SwapHelper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -58,15 +58,9 @@ public class CombatHelper extends Plugin {
   @Getter private Actor lastTarget;
   private ScheduledExecutorService executor;
   private List<Helper> helpers;
-  @Inject
-  @Getter
-  private PrayerHelper prayerHelper;
-  @Inject
-  @Getter
-  private SwapHelper swapHelper;
-  @Inject
-  @Getter
-  private MiscHelper miscHelper;
+  @Inject @Getter private PrayerHelper prayerHelper;
+  @Inject @Getter private SwapHelper swapHelper;
+  @Inject @Getter private MiscHelper miscHelper;
 
   @Provides
   Config provideConfig(ConfigManager configManager) {

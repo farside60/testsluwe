@@ -1,4 +1,4 @@
-package io.reisub.unethicalite.combathelper.boss;
+package io.reisub.devious.combathelper.boss;
 
 import com.openosrs.client.util.WeaponStyle;
 import io.reisub.devious.alchemicalhydra.SluweAlchemicalHydra;
@@ -6,13 +6,13 @@ import io.reisub.devious.alchemicalhydra.entity.Hydra;
 import io.reisub.devious.cerberus.SluweCerberus;
 import io.reisub.devious.cerberus.domain.Cerberus;
 import io.reisub.devious.cerberus.domain.CerberusAttack;
+import io.reisub.devious.combathelper.CombatHelper;
+import io.reisub.devious.combathelper.Helper;
 import io.reisub.devious.gauntletextended.SluweGauntletExtended;
 import io.reisub.devious.grotesqueguardians.SluweGrotesqueGuardians;
 import io.reisub.devious.grotesqueguardians.entity.Dusk;
 import io.reisub.devious.utils.enums.SluwePrayer;
 import io.reisub.devious.zulrah.SluweZulrah;
-import io.reisub.unethicalite.combathelper.CombatHelper;
-import io.reisub.unethicalite.combathelper.Helper;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.inject.Inject;

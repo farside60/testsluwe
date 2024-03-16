@@ -1,10 +1,10 @@
-package io.reisub.unethicalite.combathelper.prayer;
+package io.reisub.devious.combathelper.prayer;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
+import io.reisub.devious.combathelper.Helper;
 import io.reisub.devious.utils.Utils;
 import io.reisub.devious.utils.enums.SluwePrayer;
-import io.reisub.unethicalite.combathelper.Helper;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Arrays;

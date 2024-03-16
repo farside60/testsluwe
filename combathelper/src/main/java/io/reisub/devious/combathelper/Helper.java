@@ -1,4 +1,4 @@
-package io.reisub.unethicalite.combathelper;
+package io.reisub.devious.combathelper;
 
 import java.awt.event.KeyEvent;
 import javax.inject.Inject;

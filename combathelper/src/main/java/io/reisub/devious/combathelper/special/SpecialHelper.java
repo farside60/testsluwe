@@ -1,6 +1,6 @@
-package io.reisub.unethicalite.combathelper.special;
+package io.reisub.devious.combathelper.special;
 
-import io.reisub.unethicalite.combathelper.Helper;
+import io.reisub.devious.combathelper.Helper;
 import java.awt.event.KeyEvent;
 import javax.inject.Singleton;
 import net.runelite.api.EquipmentInventorySlot;

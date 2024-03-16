@@ -1,9 +1,9 @@
-package io.reisub.unethicalite.combathelper;
+package io.reisub.devious.combathelper;
 
+import io.reisub.devious.combathelper.bones.Ashes;
+import io.reisub.devious.combathelper.bones.Bones;
+import io.reisub.devious.combathelper.special.SpecialActivation;
 import io.reisub.devious.utils.enums.OverheadPrayer;
-import io.reisub.unethicalite.combathelper.bones.Ashes;
-import io.reisub.unethicalite.combathelper.bones.Bones;
-import io.reisub.unethicalite.combathelper.special.SpecialActivation;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import net.runelite.client.config.ConfigGroup;

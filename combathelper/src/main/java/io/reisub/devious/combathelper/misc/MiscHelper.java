@@ -1,7 +1,7 @@
-package io.reisub.unethicalite.combathelper.misc;
+package io.reisub.devious.combathelper.misc;
 
+import io.reisub.devious.combathelper.Helper;
 import io.reisub.devious.utils.api.SluweMovement;
-import io.reisub.unethicalite.combathelper.Helper;
 import java.awt.event.KeyEvent;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
@@ -119,12 +119,14 @@ public class MiscHelper extends Helper {
   }
 
   public void castVengeance() {
-    plugin.schedule(() -> {
-      if (Static.getClient().getTickCount() - lastVengance > VENGEANCE_COOLDOWN
-          && SpellBook.Lunar.VENGEANCE.canCast()) {
-        SpellBook.Lunar.VENGEANCE.cast();
-        lastVengance = Static.getClient().getTickCount();
-      }
-    }, Rand.nextInt(100, 150));
+    plugin.schedule(
+        () -> {
+          if (Static.getClient().getTickCount() - lastVengance > VENGEANCE_COOLDOWN
+              && SpellBook.Lunar.VENGEANCE.canCast()) {
+            SpellBook.Lunar.VENGEANCE.cast();
+            lastVengance = Static.getClient().getTickCount();
+          }
+        },
+        Rand.nextInt(100, 150));
   }
 }

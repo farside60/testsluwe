@@ -1,6 +1,6 @@
-package io.reisub.unethicalite.combathelper.bones;
+package io.reisub.devious.combathelper.bones;
 
-import io.reisub.unethicalite.combathelper.Helper;
+import io.reisub.devious.combathelper.Helper;
 import javax.inject.Singleton;
 import net.runelite.api.Item;
 import net.runelite.api.events.ItemContainerChanged;

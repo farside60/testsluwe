@@ -1,4 +1,4 @@
-package io.reisub.unethicalite.combathelper.bones;
+package io.reisub.devious.combathelper.bones;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,11 +1,11 @@
-package io.reisub.unethicalite.combathelper.swap;
+package io.reisub.devious.combathelper.swap;
 
 import com.openosrs.client.util.WeaponStyle;
+import io.reisub.devious.combathelper.Helper;
+import io.reisub.devious.combathelper.prayer.PrayerHelper;
 import io.reisub.devious.utils.api.ConfigList;
 import io.reisub.devious.utils.api.SluwePredicates;
 import io.reisub.devious.utils.enums.SluwePrayer;
-import io.reisub.unethicalite.combathelper.Helper;
-import io.reisub.unethicalite.combathelper.prayer.PrayerHelper;
 import java.awt.event.KeyEvent;
 import java.util.HashSet;
 import java.util.List;

@@ -1,4 +1,4 @@
-package io.reisub.unethicalite.combathelper.special;
+package io.reisub.devious.combathelper.special;
 
 public enum SpecialActivation {
   AUTOMATIC(),

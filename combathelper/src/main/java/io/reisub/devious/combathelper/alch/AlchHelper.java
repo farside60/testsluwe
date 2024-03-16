@@ -1,7 +1,7 @@
-package io.reisub.unethicalite.combathelper.alch;
+package io.reisub.devious.combathelper.alch;
 
+import io.reisub.devious.combathelper.Helper;
 import io.reisub.devious.utils.api.ConfigList;
-import io.reisub.unethicalite.combathelper.Helper;
 import java.awt.event.KeyEvent;
 import java.util.function.Predicate;
 import javax.inject.Singleton;
