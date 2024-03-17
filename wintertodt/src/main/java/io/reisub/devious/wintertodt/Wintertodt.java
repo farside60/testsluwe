@@ -50,6 +50,7 @@ import net.runelite.api.events.VarbitChanged;
 import net.runelite.api.widgets.Widget;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.plugins.PluginDependency;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.overlay.OverlayManager;
@@ -85,6 +86,7 @@ public class Wintertodt extends TickScript {
   @Getter private int bossHealth;
   @Getter @Setter private boolean tooCold;
   @Getter @Setter private Instant lastHop;
+  private Eat eatTask;
   private Scouter scouter;
   private int fmLevel;
   private int wcLevel;
@@ -122,7 +124,7 @@ public class Wintertodt extends TickScript {
       scouter = injector.getInstance(Scouter.class);
     }
 
-    Eat eatTask = injector.getInstance(Eat.class);
+    eatTask = injector.getInstance(Eat.class);
     eatTask.setThreshold(config.eatThreshold());
     eatTask.setCheckMissing(config.checkMissing());
 
@@ -394,6 +396,19 @@ public class Wintertodt extends TickScript {
           projectiles.add(new WintertodtProjectile(x, y, false, Instant.now()));
         }
       }
+    }
+  }
+
+  @Subscribe
+  private void onConfigChanged(ConfigChanged event) {
+    if (!event.getGroup().equals("sluwewintertodt")) {
+      return;
+    }
+
+    if (event.getKey().equals("eatThreshold")) {
+      eatTask.setThreshold(config.eatThreshold());
+    } else if (event.getKey().equals("checkMissing")) {
+      eatTask.setCheckMissing(config.checkMissing());
     }
   }
 
