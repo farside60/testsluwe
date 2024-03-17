@@ -45,7 +45,7 @@ public class SwapHelper extends Helper {
 
   @Subscribe
   private void onConfigChanged(ConfigChanged event) {
-    if (!event.getGroup().equals("chaoscombathelper")) {
+    if (!event.getGroup().equals("sluwecombathelper")) {
       return;
     }
 
