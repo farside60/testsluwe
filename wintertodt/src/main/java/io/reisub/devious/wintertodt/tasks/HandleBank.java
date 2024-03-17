@@ -2,6 +2,7 @@ package io.reisub.devious.wintertodt.tasks;
 
 import io.reisub.devious.utils.api.SluweBank;
 import io.reisub.devious.utils.tasks.BankTask;
+import io.reisub.devious.utils.tasks.KittenTask;
 import io.reisub.devious.wintertodt.Config;
 import io.reisub.devious.wintertodt.Wintertodt;
 import java.util.Arrays;
@@ -74,9 +75,7 @@ public class HandleBank extends BankTask {
 
     Bank.withdraw(config.food(), config.foodQuantity(), Bank.WithdrawMode.ITEM);
 
-    if (utilsConfig.handleKitten() && !Inventory.contains(utilsConfig.kittenFood())) {
-      Bank.withdraw(utilsConfig.kittenFood(), 1, Bank.WithdrawMode.ITEM);
-    }
+    KittenTask.withdrawKittenFood(utilsConfig);
 
     Time.sleepTicksUntil(() -> Inventory.getCount(i -> i.hasAction("Eat", "Drink")) > 1, 6);
   }
