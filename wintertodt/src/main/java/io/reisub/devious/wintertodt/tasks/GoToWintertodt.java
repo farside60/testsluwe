@@ -13,6 +13,7 @@ import net.unethicalite.api.commons.Time;
 import net.unethicalite.api.entities.Players;
 import net.unethicalite.api.entities.TileObjects;
 import net.unethicalite.api.items.Inventory;
+import net.unethicalite.api.widgets.Dialog;
 
 public class GoToWintertodt extends Task {
   @Inject public Wintertodt plugin;
@@ -40,6 +41,10 @@ public class GoToWintertodt extends Task {
     if (Players.getLocal().getWorldLocation().getY() < doorsOfDinh.getY()
         && Players.getLocal().distanceTo(doorsOfDinh) > 7) {
       SluweMovement.walkTo(target, 3);
+    }
+
+    if (Dialog.isOpen()) {
+      Dialog.close();
     }
 
     doorsOfDinh.interact("Enter");
