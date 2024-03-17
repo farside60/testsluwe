@@ -37,4 +37,25 @@ public interface Config extends net.runelite.client.config.Config {
   default Keybind walkingInterruptHotkey() {
     return new Keybind(KeyEvent.VK_F12, InputEvent.CTRL_DOWN_MASK + InputEvent.ALT_DOWN_MASK);
   }
+
+  @ConfigItem(
+      keyName = "handleKitten",
+      name = "Handle kitten",
+      description =
+          "If the script supports it, this will feed and entertain your kitten and pick it up "
+              + "once it's grown up into a cat",
+      position = 10)
+  default boolean handleKitten() {
+    return true;
+  }
+
+  @ConfigItem(
+      keyName = "kittenFood",
+      name = "Kitten food",
+      description =
+          "Specify the food to feed your kitten",
+      position = 11)
+  default String kittenFood() {
+    return "Raw karambwanji";
+  }
 }
