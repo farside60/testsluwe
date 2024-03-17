@@ -10,6 +10,7 @@ import net.runelite.api.TileObject;
 import net.unethicalite.api.commons.Rand;
 import net.unethicalite.api.commons.Time;
 import net.unethicalite.api.entities.NPCs;
+import net.unethicalite.api.entities.Players;
 import net.unethicalite.api.entities.TileObjects;
 import net.unethicalite.api.game.GameThread;
 import net.unethicalite.api.items.Inventory;
@@ -37,7 +38,8 @@ public class OpenShop extends Task {
       Movement.toggleRun();
     }
 
-    if (plugin.getNpcLocation() != null) {
+    if (plugin.getNpcLocation() != null
+        && Players.getLocal().distanceTo(plugin.getNpcLocation()) > 8) {
       SluweMovement.walkTo(plugin.getNpcLocation(), 1);
     }
 
