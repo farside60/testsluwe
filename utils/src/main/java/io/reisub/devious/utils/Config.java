@@ -58,4 +58,14 @@ public interface Config extends net.runelite.client.config.Config {
   default String kittenFood() {
     return "Raw karambwanji";
   }
+
+  @ConfigItem(
+      keyName = "kittenFoodAmount",
+      name = "Kitten food amount",
+      description =
+          "Specify the amount of food to withdraw from the bank (0 for all)",
+      position = 12)
+  default int kittenFoodAmount() {
+    return 0;
+  }
 }
