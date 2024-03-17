@@ -59,7 +59,7 @@ public class GoToTentacle extends Task {
     final int ticksSinceLastConstruction =
         Static.getClient().getTickCount() - plugin.getLastConstructionTick();
 
-    if (plugin.getRailingsFixed() == 2) {
+    if (plugin.getRailAttempts() == 2) {
       return true;
     }
 
@@ -70,11 +70,11 @@ public class GoToTentacle extends Task {
   public void execute() {
     lastSwap = Static.getClient().getTickCount();
 
-    if (plugin.getRailingsFixed() == 2) {
+    if (plugin.getRailAttempts() == 2) {
       Time.sleepTick();
     }
 
-    plugin.setRailingsFixed(0);
+    plugin.setRailAttempts(0);
 
     final WorldPoint destination =
         Players.getLocal().getWorldLocation().equals(getNorth()) ? getSouth() : getNorth();

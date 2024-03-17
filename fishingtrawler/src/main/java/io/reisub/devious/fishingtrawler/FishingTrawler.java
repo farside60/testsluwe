@@ -16,12 +16,10 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.ChatMessageType;
 import net.runelite.api.NpcID;
-import net.runelite.api.Skill;
 import net.runelite.api.events.AnimationChanged;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.InteractingChanged;
 import net.runelite.api.events.NpcDespawned;
-import net.runelite.api.events.StatChanged;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.PluginDependency;
@@ -47,7 +45,7 @@ public class FishingTrawler extends TickScript {
   public static final int PORT_REGION = 10545;
 
   @Getter private int lastConstructionTick;
-  @Getter @Setter private int railingsFixed;
+  @Getter @Setter private int railAttempts;
   @Getter private boolean enoughForReward;
   @Getter @Setter private boolean takenReward = true;
 
@@ -103,6 +101,11 @@ public class FishingTrawler extends TickScript {
       enoughForReward = true;
     } else if (message.startsWith("You have contributed enough to earn rewards!")) {
       takenReward = false;
+    } else if (message.equals("You manage to fix the rail.")
+        || message.equals("You fail to repair the rail in the harsh conditions.")) {
+      setActivity(Activity.IDLE);
+      railAttempts++;
+      lastConstructionTick = Static.getClient().getTickCount();
     }
   }
 
@@ -120,19 +123,6 @@ public class FishingTrawler extends TickScript {
 
     if (Players.getLocal().getAnimation() == constructionAnimation) {
       setActivity(FIXING_RAIL);
-    }
-  }
-
-  @Subscribe
-  private void onStatChanged(StatChanged event) {
-    if (!isRunning()) {
-      return;
-    }
-
-    if (event.getSkill().equals(Skill.CONSTRUCTION) && isCurrentActivity(FIXING_RAIL)) {
-      setActivity(Activity.IDLE);
-      lastConstructionTick = Static.getClient().getTickCount();
-      railingsFixed++;
     }
   }
 
