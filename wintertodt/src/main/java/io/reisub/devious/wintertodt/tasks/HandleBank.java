@@ -14,6 +14,7 @@ import net.unethicalite.api.items.Inventory;
 public class HandleBank extends BankTask {
   @Inject public Wintertodt plugin;
   @Inject public Config config;
+  @Inject public io.reisub.devious.utils.Config utilsConfig;
 
   @Override
   public boolean validate() {
@@ -54,6 +55,10 @@ public class HandleBank extends BankTask {
             return true;
           }
 
+          if (utilsConfig.handleKitten() && i.getName().equals(utilsConfig.kittenFood())) {
+            return true;
+          }
+
           if (config.openCrates() && i.getId() == ItemID.SUPPLY_CRATE) {
             return true;
           }
@@ -68,6 +73,11 @@ public class HandleBank extends BankTask {
     }
 
     Bank.withdraw(config.food(), config.foodQuantity(), Bank.WithdrawMode.ITEM);
+
+    if (utilsConfig.handleKitten() && !Inventory.contains(utilsConfig.kittenFood())) {
+      Bank.withdraw(utilsConfig.kittenFood(), 1, Bank.WithdrawMode.ITEM);
+    }
+
     Time.sleepTicksUntil(() -> Inventory.getCount(i -> i.hasAction("Eat", "Drink")) > 1, 6);
   }
 }

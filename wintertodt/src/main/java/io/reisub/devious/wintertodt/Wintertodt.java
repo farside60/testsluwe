@@ -6,6 +6,7 @@ import io.reisub.devious.utils.Utils;
 import io.reisub.devious.utils.api.Activity;
 import io.reisub.devious.utils.api.Stats;
 import io.reisub.devious.utils.tasks.Eat;
+import io.reisub.devious.utils.tasks.KittenTask;
 import io.reisub.devious.wintertodt.tasks.Burn;
 import io.reisub.devious.wintertodt.tasks.ChangeSide;
 import io.reisub.devious.wintertodt.tasks.Chop;
@@ -77,6 +78,7 @@ public class Wintertodt extends TickScript {
   public static Activity WOODCUTTING = new Activity("Woodcutting");
   @Getter private final List<WintertodtProjectile> projectiles = new ArrayList<>();
   @Inject public Config config;
+  @Inject public io.reisub.devious.utils.Config utilsConfig;
   @Inject private OverlayManager overlayManager;
   @Inject private WintertodtOverlay overlay;
   @Getter private int respawnTimer;
@@ -127,6 +129,9 @@ public class Wintertodt extends TickScript {
     tasks.add(eatTask);
     if (config.dodgeProjectiles()) {
       addTask(DodgeProjectile.class);
+    }
+    if (utilsConfig.handleKitten()) {
+      addTask(KittenTask.getInstance(injector));
     }
     addTask(OpenInventory.class);
     addTask(OpenCrates.class);

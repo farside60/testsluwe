@@ -14,6 +14,7 @@ Plays the Wintertodt minigame on mass worlds.
 * Optionally hop worlds between kills for less waiting time
 * Configurable minimum HP percentage for the boss to be at before hopping
 * Optional overlay
+* Feeds and entertains your kitten, configurable in the Sluwe Utils plugin
 
 Does not have
 
