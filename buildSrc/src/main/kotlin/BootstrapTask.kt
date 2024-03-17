@@ -44,7 +44,7 @@ open class BootstrapTask : DefaultTask() {
             project.subprojects.forEach {
                 if (it.project.properties.containsKey("PluginName") && it.project.properties.containsKey("PluginDescription") && (it.project.extra.get(
                                 "PluginName"
-                        ) as String) != "Chaos Test"
+                        ) as String) != "Sluwe Dev"
                 ) {
                     val plugin = it.project.tasks["jar"].outputs.files.singleFile
 
