@@ -70,6 +70,19 @@ public enum Location {
           new WorldPoint(2335, 3046, 0),
           new WorldPoint(2333, 3050, 0)),
       false),
+  OAK_MONASTERY(
+      new WorldPoint(2610, 3245, 0),
+      10,
+      null,
+      ImmutableSet.of(ObjectID.OAK_TREE_10820),
+      -1,
+      -1,
+      null,
+      ImmutableList.of(
+          new WorldPoint(2628, 3243, 0),
+          new WorldPoint(2628, 3242, 0),
+          new WorldPoint(2628, 3241, 0)),
+      false),
   ;
 
   private final WorldPoint woodcuttingAreaPoint;

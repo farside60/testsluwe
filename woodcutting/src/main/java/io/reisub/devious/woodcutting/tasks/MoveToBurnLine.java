@@ -2,16 +2,17 @@ package io.reisub.devious.woodcutting.tasks;
 
 import io.reisub.devious.utils.Constants;
 import io.reisub.devious.utils.api.Activity;
-import io.reisub.devious.utils.api.SluweMovement;
 import io.reisub.devious.utils.tasks.Task;
 import io.reisub.devious.woodcutting.Config;
 import io.reisub.devious.woodcutting.Woodcutting;
 import javax.inject.Inject;
 import net.runelite.api.coords.WorldPoint;
 import net.unethicalite.api.commons.Predicates;
+import net.unethicalite.api.commons.Time;
 import net.unethicalite.api.entities.Players;
 import net.unethicalite.api.entities.TileObjects;
 import net.unethicalite.api.items.Inventory;
+import net.unethicalite.api.movement.Movement;
 
 public class MoveToBurnLine extends Task {
   @Inject private Woodcutting plugin;
@@ -64,8 +65,15 @@ public class MoveToBurnLine extends Task {
   @Override
   public void execute() {
     if (!nearestStart.equals(Players.getLocal().getWorldLocation())) {
-      SluweMovement.walkTo(nearestStart);
+      Movement.walk(nearestStart);
+      Time.sleepTicks(2);
     }
+
+    Time.sleepTicksUntil(
+        () ->
+            !Players.getLocal().isMoving()
+                || Players.getLocal().getWorldLocation().equals(nearestStart),
+        20);
   }
 
   private WorldPoint findNearestFreeStartPoint() {
