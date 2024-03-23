@@ -391,7 +391,7 @@ public class Wintertodt extends TickScript {
 
       if (cycles == 200) {
         projectiles.add(new WintertodtProjectile(x, y, true, Instant.now()));
-      } else if ((x == 1638 && y == 3997) || (x == 1619 && y == 3997)) {
+      } else if ((x == 1638 && y == 3997) || (x == 1620 && y == 3997)) {
         if (cycles == 120) {
           projectiles.add(new WintertodtProjectile(x, y, false, Instant.now()));
         }

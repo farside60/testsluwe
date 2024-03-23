@@ -1,6 +1,5 @@
 package io.reisub.devious.wintertodt.tasks;
 
-import io.reisub.devious.utils.api.SluweMovement;
 import io.reisub.devious.utils.tasks.Task;
 import io.reisub.devious.wintertodt.Wintertodt;
 import io.reisub.devious.wintertodt.WintertodtProjectile;
@@ -13,6 +12,7 @@ import net.runelite.api.Tile;
 import net.runelite.api.coords.WorldPoint;
 import net.unethicalite.api.commons.Time;
 import net.unethicalite.api.entities.Players;
+import net.unethicalite.api.movement.Movement;
 import net.unethicalite.api.movement.Reachable;
 import net.unethicalite.api.scene.Tiles;
 
@@ -56,13 +56,20 @@ public class DodgeProjectile extends Task {
     WorldPoint safePosition = findSafePosition(Players.getLocal().getWorldLocation());
 
     if (safePosition != null) {
-      SluweMovement.walkTo(safePosition);
+      Movement.walk(safePosition);
     }
 
     Time.sleepUntil(() -> Instant.now().isAfter(projectile.getStart().plusSeconds(3)), 10000);
   }
 
   private WorldPoint findSafePosition(WorldPoint startPosition) {
+    // usually south is safe, so we don't need to check lots of tiles
+    final WorldPoint south = startPosition.dy(-1);
+
+    if (!projectile.getDamageArea().contains(south)) {
+      return south;
+    }
+    
     List<Tile> safeTiles =
         Tiles.getSurrounding(startPosition, 3).stream()
             .filter(

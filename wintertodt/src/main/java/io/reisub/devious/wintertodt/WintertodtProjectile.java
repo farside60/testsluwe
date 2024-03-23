@@ -18,11 +18,7 @@ public class WintertodtProjectile {
     if (aoe) {
       return new RectangularArea(coordX - 1, coordY - 1, coordX + 1, coordY + 1);
     } else {
-      if (coordX == 1638) {
-        return new RectangularArea(coordX, coordY - 1, coordX + 3, coordY + 2);
-      } else {
-        return new RectangularArea(coordX - 1, coordY - 1, coordX + 2, coordY + 2);
-      }
+      return new RectangularArea(coordX, coordY - 1, coordX + 3, coordY + 2);
     }
   }
 }
