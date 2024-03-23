@@ -1,9 +1,13 @@
 package io.reisub.devious.utils.tasks;
 
+import com.google.common.collect.ImmutableList;
 import io.reisub.devious.utils.api.Activity;
+import java.util.Comparator;
+import java.util.List;
 import javax.inject.Inject;
 import lombok.Setter;
 import net.runelite.api.Item;
+import net.runelite.api.ItemID;
 import net.runelite.api.Skill;
 import net.unethicalite.api.game.Combat;
 import net.unethicalite.api.game.Skills;
@@ -52,9 +56,23 @@ public class Eat extends Task {
       }
     }
 
-    consumable = Inventory.getFirst(i -> i.hasAction("Eat", "Drink"));
+    final List<Integer> ignoreIds =
+        ImmutableList.of(ItemID.ROCK_CAKE, ItemID.DWARVEN_ROCK_CAKE, ItemID.DWARVEN_ROCK_CAKE_7510);
 
-    return consumable != null && Static.getClient().getTickCount() - lastTick >= 3;
+    List<Item> consumables =
+        Inventory.getAll(i -> i.hasAction("Eat", "Drink") && !ignoreIds.contains(i.getId()));
+
+    if (consumables.isEmpty()) {
+      return false;
+    }
+
+    // this sort makes sure that we consume the consumables with the highest ID first
+    // this way we consume stuff like a slice of cake before a full cake or a 1 dose potion before
+    // a 2 dose, a 2 dose before a 3 dose, et cetera
+    consumables.sort(Comparator.comparingInt(Item::getId).reversed());
+    consumable = consumables.get(0);
+
+    return Static.getClient().getTickCount() - lastTick >= 3;
   }
 
   @Override
