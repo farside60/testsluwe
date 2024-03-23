@@ -2,12 +2,14 @@ package io.reisub.devious.wintertodt.tasks;
 
 import io.reisub.devious.utils.api.Activity;
 import io.reisub.devious.utils.tasks.Task;
+import io.reisub.devious.wintertodt.Side;
 import io.reisub.devious.wintertodt.Wintertodt;
 import javax.inject.Inject;
 import net.runelite.api.TileObject;
 import net.unethicalite.api.commons.Time;
 import net.unethicalite.api.entities.Players;
 import net.unethicalite.api.entities.TileObjects;
+import net.unethicalite.api.movement.Movement;
 
 public class Fix extends Task {
   @Inject public Wintertodt plugin;
@@ -36,6 +38,19 @@ public class Fix extends Task {
 
   @Override
   public void execute() {
+    if (plugin.getNearestSide() == Side.WEST
+        && !Players.getLocal().getWorldLocation().equals(Side.WEST.getPositionNearBrazier())) {
+      Movement.walk(Side.WEST.getPositionNearBrazier());
+      Time.sleepTick();
+      Time.sleepTicksUntil(
+          () ->
+              !Players.getLocal().isMoving()
+                  || Players.getLocal()
+                  .getWorldLocation()
+                  .equals(Side.WEST.getPositionNearBrazier()),
+          20);
+    }
+
     brazier.interact("Fix");
 
     int distance;
