@@ -14,6 +14,7 @@ import net.unethicalite.api.entities.Players;
 import net.unethicalite.api.entities.TileObjects;
 import net.unethicalite.api.game.Combat;
 import net.unethicalite.api.items.Inventory;
+import net.unethicalite.api.movement.Movement;
 
 public class GoToBank extends Task {
   @Inject private Wintertodt plugin;
@@ -51,11 +52,11 @@ public class GoToBank extends Task {
       return;
     }
 
-    final WorldPoint target = new WorldPoint(1630, 3975, 0);
+    final WorldPoint target = new WorldPoint(1630, 3969, 0);
 
     if (Players.getLocal().getWorldLocation().getY() > doorsOfDinh.getY()
         && Players.getLocal().distanceTo(doorsOfDinh) > 8) {
-      SluweMovement.walkTo(target, 3);
+      SluweMovement.walkTo(target, 1);
       Time.sleepTick();
     }
 
@@ -63,8 +64,10 @@ public class GoToBank extends Task {
 
     doorsOfDinh.interact("Enter");
     Time.sleepTicksUntil(() -> Players.getLocal().getWorldLocation().getY() < 3965, 20);
+    Time.sleepTicks(2);
 
     final WorldPoint bank = new WorldPoint(1639, 3944, 0);
-    SluweMovement.walkTo(bank);
+    Movement.walk(bank);
+    Time.sleepTick();
   }
 }
