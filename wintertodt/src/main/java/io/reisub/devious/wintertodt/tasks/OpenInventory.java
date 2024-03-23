@@ -18,7 +18,7 @@ public class OpenInventory extends Task {
   public boolean validate() {
     return Static.getClient().getGameState() == GameState.LOGGED_IN
         && !Bank.isOpen()
-        && !Tabs.isOpen(Tab.INVENTORY);
+        && Tabs.isOpen(Tab.LOG_OUT);
   }
 
   @Override
