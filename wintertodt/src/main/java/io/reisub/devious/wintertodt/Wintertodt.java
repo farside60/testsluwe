@@ -61,6 +61,7 @@ import net.unethicalite.api.items.Inventory;
 import net.unethicalite.api.widgets.Widgets;
 import net.unethicalite.client.Static;
 import org.pf4j.Extension;
+import org.slf4j.Logger;
 
 @Extension
 @PluginDependency(Utils.class)
@@ -109,6 +110,11 @@ public class Wintertodt extends TickScript {
   @Provides
   Config provideConfig(ConfigManager configManager) {
     return configManager.getConfig(Config.class);
+  }
+
+  @Override
+  public Logger getLogger() {
+    return log;
   }
 
   @Override

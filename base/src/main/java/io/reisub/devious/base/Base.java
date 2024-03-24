@@ -28,6 +28,11 @@ public class Base extends TickScript {
   }
 
   @Override
+  public Logger getLogger() {
+    return log;
+  }
+
+  @Override
   protected void onStart() {
     super.onStart();
 
