@@ -22,7 +22,7 @@ public class Steal extends Task {
   @Override
   public boolean validate() {
     stall = TileObjects.getNearest(o -> o.getId() == config.stall().getStallId()
-        && Players.getLocal().distanceTo(o.getWorldLocation()) < 6);
+        && Players.getLocal().distanceTo(o.getWorldLocation()) < 3);
 
     return !Inventory.isFull()
         && stall != null
