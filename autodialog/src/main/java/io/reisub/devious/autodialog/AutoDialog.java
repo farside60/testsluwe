@@ -1,14 +1,18 @@
 package io.reisub.devious.autodialog;
 
+import com.google.common.collect.ImmutableList;
 import com.google.inject.Provides;
+import io.reisub.devious.autodialog.tasks.DialogTask;
+import io.reisub.devious.autodialog.tasks.PhialsExchange;
+import io.reisub.devious.autodialog.tasks.QuestHelper;
+import io.reisub.devious.autodialog.tasks.SeersStew;
+import io.reisub.devious.autodialog.tasks.SilkMerchant;
 import io.reisub.devious.utils.Utils;
 import java.awt.event.KeyEvent;
 import java.util.List;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.DialogOption;
 import net.runelite.api.events.GameTick;
-import net.runelite.api.widgets.Widget;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.input.KeyListener;
@@ -30,6 +34,7 @@ public class AutoDialog extends Plugin implements KeyListener {
   @Inject private Config config;
   @Inject private KeyManager keyManager;
   private boolean disable = false;
+  private List<DialogTask> tasks;
 
   @Provides
   Config provideConfig(ConfigManager configManager) {
@@ -40,6 +45,13 @@ public class AutoDialog extends Plugin implements KeyListener {
   protected void startUp() {
     log.info("Starting Sluwe Auto Dialog");
     keyManager.registerKeyListener(this);
+
+    tasks =
+        ImmutableList.of(
+            injector.getInstance(SeersStew.class),
+            injector.getInstance(SilkMerchant.class),
+            injector.getInstance(PhialsExchange.class),
+            injector.getInstance(QuestHelper.class));
   }
 
   @Override
@@ -54,31 +66,10 @@ public class AutoDialog extends Plugin implements KeyListener {
       return;
     }
 
-    if (config.silkMerchant()
-        && Dialog.canContinue()
-        && Dialog.getText().startsWith("Hello. I have some fine silk")) {
-      Dialog.invokeDialog(
-          DialogOption.PLAYER_CONTINUE,
-          DialogOption.NPC_CONTINUE,
-          DialogOption.CHAT_OPTION_THREE,
-          DialogOption.PLAYER_CONTINUE,
-          DialogOption.NPC_CONTINUE,
-          DialogOption.CHAT_OPTION_TWO,
-          DialogOption.PLAYER_CONTINUE,
-          DialogOption.NPC_CONTINUE);
-
-      return;
-    }
-
-    if (Dialog.isViewingOptions()) {
-      List<Widget> options = Dialog.getOptions();
-
-      for (Widget opt : options) {
-        if ((config.questHelper() && opt.getText().startsWith("["))
-            || (config.phialsExchangeAll() && opt.getText().startsWith("Exchange All:"))) {
-          Dialog.chooseOption(opt.getIndex());
-          return;
-        }
+    for (DialogTask task : tasks) {
+      if (task.validate()) {
+        task.execute();
+        return;
       }
     }
 

@@ -66,4 +66,13 @@ public interface Config extends net.runelite.client.config.Config {
   default boolean silkMerchant() {
     return true;
   }
+
+  @ConfigItem(
+      keyName = "seersStew",
+      name = "Seers stew",
+      description = "Buy stew from the bartender in Seers.",
+      position = 4)
+  default boolean seersStew() {
+    return true;
+  }
 }
