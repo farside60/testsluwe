@@ -1,6 +1,6 @@
-version = "1.0.9"
+version = "1.0.10"
 
-project.extra["PluginName"] = "Sluwe"
+project.extra["PluginName"] = "Sluwe Agility"
 project.extra["PluginDescription"] = "Hippity hoppity, jumps on your property"
 
 tasks {
