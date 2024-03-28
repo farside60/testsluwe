@@ -9,6 +9,7 @@ import net.runelite.client.config.ConfigManager;
 import net.runelite.client.plugins.PluginDependency;
 import net.runelite.client.plugins.PluginDescriptor;
 import org.pf4j.Extension;
+import org.slf4j.Logger;
 
 @Extension
 @PluginDependency(Utils.class)
@@ -19,8 +20,7 @@ import org.pf4j.Extension;
 )
 @Slf4j
 public class Base extends TickScript {
-  @Inject
-  private Config config;
+  @Inject private Config config;
 
   @Provides
   public Config getConfig(ConfigManager configManager) {
