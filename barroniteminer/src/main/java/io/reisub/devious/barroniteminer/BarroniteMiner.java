@@ -2,6 +2,7 @@ package io.reisub.devious.barroniteminer;
 
 import com.google.inject.Provides;
 import io.reisub.devious.barroniteminer.tasks.Crush;
+import io.reisub.devious.barroniteminer.tasks.HandleBank;
 import io.reisub.devious.barroniteminer.tasks.Mine;
 import io.reisub.devious.utils.TickScript;
 import io.reisub.devious.utils.Utils;
@@ -54,6 +55,7 @@ public class BarroniteMiner extends TickScript {
 
     mineTask = injector.getInstance(Mine.class);
 
+    addTask(HandleBank.class);
     addTask(Crush.class);
     addTask(mineTask);
   }

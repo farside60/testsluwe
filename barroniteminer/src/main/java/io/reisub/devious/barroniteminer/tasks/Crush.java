@@ -31,7 +31,7 @@ public class Crush extends Task {
     return !plugin.isCurrentActivity(BarroniteMiner.SMITHING)
         && (Inventory.isFull()
             || Inventory.contains(ItemID.BARRONITE_DEPOSIT)
-                && Players.getLocal().distanceTo(crusher) < 3);
+                && Players.getLocal().getWorldLocation().getX() > 2950);
   }
 
   @Override
