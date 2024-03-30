@@ -103,7 +103,7 @@ public class Tempoross extends TickScript {
   @Getter private int lastDoubleSpawn;
   @Getter @Setter private WorldPoint lastFishLocation;
   @Getter private int gamesWon;
-  @Getter private int gamesLost;
+  @Getter @Setter private int gamesLost;
   private int totalRoundTimes;
   @Getter private int permitsEarned;
 

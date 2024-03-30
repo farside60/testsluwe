@@ -25,9 +25,29 @@ public class LeaveGame extends Task {
 
   @Override
   public boolean validate() {
+    if (!plugin.isInTemporossArea()) {
+      return false;
+    }
+
     NPC pudi = NPCs.getNearest(NpcID.CAPTAIN_PUDI_10585, NpcID.CAPTAIN_PUDI_10586);
 
     if (pudi != null && Players.getLocal().distanceTo(pudi) < 5) {
+      return true;
+    }
+
+    if (Players.getAll().size() > 1) {
+      return true;
+    }
+
+    NPC fire =
+        NPCs.getNearest(
+            (n) ->
+                n.getId() == NpcID.FIRE_8643
+                    && (plugin.getIslandArea().contains(n) || plugin.getBoatArea().contains(n)));
+
+    if (fire != null
+        && !Inventory.contains(ItemID.BUCKET)
+        && !Inventory.contains(ItemID.BUCKET_OF_WATER)) {
       return true;
     }
 
@@ -36,26 +56,22 @@ public class LeaveGame extends Task {
 
   @Override
   public void execute() {
-    if (!plugin.isFinished()) {
-      NPC pudi = NPCs.getNearest(NpcID.CAPTAIN_PUDI_10585, NpcID.CAPTAIN_PUDI_10586);
-      pudi.interact("Forfeit");
-      Time.sleepUntil(() -> plugin.isInDesert(), 20000);
+    if (!Inventory.contains(ItemID.BUCKET) && !Inventory.contains(ItemID.BUCKET_OF_WATER)) {
+      TileObject buckets = TileObjects.getNearest(ObjectID.BUCKETS);
+      if (buckets == null) {
+        return;
+      }
+
+      buckets.interact("Take-5");
+      Time.sleepUntil(() -> Inventory.contains(ItemID.BUCKET), 100, 10000);
     }
 
-    TileObject buckets = TileObjects.getNearest(ObjectID.BUCKETS);
-    if (buckets == null) {
+    NPC leaveNpc = NPCs.getNearest(n -> n.hasAction("Forfeit", "Leave"));
+    if (leaveNpc == null) {
       return;
     }
 
-    buckets.interact("Take-5");
-    Time.sleepUntil(() -> Inventory.contains(ItemID.BUCKET), 100, 10000);
-
-    NPC deri = NPCs.getNearest(NpcID.FIRST_MATE_DERI_10595);
-    if (deri == null) {
-      return;
-    }
-
-    deri.interact("Leave");
+    leaveNpc.interact("Leave", "Forfeit");
     Time.sleepUntil(() -> plugin.isInDesert(), 20000);
 
     Time.sleepUntil(Dialog::canContinueNPC, 100, 30000);
