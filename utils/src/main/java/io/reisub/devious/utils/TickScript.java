@@ -2,8 +2,10 @@ package io.reisub.devious.utils;
 
 import io.reisub.devious.utils.api.Activity;
 import io.reisub.devious.utils.api.SluweMovement;
+import io.reisub.devious.utils.api.Stats;
 import io.reisub.devious.utils.tasks.Task;
 import java.awt.event.KeyEvent;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,8 +31,11 @@ import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.input.KeyListener;
 import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
+import net.runelite.client.ui.overlay.Overlay;
+import net.runelite.client.ui.overlay.OverlayManager;
 import net.unethicalite.api.commons.Rand;
 import net.unethicalite.api.entities.Players;
+import net.unethicalite.api.game.Skills;
 import net.unethicalite.api.input.Keyboard;
 import net.unethicalite.api.utils.MessageUtils;
 import net.unethicalite.client.Static;
@@ -48,6 +53,7 @@ public abstract class TickScript extends Plugin implements KeyListener {
   protected int lastInventoryChangeTick = 0;
   protected boolean idleCheckInventoryChange = false;
   @Inject private Config utilsConfig;
+  @Inject private OverlayManager overlayManager;
   @Inject private KeyManager keyManager;
   @Getter private Activity currentActivity;
   @Getter private Activity previousActivity;
@@ -55,6 +61,10 @@ public abstract class TickScript extends Plugin implements KeyListener {
   @Getter @Setter private int lastHopTick;
   private ScheduledFuture<?> current;
   private ScheduledFuture<?> next;
+  @Getter private Instant startTime = Instant.now();
+  private Map<Skill, Integer> startingLevels;
+  private Map<Skill, Integer> startingExperience;
+  private Overlay overlay;
 
   @Subscribe
   private void onConfigButtonPressed(ConfigButtonClicked event) {
@@ -188,6 +198,12 @@ public abstract class TickScript extends Plugin implements KeyListener {
     previousActivity = Activity.IDLE;
     currentActivity = Activity.IDLE;
 
+    startTime = Instant.now();
+
+    if (overlay != null) {
+      overlayManager.add(overlay);
+    }
+
     onStart();
   }
 
@@ -209,6 +225,12 @@ public abstract class TickScript extends Plugin implements KeyListener {
     previousActivity = Activity.IDLE;
     currentActivity = Activity.IDLE;
 
+    startTime = null;
+
+    if (overlay != null) {
+      overlayManager.remove(overlay);
+    }
+
     onStop();
   }
 
@@ -229,6 +251,41 @@ public abstract class TickScript extends Plugin implements KeyListener {
 
   protected final <T extends Task> void addTask(Class<T> type) {
     addTask(injector.getInstance(type));
+  }
+
+  protected final void setOverlay(Overlay overlay) {
+    this.overlay = overlay;
+    overlayManager.add(overlay);
+  }
+
+  public final String getTimeRunning() {
+    return startTime != null ? Stats.getFormattedDurationBetween(startTime, Instant.now()) : "";
+  }
+
+  protected final void trackExperience(Skill... skills) {
+    startingLevels = new HashMap<>();
+    startingExperience = new HashMap<>();
+
+    for (Skill skill : skills) {
+      startingLevels.put(skill, Skills.getLevel(skill));
+      startingExperience.put(skill, Skills.getExperience(skill));
+    }
+  }
+
+  public final int getLevelsGained(Skill skill) {
+    if (startingLevels == null) {
+      return -1;
+    }
+
+    return Skills.getLevel(skill) - startingLevels.get(skill);
+  }
+
+  public final int getExperienceGained(Skill skill) {
+    if (startingExperience == null) {
+      return -1;
+    }
+
+    return Skills.getExperience(skill) - startingExperience.get(skill);
   }
 
   protected void checkActionTimeout() {
