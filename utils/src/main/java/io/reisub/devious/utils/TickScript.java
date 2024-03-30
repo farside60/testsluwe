@@ -49,8 +49,8 @@ public abstract class TickScript extends Plugin implements KeyListener {
   protected boolean idleCheckInventoryChange = false;
   @Inject private Config utilsConfig;
   @Inject private KeyManager keyManager;
-  private Activity currentActivity;
-  private Activity previousActivity;
+  @Getter private Activity currentActivity;
+  @Getter private Activity previousActivity;
   @Getter private boolean running;
   @Getter @Setter private int lastHopTick;
   private ScheduledFuture<?> current;
@@ -274,7 +274,9 @@ public abstract class TickScript extends Plugin implements KeyListener {
     for (Task t : tasks) {
       if (t.validate()) {
         getLogger().info(t.getStatus());
-        setActivity(t.getActivity());
+        if (t.getActivity() != Activity.IDLE) {
+          setActivity(t.getActivity());
+        }
         t.execute();
         break;
       }
