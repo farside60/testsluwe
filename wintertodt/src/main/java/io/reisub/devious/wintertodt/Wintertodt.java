@@ -4,7 +4,6 @@ import com.google.inject.Provides;
 import io.reisub.devious.utils.TickScript;
 import io.reisub.devious.utils.Utils;
 import io.reisub.devious.utils.api.Activity;
-import io.reisub.devious.utils.api.Stats;
 import io.reisub.devious.utils.tasks.Eat;
 import io.reisub.devious.utils.tasks.KittenTask;
 import io.reisub.devious.wintertodt.tasks.Burn;
@@ -53,7 +52,6 @@ import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.plugins.PluginDependency;
 import net.runelite.client.plugins.PluginDescriptor;
-import net.runelite.client.ui.overlay.OverlayManager;
 import net.unethicalite.api.commons.Predicates;
 import net.unethicalite.api.entities.Players;
 import net.unethicalite.api.game.Skills;
@@ -81,7 +79,6 @@ public class Wintertodt extends TickScript {
   @Getter private final List<WintertodtProjectile> projectiles = new ArrayList<>();
   @Inject public Config config;
   @Inject public io.reisub.devious.utils.Config utilsConfig;
-  @Inject private OverlayManager overlayManager;
   @Inject private WintertodtOverlay overlay;
   @Getter private int respawnTimer;
   @Getter private int bossHealth;
@@ -92,18 +89,8 @@ public class Wintertodt extends TickScript {
   private int fmLevel;
   private int wcLevel;
   private int fletchLevel;
-  private int constructionLevel;
   @Getter private int wonGames;
   @Getter private int lostGames;
-  private int startFiremakingExperience;
-  private int startFiremakingLevel;
-  private int startWoodcuttingExperience;
-  private int startWoodcuttingLevel;
-  private int startFletchingExperience;
-  private int startFletchingLevel;
-  private int startConstructionExperience;
-  private int startConstructionLevel;
-  @Getter private Instant startTime;
   @Getter private Instant lastWin;
 
   @SuppressWarnings("unused")
@@ -119,12 +106,9 @@ public class Wintertodt extends TickScript {
 
   @Override
   protected void onStart() {
-    super.onStart();
-
     fmLevel = Skills.getLevel(Skill.FIREMAKING);
     wcLevel = Skills.getLevel(Skill.WOODCUTTING);
     fletchLevel = Skills.getLevel(Skill.FLETCHING);
-    constructionLevel = Skills.getLevel(Skill.CONSTRUCTION);
 
     if (config.hop()) {
       scouter = injector.getInstance(Scouter.class);
@@ -158,29 +142,19 @@ public class Wintertodt extends TickScript {
     addTask(Chop.class);
 
     reset();
-    this.overlayManager.add(overlay);
+    setOverlay(overlay);
   }
 
   @Override
   protected void onStop() {
-    super.onStop();
     scouter = null;
-    startTime = null;
-    this.overlayManager.remove(overlay);
   }
 
   private void reset() {
-    startTime = Instant.now();
     wonGames = 0;
     lostGames = 0;
-    startFiremakingExperience = Skills.getExperience(Skill.FIREMAKING);
-    startWoodcuttingExperience = Skills.getExperience(Skill.WOODCUTTING);
-    startFletchingExperience = Skills.getExperience(Skill.FLETCHING);
-    startConstructionExperience = Skills.getExperience(Skill.CONSTRUCTION);
-    startFiremakingLevel = Skills.getLevel(Skill.FIREMAKING);
-    startWoodcuttingLevel = Skills.getLevel(Skill.WOODCUTTING);
-    startFletchingLevel = Skills.getLevel(Skill.FLETCHING);
-    startConstructionLevel = Skills.getLevel(Skill.CONSTRUCTION);
+
+    trackExperience(Skill.FIREMAKING, Skill.WOODCUTTING, Skill.FLETCHING, Skill.CONSTRUCTION);
   }
 
   @SuppressWarnings("unused")
@@ -415,40 +389,6 @@ public class Wintertodt extends TickScript {
       eatTask.setThreshold(config.eatThreshold());
     } else if (event.getKey().equals("checkMissing")) {
       eatTask.setCheckMissing(config.checkMissing());
-    }
-  }
-
-  public String getTimeRunning() {
-    return startTime != null ? Stats.getFormattedDurationBetween(startTime, Instant.now()) : "";
-  }
-
-  public int getExperienceGained(Skill skill) {
-    switch (skill) {
-      case FIREMAKING:
-        return Skills.getExperience(skill) - startFiremakingExperience;
-      case WOODCUTTING:
-        return Skills.getExperience(skill) - startWoodcuttingExperience;
-      case FLETCHING:
-        return Skills.getExperience(skill) - startFletchingExperience;
-      case CONSTRUCTION:
-        return Skills.getExperience(skill) - startConstructionExperience;
-      default:
-        return 0;
-    }
-  }
-
-  public int getLevelsGained(Skill skill) {
-    switch (skill) {
-      case FIREMAKING:
-        return Skills.getLevel(skill) - startFiremakingLevel;
-      case WOODCUTTING:
-        return Skills.getLevel(skill) - startWoodcuttingLevel;
-      case FLETCHING:
-        return Skills.getLevel(skill) - startFletchingLevel;
-      case CONSTRUCTION:
-        return Skills.getLevel(skill) - startConstructionLevel;
-      default:
-        return 0;
     }
   }
 
