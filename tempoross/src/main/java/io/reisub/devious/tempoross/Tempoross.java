@@ -19,6 +19,7 @@ import io.reisub.devious.utils.TickScript;
 import io.reisub.devious.utils.Utils;
 import io.reisub.devious.utils.api.Activity;
 import io.reisub.devious.utils.tasks.Run;
+import java.time.Duration;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -33,6 +34,7 @@ import net.runelite.api.ItemContainer;
 import net.runelite.api.ItemID;
 import net.runelite.api.NpcID;
 import net.runelite.api.ObjectID;
+import net.runelite.api.Skill;
 import net.runelite.api.TileObject;
 import net.runelite.api.coords.WorldArea;
 import net.runelite.api.coords.WorldPoint;
@@ -86,6 +88,7 @@ public class Tempoross extends TickScript {
   private static final int UNKAH_REWARD_POOL_REGION = 12588;
   private static final int UNKAH_BOAT_REGION = 12332;
   @Inject private Config config;
+  @Inject private TemporossOverlay overlay;
   @Getter private boolean waveIncoming;
   @Getter private int phase = 1;
   @Getter private int playersReady;
@@ -99,6 +102,10 @@ public class Tempoross extends TickScript {
   @Getter @Setter private int cookedFishRequired;
   @Getter private int lastDoubleSpawn;
   @Getter @Setter private WorldPoint lastFishLocation;
+  @Getter private int gamesWon;
+  @Getter private int gamesLost;
+  private int totalRoundTimes;
+  @Getter private int permitsEarned;
 
   @Provides
   public Config getConfig(ConfigManager configManager) {
@@ -112,8 +119,6 @@ public class Tempoross extends TickScript {
 
   @Override
   protected void onStart() {
-    super.onStart();
-
     reset();
 
     tasks.add(new Run());
@@ -131,6 +136,24 @@ public class Tempoross extends TickScript {
     addTask(Stock.class);
     addTask(Cook.class);
     addTask(Fish.class);
+
+    trackExperience(Skill.FISHING, Skill.COOKING, Skill.CONSTRUCTION);
+    gamesWon = 0;
+    gamesLost = 0;
+    totalRoundTimes = 0;
+    permitsEarned = 0;
+
+    setOverlay(overlay);
+  }
+
+  private void reset() {
+    waveIncoming = false;
+    phase = 1;
+    rawFish = 0;
+    cookedFish = 0;
+    cookedFishRequired = 17;
+    dudiPos = null;
+    finished = false;
   }
 
   @Subscribe(priority = 1)
@@ -170,6 +193,30 @@ public class Tempoross extends TickScript {
     } else if (message.startsWith("congratulations, you've just advanced")) {
       if (isCurrentActivity(COOKING)) {
         setActivity(Activity.IDLE);
+      }
+    } else if (message.startsWith("reward permits:")) {
+      gamesWon++;
+
+      Pattern regex = Pattern.compile("\\d+");
+      Matcher matcher = regex.matcher(message);
+
+      if (matcher.find()) {
+        String match = matcher.group(0);
+
+        permitsEarned += Integer.parseInt(match);
+      }
+    } else if (message.startsWith("subdued in")) {
+      Pattern regex = Pattern.compile("\\d+:\\d+");
+      Matcher matcher = regex.matcher(message);
+
+      if (matcher.find()) {
+        String match = matcher.group(0);
+
+        String[] splitMatch = match.split(":");
+
+        int roundTime = Integer.parseInt(splitMatch[0]) * 60 + Integer.parseInt(splitMatch[1]);
+
+        totalRoundTimes += roundTime;
       }
     }
   }
@@ -350,6 +397,16 @@ public class Tempoross extends TickScript {
     return new WorldArea(dudiPos.dx(-3), 20, 30);
   }
 
+  public String getAverageRoundTime() {
+    if (gamesWon == 0) {
+      return "n/a";
+    }
+
+    Duration averageTime = Duration.ofSeconds(totalRoundTimes / gamesWon);
+
+    return String.format("%d:%02d", averageTime.toMinutes(), averageTime.toSecondsPart());
+  }
+
   @Override
   protected void checkActionTimeout() {
     if (Vars.getBit(VARB_IS_TETHERED) > 0) {
@@ -358,16 +415,6 @@ public class Tempoross extends TickScript {
     }
 
     super.checkActionTimeout();
-  }
-
-  private void reset() {
-    waveIncoming = false;
-    phase = 1;
-    rawFish = 0;
-    cookedFish = 0;
-    cookedFishRequired = 17;
-    dudiPos = null;
-    finished = false;
   }
 
   private int parseWidget(int group, int id) {
