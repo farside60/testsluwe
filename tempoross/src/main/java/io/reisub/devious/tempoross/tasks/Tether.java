@@ -25,8 +25,8 @@ public class Tether extends Task {
     }
 
     return plugin.isWaveIncoming()
-        && plugin.isCurrentActivity(Tempoross.TETHERING_MAST)
-        && plugin.isCurrentActivity(Tempoross.REPAIRING);
+        && !plugin.isCurrentActivity(Tempoross.TETHERING_MAST)
+        && !plugin.isCurrentActivity(Tempoross.REPAIRING);
   }
 
   @Override
@@ -41,7 +41,7 @@ public class Tether extends Task {
       return;
     }
 
-    if (plugin.isCurrentActivity(Activity.IDLE)
+    if (!plugin.isCurrentActivity(Activity.IDLE)
         && !plugin.wasPreviousActivity(Tempoross.REPAIRING)) {
       int waitTicks = 10 - (Players.getLocal().distanceTo(tetherObject) / 2);
       Time.sleepTicksUntil(() -> plugin.isCurrentActivity(Activity.IDLE), waitTicks);

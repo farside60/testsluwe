@@ -47,7 +47,7 @@ public class Stock extends Task {
     if (plugin.getPhase() == 1
         && plugin.getCookedFish() >= plugin.getCookedFishRequired()
         && plugin.getEnergy() == 100
-        && plugin.isCurrentActivity(Tempoross.STOCKING_CANNON)) {
+        && !plugin.isCurrentActivity(Tempoross.STOCKING_CANNON)) {
       return true;
     }
 
@@ -58,7 +58,7 @@ public class Stock extends Task {
         && plugin.getEnergy() < 100
         && (plugin.getStormIntensity() >= 94
             || plugin.getCookedFish() >= plugin.getCookedFishRequired())
-        && plugin.isCurrentActivity(Tempoross.STOCKING_CANNON)) {
+        && !plugin.isCurrentActivity(Tempoross.STOCKING_CANNON)) {
       return true;
     }
 
@@ -69,7 +69,7 @@ public class Stock extends Task {
         && plugin.getCookedFishRequired() > 0
         && plugin.getCookedFishRequired() != 19
         && plugin.getCookedFish() >= plugin.getCookedFishRequired()
-        && plugin.isCurrentActivity(Tempoross.STOCKING_CANNON)) {
+        && !plugin.isCurrentActivity(Tempoross.STOCKING_CANNON)) {
       return true;
     }
 
@@ -78,7 +78,7 @@ public class Stock extends Task {
     // bring energy to 4%
     if (plugin.getPhase() == 2
         && plugin.getCookedFish() >= plugin.getCookedFishRequired()
-        && plugin.isCurrentActivity(Tempoross.STOCKING_CANNON)) {
+        && !plugin.isCurrentActivity(Tempoross.STOCKING_CANNON)) {
       return true;
     }
 
@@ -88,7 +88,7 @@ public class Stock extends Task {
         && plugin.getCookedFish() > 0
         && plugin.getRawFish() == 0
         && Inventory.isFull()
-        && plugin.isCurrentActivity(Tempoross.STOCKING_CANNON)) {
+        && !plugin.isCurrentActivity(Tempoross.STOCKING_CANNON)) {
       return true;
     }
 

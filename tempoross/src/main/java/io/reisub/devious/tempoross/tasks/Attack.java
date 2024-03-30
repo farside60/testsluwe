@@ -21,7 +21,7 @@ public class Attack extends Task {
 
   @Override
   public boolean validate() {
-    if (!plugin.isInTemporossArea() || plugin.isCurrentActivity(Activity.IDLE)) {
+    if (!plugin.isInTemporossArea() || !plugin.isCurrentActivity(Activity.IDLE)) {
       return false;
     }
 
