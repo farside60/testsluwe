@@ -49,7 +49,7 @@ public class TemporossOverlay extends OverlayPanel {
         .getChildren()
         .add(
             LineComponent.builder()
-                .left("Wins: " + plugin.getGamesLost())
+                .left("Wins: " + plugin.getGamesWon())
                 .leftColor(Color.GREEN)
                 .right("Losses: " + plugin.getGamesLost())
                 .rightColor(Color.RED)
