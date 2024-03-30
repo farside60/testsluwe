@@ -43,6 +43,7 @@ import net.runelite.api.events.GameTick;
 import net.runelite.api.events.HitsplatApplied;
 import net.runelite.api.events.InteractingChanged;
 import net.runelite.api.events.ItemContainerChanged;
+import net.runelite.api.events.NpcDespawned;
 import net.runelite.api.events.NpcSpawned;
 import net.runelite.api.util.Text;
 import net.runelite.api.widgets.Widget;
@@ -97,6 +98,7 @@ public class Tempoross extends TickScript {
   @Getter private boolean finished;
   @Getter @Setter private int cookedFishRequired;
   @Getter private int lastDoubleSpawn;
+  @Getter @Setter private WorldPoint lastFishLocation;
 
   @Provides
   public Config getConfig(ConfigManager configManager) {
@@ -165,6 +167,10 @@ public class Tempoross extends TickScript {
       phase++;
     } else if (message.contains(FINISHED_GAME)) {
       finished = true;
+    } else if (message.startsWith("congratulations, you've just advanced")) {
+      if (isCurrentActivity(COOKING)) {
+        setActivity(Activity.IDLE);
+      }
     }
   }
 
@@ -200,6 +206,10 @@ public class Tempoross extends TickScript {
 
   @Subscribe
   private void onInteractingChanged(InteractingChanged event) {
+    if (!isRunning()) {
+      return;
+    }
+
     if (event.getSource() == Players.getLocal()) {
       if (event.getTarget() == null) {
         if (isCurrentActivity(FISHING)
@@ -289,6 +299,24 @@ public class Tempoross extends TickScript {
       dudiPos = npcSpawned.getNpc().getWorldLocation();
     } else if (id == NpcID.FISHING_SPOT_10569) {
       lastDoubleSpawn = Static.getClient().getTickCount();
+    }
+  }
+
+  @Subscribe
+  private void onNpcDespawned(NpcDespawned npcDespawned) {
+    if (!isInTemporossArea()) {
+      return;
+    }
+
+    if (!isCurrentActivity(FISHING)) {
+      return;
+    }
+
+    if (npcDespawned.getNpc().getId() == NpcID.FISHING_SPOT_10569
+        || npcDespawned.getNpc().getId() == NpcID.FISHING_SPOT_10565) {
+      if (npcDespawned.getNpc().getWorldLocation().equals(lastFishLocation)) {
+        setActivity(Activity.IDLE);
+      }
     }
   }
 

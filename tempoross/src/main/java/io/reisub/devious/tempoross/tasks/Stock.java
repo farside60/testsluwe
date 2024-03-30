@@ -96,7 +96,7 @@ public class Stock extends Task {
     NPC southCrate = NPCs.getNearest(NpcID.AMMUNITION_CRATE_10577);
 
     if (northCrate != null && southCrate != null) {
-      // swap ammunition box at phase 3
+      // swap ammunition box at phase 4
       return plugin.getPhase() >= 4
           && plugin.isCurrentActivity(Tempoross.STOCKING_CANNON)
           && plugin.getCookedFish() > 0

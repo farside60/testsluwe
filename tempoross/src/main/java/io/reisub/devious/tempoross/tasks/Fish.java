@@ -113,6 +113,7 @@ public class Fish extends Task {
     }
 
     spot.interact(0);
+    plugin.setLastFishLocation(spot.getWorldLocation());
     Time.sleepTicksUntil(() -> plugin.isCurrentActivity(Tempoross.FISHING), 3);
   }
 
