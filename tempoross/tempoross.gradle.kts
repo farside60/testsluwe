@@ -1,4 +1,4 @@
-version = "1.5.1"
+version = "1.5.2"
 
 project.extra["PluginName"] = "Sluwe Tempoross"
 project.extra["PluginDescription"] = "Plays the Tempoross minigame"

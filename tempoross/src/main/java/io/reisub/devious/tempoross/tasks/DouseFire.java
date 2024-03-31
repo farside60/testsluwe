@@ -7,9 +7,12 @@ import javax.inject.Inject;
 import net.runelite.api.ItemID;
 import net.runelite.api.NPC;
 import net.runelite.api.NpcID;
+import net.unethicalite.api.commons.Rand;
 import net.unethicalite.api.commons.Time;
 import net.unethicalite.api.entities.NPCs;
+import net.unethicalite.api.entities.Players;
 import net.unethicalite.api.items.Inventory;
+import net.unethicalite.api.movement.Movement;
 
 public class DouseFire extends Task {
   @Inject private Tempoross plugin;
@@ -23,6 +26,8 @@ public class DouseFire extends Task {
 
   @Override
   public boolean validate() {
+    fire = null;
+
     if (!plugin.isInTemporossArea()) {
       return false;
     }
@@ -40,6 +45,15 @@ public class DouseFire extends Task {
       return false;
     }
 
+    // if we get fires beyond phase 1 there will be 1 fire on the boat that won't be picked up
+    // by the normal check because it's out of range, but we need to douse it asap and the
+    // easiest check is simply the player having exactly 2 buckets of water
+    if (plugin.getPhase() != 1
+        && Inventory.getCount(ItemID.BUCKET_OF_WATER) == 2
+        && Players.getLocal().distanceTo(plugin.getDudiPos()) > 8) {
+      return true;
+    }
+
     fire =
         NPCs.getNearest(
             (n) ->
@@ -51,6 +65,18 @@ public class DouseFire extends Task {
 
   @Override
   public void execute() {
+    // move to the boat to douse the fire on the boat in any phase other than phase 1
+    if (fire == null && Players.getLocal().distanceTo(plugin.getDudiPos()) > 8) {
+      Movement.walk(plugin.getDudiPos().dx(Rand.nextInt(-2, 3)).dy(Rand.nextInt(-2, 3)));
+      Time.sleepTicksUntil(() -> Players.getLocal().distanceTo(plugin.getDudiPos()) <= 8, 20);
+
+      fire =
+          NPCs.getNearest(
+              (n) ->
+                  n.getId() == NpcID.FIRE_8643
+                      && (plugin.getIslandArea().contains(n) || plugin.getBoatArea().contains(n)));
+    }
+
     fire.interact(0);
 
     if (!Time.sleepUntil(() -> plugin.isCurrentActivity(Tempoross.DOUSING_FIRE), 2500)) {
