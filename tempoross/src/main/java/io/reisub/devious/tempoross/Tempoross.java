@@ -13,6 +13,7 @@ import io.reisub.devious.tempoross.tasks.GetBuckets;
 import io.reisub.devious.tempoross.tasks.HandleBank;
 import io.reisub.devious.tempoross.tasks.LeaveBoat;
 import io.reisub.devious.tempoross.tasks.LeaveGame;
+import io.reisub.devious.tempoross.tasks.Relog;
 import io.reisub.devious.tempoross.tasks.Repair;
 import io.reisub.devious.tempoross.tasks.Stock;
 import io.reisub.devious.tempoross.tasks.Tether;
@@ -107,6 +108,7 @@ public class Tempoross extends TickScript {
   @Getter @Setter private int gamesLost;
   private int totalRoundTimes;
   @Getter private int permitsEarned;
+  @Getter @Setter private boolean relog;
 
   @Provides
   public Config getConfig(ConfigManager configManager) {
@@ -124,6 +126,7 @@ public class Tempoross extends TickScript {
 
     tasks.add(new Run());
 
+    addTask(Relog.class);
     addTask(HandleBank.class);
     addTask(DodgeFire.class);
     addTask(GetBuckets.class);
@@ -219,6 +222,8 @@ public class Tempoross extends TickScript {
         int roundTime = Integer.parseInt(splitMatch[0]) * 60 + Integer.parseInt(splitMatch[1]);
 
         totalRoundTimes += roundTime;
+      } else if (config.enableRelog() && message.startsWith("you've been playing for a while")) {
+        relog = true;
       }
     }
   }
