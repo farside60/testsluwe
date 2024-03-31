@@ -2,7 +2,10 @@ package io.reisub.devious.tempoross.tasks;
 
 import io.reisub.devious.tempoross.Tempoross;
 import io.reisub.devious.utils.tasks.Task;
+import java.util.Comparator;
+import java.util.List;
 import javax.inject.Inject;
+import net.runelite.api.Item;
 import net.runelite.api.ItemID;
 import net.runelite.api.NPC;
 import net.runelite.api.NpcID;
@@ -50,6 +53,17 @@ public class GetBuckets extends Task {
     TileObject buckets = TileObjects.getNearest(ObjectID.BUCKETS);
     if (buckets == null) {
       return;
+    }
+
+    int amountToDrop = 5 - Inventory.getFreeSlots();
+
+    if (amountToDrop > 0) {
+      List<Item> fish = Inventory.getAll(ItemID.RAW_HARPOONFISH, ItemID.HARPOONFISH);
+      fish.sort(Comparator.comparingInt(Item::getId));
+
+      for (int i = 0; i < amountToDrop; i++) {
+        fish.get(i).drop();
+      }
     }
 
     buckets.interact("Take-5");
