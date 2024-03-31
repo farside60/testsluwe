@@ -27,6 +27,11 @@ public class EnterBoat extends Task {
 
   @Override
   public void execute() {
+    if (plugin.isReachedMaxStormIntensity()) {
+      plugin.setReachedMaxStormIntensity(false);
+      plugin.setGamesLost(plugin.getGamesLost() + 1);
+    }
+
     TileObject ladder = TileObjects.getNearest(ObjectID.ROPE_LADDER_41305);
     if (ladder == null) {
       return;

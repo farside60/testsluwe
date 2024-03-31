@@ -109,6 +109,7 @@ public class Tempoross extends TickScript {
   private int totalRoundTimes;
   @Getter private int permitsEarned;
   @Getter @Setter private boolean relog;
+  @Getter @Setter private boolean reachedMaxStormIntensity;
 
   @Provides
   public Config getConfig(ConfigManager configManager) {
@@ -173,6 +174,10 @@ public class Tempoross extends TickScript {
       energy = parseWidget(437, 35);
       essence = parseWidget(437, 45);
       stormIntensity = parseWidget(437, 55);
+
+      if (stormIntensity == 100) {
+        reachedMaxStormIntensity = true;
+      }
     }
   }
 
