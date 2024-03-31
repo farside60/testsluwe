@@ -23,9 +23,7 @@ public class HandleBank extends BankTask {
     bucketCount = Inventory.getCount(ItemID.BUCKET, ItemID.BUCKET_OF_WATER);
 
     return isLastBankDurationAgo(Duration.ofSeconds(5))
-        && (bucketCount < 4
-            || (!Inventory.contains(ItemID.HAMMER, ItemID.IMCANDO_HAMMER)
-                && !Equipment.contains(ItemID.IMCANDO_HAMMER)));
+        && (isRopeMissing() || isHammerMissing() || areBucketsMissing());
   }
 
   @Override
@@ -34,11 +32,11 @@ public class HandleBank extends BankTask {
       return;
     }
 
-    if (bucketCount < 4) {
+    if (areBucketsMissing()) {
       Bank.withdraw(ItemID.BUCKET, 4 - bucketCount, Bank.WithdrawMode.ITEM);
     }
 
-    if (!Inventory.contains(ItemID.HAMMER, ItemID.IMCANDO_HAMMER)) {
+    if (isHammerMissing()) {
       if (Bank.contains(ItemID.IMCANDO_HAMMER)) {
         Bank.withdraw(ItemID.IMCANDO_HAMMER, 1, Bank.WithdrawMode.ITEM);
       } else {
@@ -46,6 +44,29 @@ public class HandleBank extends BankTask {
       }
     }
 
+    if (isRopeMissing()) {
+      Bank.withdraw(ItemID.ROPE, 1, Bank.WithdrawMode.ITEM);
+    }
+
     Bank.close();
+  }
+
+  private boolean isRopeMissing() {
+    return !Inventory.contains(ItemID.ROPE)
+        && (!Equipment.contains(ItemID.SPIRIT_ANGLER_BOOTS)
+            || !Equipment.contains(ItemID.SPIRIT_ANGLER_HEADBAND)
+            || !Equipment.contains(ItemID.SPIRIT_ANGLER_TOP)
+            || !Equipment.contains(ItemID.SPIRIT_ANGLER_WADERS));
+  }
+
+  private boolean isHammerMissing() {
+    return !Inventory.contains(ItemID.HAMMER, ItemID.IMCANDO_HAMMER)
+        && !Equipment.contains(ItemID.IMCANDO_HAMMER);
+  }
+
+  private boolean areBucketsMissing() {
+    bucketCount = Inventory.getCount(ItemID.BUCKET, ItemID.BUCKET_OF_WATER);
+
+    return bucketCount < 4;
   }
 }
