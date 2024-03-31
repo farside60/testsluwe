@@ -36,6 +36,10 @@ public class EnterBoat extends Task {
     Time.sleepTicks(Rand.nextInt(3, 5));
     Time.sleepUntil(() -> plugin.isOnBoat() || plugin.getPlayersReady() >= 1, 10000);
 
+    if (Dialog.isOpen()) {
+      Dialog.close();
+    }
+
     if (!plugin.isOnBoat() && plugin.getPlayersReady() >= 1) {
       Movement.walk(new WorldPoint(3137, 2840, 0));
       Time.sleep(400, 700);
