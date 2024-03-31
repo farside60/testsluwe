@@ -8,10 +8,12 @@ import net.runelite.api.ItemID;
 import net.runelite.api.NpcID;
 import net.runelite.api.ObjectID;
 import net.runelite.api.TileObject;
+import net.runelite.api.coords.WorldPoint;
 import net.unethicalite.api.commons.Time;
 import net.unethicalite.api.entities.NPCs;
 import net.unethicalite.api.entities.TileObjects;
 import net.unethicalite.api.items.Inventory;
+import net.unethicalite.api.movement.Movement;
 
 public class FillBuckets extends Task {
   @Inject private Tempoross plugin;
@@ -60,5 +62,9 @@ public class FillBuckets extends Task {
     }
 
     Time.sleepUntil(() -> plugin.isCurrentActivity(Activity.IDLE), 5000);
+
+    if (plugin.isOnBoat()) {
+      Movement.walk(new WorldPoint(3137, 2840, 0));
+    }
   }
 }
