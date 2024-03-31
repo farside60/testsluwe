@@ -79,6 +79,16 @@ public class Cook extends Task {
       return false;
     }
 
+    NPC fishingSpot = NPCs.getNearest(NpcID.FISHING_SPOT_10569, NpcID.FISHING_SPOT_10565);
+
+    if (plugin.wasPreviousActivity(Tempoross.FISHING)
+        && Inventory.getFreeSlots() <= 2
+        && !Inventory.isFull()
+        && fishingSpot != null
+        && Players.getLocal().distanceTo(fishingSpot) <= 8) {
+      return false;
+    }
+
     if (plugin.isCurrentActivity(Tempoross.FISHING)
         && Inventory.getCount(ItemID.RAW_HARPOONFISH) >= 9
         && doubleSpot == null) {
