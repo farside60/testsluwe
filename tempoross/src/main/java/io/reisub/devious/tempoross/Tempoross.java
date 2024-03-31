@@ -9,6 +9,7 @@ import io.reisub.devious.tempoross.tasks.DouseFire;
 import io.reisub.devious.tempoross.tasks.EnterBoat;
 import io.reisub.devious.tempoross.tasks.FillBuckets;
 import io.reisub.devious.tempoross.tasks.Fish;
+import io.reisub.devious.tempoross.tasks.GetBuckets;
 import io.reisub.devious.tempoross.tasks.HandleBank;
 import io.reisub.devious.tempoross.tasks.LeaveBoat;
 import io.reisub.devious.tempoross.tasks.LeaveGame;
@@ -125,6 +126,7 @@ public class Tempoross extends TickScript {
 
     addTask(HandleBank.class);
     addTask(DodgeFire.class);
+    addTask(GetBuckets.class);
     addTask(LeaveGame.class);
     addTask(EnterBoat.class);
     addTask(FillBuckets.class);
