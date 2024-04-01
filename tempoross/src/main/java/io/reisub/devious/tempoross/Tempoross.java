@@ -189,6 +189,7 @@ public class Tempoross extends TickScript {
     }
 
     String message = Text.standardize(chatMessage.getMessage());
+
     if (message.contains(WAVE_INCOMING_MESSAGE)) {
       waveIncoming = true;
     } else if (message.contains(TETHER_MESSAGE)) {
@@ -227,9 +228,9 @@ public class Tempoross extends TickScript {
         int roundTime = Integer.parseInt(splitMatch[0]) * 60 + Integer.parseInt(splitMatch[1]);
 
         totalRoundTimes += roundTime;
-      } else if (config.enableRelog() && message.startsWith("you've been playing for a while")) {
-        relog = true;
       }
+    } else if (config.enableRelog() && message.startsWith("you've been playing for a while")) {
+      relog = true;
     }
   }
 
