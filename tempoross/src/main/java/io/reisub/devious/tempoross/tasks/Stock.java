@@ -7,6 +7,8 @@ import javax.inject.Inject;
 import net.runelite.api.NPC;
 import net.runelite.api.NpcID;
 import net.runelite.api.NullObjectID;
+import net.runelite.api.TileObject;
+import net.runelite.api.coords.WorldArea;
 import net.unethicalite.api.commons.Rand;
 import net.unethicalite.api.commons.Time;
 import net.unethicalite.api.entities.NPCs;
@@ -133,8 +135,16 @@ public class Stock extends Task {
     } else {
       if (NPCs.getNearest(NpcID.CANNONEER).getAnimation() == 7211) {
         crate = NPCs.getNearest(NpcID.AMMUNITION_CRATE_10577);
+
+        if (isFireInFrontOfCrate(crate)) {
+          crate = null;
+        }
       } else {
         crate = NPCs.getNearest(NpcID.AMMUNITION_CRATE);
+
+        if (isFireInFrontOfCrate(crate)) {
+          crate = NPCs.getNearest(NpcID.AMMUNITION_CRATE_10577);
+        }
       }
     }
 
@@ -145,5 +155,21 @@ public class Stock extends Task {
     crate.interact(0);
 
     Time.sleepTicksUntil(() -> plugin.isCurrentActivity(Tempoross.STOCKING_CANNON), 3);
+  }
+
+  private boolean isFireInFrontOfCrate(NPC crate) {
+    TileObject fire =
+        TileObjects.getNearest(
+            (o) ->
+                o.getId() == NullObjectID.NULL_41006
+                    && plugin.getBoatArea().contains(o));
+
+    if (fire == null) {
+      return false;
+    }
+
+    WorldArea fireArea = new WorldArea(fire.getWorldLocation(), 2, 2);
+
+    return fireArea.contains(crate.getWorldLocation().dx(-1));
   }
 }
