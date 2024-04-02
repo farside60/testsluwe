@@ -2,13 +2,18 @@ package io.reisub.devious.utils.tasks;
 
 import io.reisub.devious.utils.Constants;
 import io.reisub.devious.utils.api.ConfigList;
+import io.reisub.devious.utils.api.SluwePredicates;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Map;
+import java.util.Set;
+import lombok.Getter;
+import lombok.Setter;
 import net.runelite.api.Item;
 import net.runelite.api.ItemID;
 import net.runelite.api.NPC;
 import net.runelite.api.TileObject;
+import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.widgets.WidgetID;
 import net.unethicalite.api.commons.Predicates;
 import net.unethicalite.api.commons.Time;
@@ -27,6 +32,12 @@ import net.unethicalite.client.Static;
 public abstract class BankTask extends Task {
   protected Instant last = Instant.EPOCH;
   protected Instant lastStamina = Instant.EPOCH;
+  @Getter @Setter private Set<WorldPoint> bankIgnoreLocations;
+  @Getter @Setter private Set<WorldPoint> bankLocations;
+  @Getter @Setter private String name = null;
+  @Getter @Setter private boolean openMainTab = false;
+  @Getter @Setter private int movingCheck = 3;
+  @Getter @Setter private int waitTicks = 15;
 
   @Override
   public String getStatus() {
@@ -34,7 +45,120 @@ public abstract class BankTask extends Task {
   }
 
   protected boolean open() {
-    return open(false);
+    if (Bank.isOpen()) {
+      if (openMainTab) {
+        Bank.openMainTab();
+
+        Time.sleepTicksUntil(Bank::isMainTabOpen, 2);
+      }
+
+      last = Instant.now();
+      return true;
+    }
+
+    TileObject bankObject = null;
+    NPC bankNpc;
+
+    if (name != null) {
+      if (bankLocations != null) {
+        bankNpc =
+            NPCs.getNearest(
+                n -> n.getName().equals(name) && bankLocations.contains(n.getWorldLocation()));
+      } else if (bankIgnoreLocations != null) {
+        bankNpc =
+            NPCs.getNearest(
+                n ->
+                    n.getName().equals(name)
+                        && !bankIgnoreLocations.contains(n.getWorldLocation()));
+      } else {
+        bankNpc = NPCs.getNearest(name);
+      }
+
+      if (bankNpc == null) {
+        return false;
+      }
+    } else {
+      bankObject = getBankObject();
+    }
+
+    if (bankObject != null) {
+      if (bankObject.hasAction("Bank")) {
+        bankObject.interact("Bank");
+      } else if (bankObject.hasAction("Use")) {
+        bankObject.interact("Use");
+      } else {
+        bankObject.interact(0);
+      }
+    } else {
+      bankNpc = getBankNpc();
+
+      if (bankNpc == null) {
+        return false;
+      }
+
+      if (bankNpc.hasAction("Bank")) {
+        bankNpc.interact("Bank");
+      } else {
+        bankNpc.interact(0);
+      }
+    }
+
+    if (movingCheck > 0) {
+      if (!Time.sleepTicksUntil(
+          () -> Bank.isOpen() || Players.getLocal().isMoving(), movingCheck)) {
+        return false;
+      }
+    }
+
+    Time.sleepTicksUntil(Bank::isOpen, waitTicks);
+
+    last = Instant.now();
+
+    if (Bank.isOpen() && openMainTab) {
+      Bank.openMainTab();
+
+      Time.sleepTicksUntil(Bank::isMainTabOpen, 2);
+    }
+
+    return Bank.isOpen();
+  }
+
+  protected boolean open(String name, int waitTicks, int movingCheck, boolean openMainTab) {
+    if (Bank.isOpen()) {
+      if (openMainTab) {
+        Bank.openMainTab();
+      }
+
+      return true;
+    }
+
+    NPC bankNpc = NPCs.getNearest(name);
+    if (bankNpc == null) {
+      return false;
+    }
+
+    GameThread.invoke(() -> bankNpc.interact("Bank"));
+
+    if (movingCheck > 0) {
+      if (!Time.sleepTicksUntil(
+          () ->
+              Bank.isOpen()
+                  || Players.getLocal().isMoving()
+                  || Widgets.isVisible(Widgets.get(WidgetID.BANK_PIN_GROUP_ID, 0)),
+          movingCheck)) {
+        return false;
+      }
+    }
+
+    Time.sleepTicksUntil(Bank::isOpen, waitTicks);
+
+    last = Instant.now();
+
+    if (Bank.isOpen() && openMainTab && !Bank.isMainTabOpen()) {
+      Bank.openMainTab();
+    }
+
+    return Bank.isOpen();
   }
 
   protected boolean open(boolean openMainTab) {
@@ -54,6 +178,11 @@ public abstract class BankTask extends Task {
   }
 
   protected boolean open(int waitTicks, int movingCheck, boolean openMainTab) {
+    return open(waitTicks, movingCheck, openMainTab, null);
+  }
+
+  protected boolean open(
+      int waitTicks, int movingCheck, boolean openMainTab, Set<WorldPoint> bankIgnorePoints) {
     if (Bank.isOpen()) {
       if (openMainTab) {
         Bank.openMainTab();
@@ -130,44 +259,6 @@ public abstract class BankTask extends Task {
     return open(name, waitTicks, movingCheck, false);
   }
 
-  protected boolean open(String name, int waitTicks, int movingCheck, boolean openMainTab) {
-    if (Bank.isOpen()) {
-      if (openMainTab) {
-        Bank.openMainTab();
-      }
-
-      return true;
-    }
-
-    NPC bankNpc = NPCs.getNearest(name);
-    if (bankNpc == null) {
-      return false;
-    }
-
-    GameThread.invoke(() -> bankNpc.interact("Bank"));
-
-    if (movingCheck > 0) {
-      if (!Time.sleepTicksUntil(
-          () ->
-              Bank.isOpen()
-                  || Players.getLocal().isMoving()
-                  || Widgets.isVisible(Widgets.get(WidgetID.BANK_PIN_GROUP_ID, 0)),
-          movingCheck)) {
-        return false;
-      }
-    }
-
-    Time.sleepTicksUntil(Bank::isOpen, waitTicks);
-
-    last = Instant.now();
-
-    if (Bank.isOpen() && openMainTab && !Bank.isMainTabOpen()) {
-      Bank.openMainTab();
-    }
-
-    return Bank.isOpen();
-  }
-
   protected void close() {
     if (Bank.isOpen()) {
       DialogPackets.closeInterface();
@@ -226,11 +317,27 @@ public abstract class BankTask extends Task {
   }
 
   protected TileObject getBankObject() {
-    return TileObjects.getNearest(Predicates.ids(Constants.BANK_OBJECT_IDS));
+    if (bankLocations != null) {
+      return TileObjects.getNearest(
+          SluwePredicates.idsAtLocations(Constants.BANK_OBJECT_IDS, bankLocations));
+    } else if (bankIgnoreLocations != null) {
+      return TileObjects.getNearest(
+          SluwePredicates.idsNotAtLocations(Constants.BANK_OBJECT_IDS, bankIgnoreLocations));
+    } else {
+      return TileObjects.getNearest(Predicates.ids(Constants.BANK_OBJECT_IDS));
+    }
   }
 
   protected NPC getBankNpc() {
-    return NPCs.getNearest(Predicates.ids(Constants.BANK_NPC_IDS));
+    if (bankLocations != null) {
+      return NPCs.getNearest(
+          SluwePredicates.idsAtLocations(Constants.BANK_NPC_IDS, bankLocations));
+    } else if (bankIgnoreLocations != null) {
+      return NPCs.getNearest(
+          SluwePredicates.idsNotAtLocations(Constants.BANK_NPC_IDS, bankIgnoreLocations));
+    } else {
+      return NPCs.getNearest(Predicates.ids(Constants.BANK_NPC_IDS));
+    }
   }
 
   protected boolean hasEverythingInInventory(ConfigList list) {
