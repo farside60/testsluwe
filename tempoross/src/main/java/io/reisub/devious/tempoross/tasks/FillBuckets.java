@@ -11,6 +11,7 @@ import net.runelite.api.TileObject;
 import net.runelite.api.coords.WorldPoint;
 import net.unethicalite.api.commons.Time;
 import net.unethicalite.api.entities.NPCs;
+import net.unethicalite.api.entities.Players;
 import net.unethicalite.api.entities.TileObjects;
 import net.unethicalite.api.items.Inventory;
 import net.unethicalite.api.movement.Movement;
@@ -44,6 +45,16 @@ public class FillBuckets extends Task {
                     n.getId() == NpcID.FIRE_8643
                         && (plugin.getIslandArea().contains(n) || plugin.getBoatArea().contains(n)))
             .size();
+
+    if ((plugin.isCurrentActivity(Activity.ATTACKING)
+            || plugin.wasPreviousActivity(Activity.ATTACKING))
+        && Players.getLocal().getInteracting() == null
+        && Players.getLocal().distanceTo(plugin.getDudiPos()) > 8
+        && plugin.getPhase() == 2
+        && plugin.getCookedFishRequired() > 0
+        && plugin.getCookedFishRequired() != 19) {
+      return true;
+    }
 
     return plugin.isInTemporossArea() && filledBuckets < fires;
   }
