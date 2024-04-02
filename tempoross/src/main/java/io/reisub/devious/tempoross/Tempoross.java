@@ -164,6 +164,10 @@ public class Tempoross extends TickScript {
 
   @Subscribe(priority = 1)
   private void onGameTick(GameTick event) {
+    if (!isRunning()) {
+      return;
+    }
+
     if (isInDesert() || isOnBoat()) {
       if (dudiPos != null) {
         reset();
@@ -183,6 +187,10 @@ public class Tempoross extends TickScript {
 
   @Subscribe
   private void onChatMessage(ChatMessage chatMessage) {
+    if (!isRunning()) {
+      return;
+    }
+
     if (chatMessage.getType() != ChatMessageType.GAMEMESSAGE
         && chatMessage.getType() != ChatMessageType.SPAM) {
       return;
@@ -236,7 +244,7 @@ public class Tempoross extends TickScript {
 
   @Subscribe
   private void onAnimationChanged(AnimationChanged event) {
-    if (!Utils.isLoggedIn()) {
+    if (!Utils.isLoggedIn() || !isRunning()) {
       return;
     }
 
@@ -298,6 +306,10 @@ public class Tempoross extends TickScript {
 
   @Subscribe
   private void onItemContainerChanged(ItemContainerChanged event) {
+    if (!isRunning()) {
+      return;
+    }
+
     final ItemContainer container = event.getItemContainer();
 
     if (container.count(ItemID.HARPOONFISH) < cookedFish) {
@@ -353,6 +365,10 @@ public class Tempoross extends TickScript {
 
   @Subscribe
   private void onNpcSpawned(NpcSpawned npcSpawned) {
+    if (!isRunning()) {
+      return;
+    }
+
     int id = npcSpawned.getNpc().getId();
 
     if (id == NpcID.CAPTAIN_DUDI_10587 && dudiPos == null) {
@@ -382,6 +398,10 @@ public class Tempoross extends TickScript {
 
   @Subscribe
   private void onHitsplatApplied(HitsplatApplied event) {
+    if (!isRunning()) {
+      return;
+    }
+
     if (event.getActor().getName().contains("Spirit pool")
         && event.getHitsplat().getHitsplatType() == HitsplatID.DAMAGE_ME) {
       if (isCurrentActivity(Activity.ATTACKING) && phase <= 3 && essence <= 10) {
