@@ -4,6 +4,7 @@ import io.reisub.devious.utils.api.SluweMovement;
 import io.reisub.devious.utils.tasks.Task;
 import io.reisub.devious.woodcutting.Config;
 import io.reisub.devious.woodcutting.Location;
+import io.reisub.devious.woodcutting.Woodcutting;
 import javax.inject.Inject;
 import net.runelite.api.ObjectID;
 import net.runelite.api.Skill;
@@ -18,7 +19,7 @@ import net.unethicalite.api.movement.Movement;
 import net.unethicalite.client.Static;
 
 public class GoToBank extends Task {
-
+  @Inject private Woodcutting plugin;
   @Inject private Config config;
 
   @Override
@@ -30,6 +31,7 @@ public class GoToBank extends Task {
   public boolean validate() {
     return Inventory.isFull()
         && config.location().getBankPoint() != null
+        && !plugin.isDoingForestry()
         && !config.drop()
         && !config.burn()
         && Players.getLocal().distanceTo(config.location().getBankPoint()) >= 10;

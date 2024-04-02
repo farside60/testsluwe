@@ -3,6 +3,7 @@ package io.reisub.devious.woodcutting;
 import net.runelite.client.config.Button;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
+import net.runelite.client.config.ConfigSection;
 
 @ConfigGroup("sluwewoodcutting")
 public interface Config extends net.runelite.client.config.Config {
@@ -43,6 +44,42 @@ public interface Config extends net.runelite.client.config.Config {
       position = 4)
   default boolean onlyPickUpOurs() {
     return false;
+  }
+
+  @ConfigSection(
+      name = "Forestry",
+      description = "Configuration options for Forestry",
+      position = 10)
+  String forestrySection = "forestry";
+
+  @ConfigItem(
+      keyName = "forestryRoots",
+      name = "Roots",
+      description = "Do the rising roots event",
+      position = 11,
+      section = forestrySection)
+  default boolean forestryRoots() {
+    return true;
+  }
+
+  @ConfigItem(
+      keyName = "forestryPoacher",
+      name = "Poacher",
+      description = "Do the poacher event",
+      position = 12,
+      section = forestrySection)
+  default boolean forestryPoacher() {
+    return true;
+  }
+
+  @ConfigItem(
+      keyName = "forestryPheasants",
+      name = "Pheasants",
+      description = "Do the pheasants event",
+      position = 13,
+      section = forestrySection)
+  default boolean forestryPheasants() {
+    return true;
   }
 
   @ConfigItem(

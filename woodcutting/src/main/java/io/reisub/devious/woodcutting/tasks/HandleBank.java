@@ -12,15 +12,25 @@ import net.unethicalite.api.items.Inventory;
 import net.unethicalite.client.Static;
 
 public class HandleBank extends BankTask {
+  private final Woodcutting plugin;
+  private final Config config;
+  private final Chop chopTask;
 
-  @Inject private Woodcutting plugin;
-  @Inject private Config config;
-  @Inject private Chop chopTask;
+  @Inject
+  private HandleBank(Woodcutting plugin, Config config, Chop chopTask) {
+    this.plugin = plugin;
+    this.config = config;
+    this.chopTask = chopTask;
+
+    setBankLocations(config.location().getBankLocations());
+    setBankIgnoreLocations(config.location().getIgnoreBankLocations());
+  }
 
   @Override
   public boolean validate() {
     return Inventory.isFull()
         && config.location().getBankPoint() != null
+        && !plugin.isDoingForestry()
         && !config.drop()
         && Players.getLocal().distanceTo(config.location().getBankPoint()) < 10
         && isLastBankDurationAgo(Duration.ofSeconds(5));

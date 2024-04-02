@@ -29,7 +29,8 @@ public class GoToChoppingArea extends Task {
 
   @Override
   public boolean validate() {
-    return (!Inventory.isFull()
+    return !plugin.isDoingForestry()
+        && (!Inventory.isFull()
             || Static.getClient().getTickCount() - plugin.getLastBankTick() <= 2)
         && Players.getLocal().distanceTo(config.location().getWoodcuttingAreaPoint())
             > config.location().getWoodcuttingAreaRadius();
@@ -49,6 +50,10 @@ public class GoToChoppingArea extends Task {
       }
     } else {
       SluweMovement.walkTo(config.location().getWoodcuttingAreaPoint(), 1);
+    }
+
+    if (config.location() == Location.WILLOWS_DRAYNOR) {
+      Time.sleepTicks(5);
     }
   }
 }

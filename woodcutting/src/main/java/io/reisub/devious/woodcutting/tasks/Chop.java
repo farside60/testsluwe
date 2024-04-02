@@ -48,6 +48,10 @@ public class Chop extends Task {
 
   @Override
   public boolean validate() {
+    if (plugin.isDoingForestry()) {
+      return false;
+    }
+
     if (!Inventory.contains(Predicates.ids(Constants.LOG_IDS))
         && plugin.wasPreviousActivity(Woodcutting.BURNING)
         && !plugin.isCurrentActivity(Woodcutting.CHOPPING)) {
