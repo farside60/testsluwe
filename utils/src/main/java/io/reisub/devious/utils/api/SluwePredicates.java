@@ -1,10 +1,13 @@
 package io.reisub.devious.utils.api;
 
+import java.util.Collection;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import net.runelite.api.Item;
+import net.runelite.api.TileObject;
+import net.runelite.api.coords.WorldPoint;
 import net.unethicalite.api.SceneEntity;
 import net.unethicalite.api.commons.Predicates;
 
@@ -67,5 +70,33 @@ public class SluwePredicates {
 
       return nameablePredicate.or(identifiablePredicate);
     }
+  }
+
+  public static <T extends SceneEntity> Predicate<T> idsAtLocations(
+      Collection<Integer> ids, Collection<WorldPoint> locations) {
+    return o -> {
+      boolean matchId =
+          o instanceof TileObject
+              ? ids.contains(((TileObject) o).getActualId()) || ids.contains(o.getId())
+              : ids.contains(o.getId());
+
+      boolean matchLocation = locations.contains(o.getWorldLocation());
+
+      return matchId && matchLocation;
+    };
+  }
+
+  public static <T extends SceneEntity> Predicate<T> idsNotAtLocations(
+      Collection<Integer> ids, Collection<WorldPoint> locations) {
+    return o -> {
+      boolean matchId =
+          o instanceof TileObject
+              ? ids.contains(((TileObject) o).getActualId()) || ids.contains(o.getId())
+              : ids.contains(o.getId());
+
+      boolean notMatchLocation = !locations.contains(o.getWorldLocation());
+
+      return matchId && notMatchLocation;
+    };
   }
 }
