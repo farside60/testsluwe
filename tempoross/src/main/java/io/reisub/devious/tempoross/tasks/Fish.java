@@ -90,7 +90,8 @@ public class Fish extends Task {
           25);
     }
 
-    if (plugin.getPhase() >= 2) {
+    if ((plugin.getPhase() == 2 && plugin.getCookedFishRequired() == 19)
+        || plugin.getPhase() >= 3) {
       Inventory.getAll(ItemID.BUCKET, ItemID.BUCKET_OF_WATER).forEach((i) -> i.interact("Drop"));
     }
 
