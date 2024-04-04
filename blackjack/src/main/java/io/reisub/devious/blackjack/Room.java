@@ -23,14 +23,13 @@ public enum Room {
       new WorldPoint(3364, 2999, 0),
       new WorldPoint(3364, 2998, 0),
       new WorldPoint(3361, 2986, 0)),
-  // TODO
   SOUTH(
-      new RectangularArea(0, 0, 0, 0),
-      new WorldPoint(0, 0, 0),
-      new WorldPoint(0, 0, 0),
-      new WorldPoint(0, 0, 0),
-      new WorldPoint(0, 0, 0),
-      new WorldPoint(0, 0, 0));
+      new RectangularArea(3340, 2953, 3344, 2956),
+      new WorldPoint(3344, 2955, 0),
+      new WorldPoint(3343, 2954, 0),
+      new WorldPoint(3345, 2955, 0),
+      new WorldPoint(3346, 2955, 0),
+      new WorldPoint(3363, 2963, 0));
 
   private final Area area;
 
@@ -120,6 +119,6 @@ public enum Room {
       Time.sleepTicksUntil(() -> getDoor().hasAction(reverseAction), 10);
     }
 
-    return door.hasAction(reverseAction);
+    return getDoor().hasAction(reverseAction);
   }
 }

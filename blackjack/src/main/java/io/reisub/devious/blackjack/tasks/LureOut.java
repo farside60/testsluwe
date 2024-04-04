@@ -43,6 +43,11 @@ public class LureOut extends Task {
 
   @Override
   public void execute() {
+    if (!config.target().getRoom().contains(Players.getLocal())
+        && config.target().getRoom().getDoor().hasAction("Open")) {
+      config.target().getRoom().openDoor();
+    }
+
     NPC target = npcsInRoom.get(0);
 
     // if we have multiple NPCs in the room, try to get one we don't want to pickpocket

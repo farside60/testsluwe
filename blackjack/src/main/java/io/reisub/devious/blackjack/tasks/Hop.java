@@ -26,7 +26,7 @@ public class Hop extends Task {
 
   @Override
   public boolean validate() {
-    if (last + 5 > Static.getClient().getTickCount()) {
+    if (last + 3 > Static.getClient().getTickCount()) {
       return false;
     }
 
@@ -49,7 +49,8 @@ public class Hop extends Task {
       }
     }
 
-    if (Inventory.isFull() && plugin.getOriginalWorld() != 0) {
+    if (Inventory.isFull()
+        && plugin.getOriginalWorld() != 0) {
       Worlds.hopTo(Worlds.getFirst(plugin.getOriginalWorld()));
     } else {
       Worlds.hopTo(

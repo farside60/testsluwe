@@ -52,6 +52,11 @@ public class LureIn extends Task {
 
   @Override
   public void execute() {
+    if (config.target().getRoom().contains(Players.getLocal())
+        && config.target().getRoom().getDoor().hasAction("Open")) {
+      config.target().getRoom().openDoor();
+    }
+
     final NPC target =
         NPCs.getNearest(
             n -> {

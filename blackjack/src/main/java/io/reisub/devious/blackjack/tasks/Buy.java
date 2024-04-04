@@ -9,15 +9,13 @@ import net.runelite.api.Item;
 import net.runelite.api.ItemID;
 import net.runelite.api.NPC;
 import net.runelite.api.NpcID;
-import net.runelite.api.TileObject;
 import net.runelite.api.coords.WorldPoint;
 import net.unethicalite.api.commons.Time;
 import net.unethicalite.api.entities.NPCs;
 import net.unethicalite.api.entities.Players;
-import net.unethicalite.api.game.Worlds;
 import net.unethicalite.api.items.Inventory;
 import net.unethicalite.api.items.Shop;
-import net.unethicalite.api.movement.Movement;
+import net.unethicalite.api.packets.DialogPackets;
 
 public class Buy extends Task {
   @Inject private Blackjack plugin;
@@ -39,37 +37,17 @@ public class Buy extends Task {
 
   @Override
   public void execute() {
-    plugin.setOriginalWorld(Worlds.getCurrentId());
-
     // leave room and close door behind us
     if (config.target().getRoom().contains(Players.getLocal())) {
-      TileObject door = config.target().getRoom().getDoor();
-      if (door != null && door.hasAction("Open")) {
-        door.interact("Open");
-        Time.sleepTicksUntil(() -> config.target().getRoom().getDoor().hasAction("Close"), 10);
-      }
-
-      Movement.walk(config.target().getRoom().getOutsideLocation());
-      Time.sleepTicksUntil(
-          () ->
-              Players.getLocal()
-                  .getWorldLocation()
-                  .equals(config.target().getRoom().getOutsideLocation()),
-          10);
-
-      door = config.target().getRoom().getDoor();
-      if (door != null) {
-        door.interact("Close");
-        Time.sleepTick();
-      }
+      config.target().getRoom().passDoor(config.target().getRoom().getOutsideLocation());
     }
 
     NPC barman = NPCs.getNearest(NpcID.FAISAL_THE_BARMAN);
     if (barman == null) {
       SluweMovement.walkTo(new WorldPoint(3358, 2957, 0), this::dropJugs);
+      barman = NPCs.getNearest(NpcID.FAISAL_THE_BARMAN);
     }
 
-    barman = NPCs.getNearest(NpcID.FAISAL_THE_BARMAN);
     if (barman == null) {
       return;
     }
@@ -84,10 +62,11 @@ public class Buy extends Task {
     if (Shop.getStock(ItemID.JUG_OF_WINE) > 0) {
       final int count = Inventory.getFreeSlots();
       Shop.buyFifty(ItemID.JUG_OF_WINE);
+      DialogPackets.closeInterface();
       Time.sleepTicksUntil(() -> Inventory.getFreeSlots() < count, 5);
     }
 
-    plugin.setHop(!Inventory.isFull());
+    plugin.setHop(true);
   }
 
   private void dropJugs() {

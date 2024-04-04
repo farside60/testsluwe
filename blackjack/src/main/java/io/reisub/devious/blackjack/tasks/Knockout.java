@@ -9,6 +9,8 @@ import net.runelite.api.NPC;
 import net.unethicalite.api.commons.Time;
 import net.unethicalite.api.entities.NPCs;
 import net.unethicalite.api.entities.Players;
+import net.unethicalite.api.game.GameThread;
+import net.unethicalite.api.game.Worlds;
 import net.unethicalite.api.items.Inventory;
 import net.unethicalite.api.movement.Reachable;
 
@@ -45,11 +47,13 @@ public class Knockout extends Task {
 
   @Override
   public void execute() {
+    plugin.setOriginalWorld(Worlds.getCurrentId());
+
     if (target == null) {
       return;
     }
 
-    target.interact("Knock-Out");
+    GameThread.invoke(() -> target.interact("Knock-Out"));
     Time.sleepTicksUntil(() -> Players.getLocal().distanceTo(target) <= 1, 5);
     Time.sleepTicks(2);
   }
