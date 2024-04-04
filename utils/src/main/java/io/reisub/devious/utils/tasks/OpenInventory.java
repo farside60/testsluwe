@@ -1,6 +1,5 @@
-package io.reisub.devious.wintertodt.tasks;
+package io.reisub.devious.utils.tasks;
 
-import io.reisub.devious.utils.tasks.Task;
 import net.runelite.api.GameState;
 import net.unethicalite.api.commons.Time;
 import net.unethicalite.api.items.Bank;
