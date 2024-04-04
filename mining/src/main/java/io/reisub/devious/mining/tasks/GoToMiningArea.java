@@ -92,6 +92,16 @@ public class GoToMiningArea extends Task {
             Time.sleepTicksUntil(() -> Players.getLocal().distanceTo(destination) < 6, 15);
           }
           break;
+        case MONASTERY_IRON:
+          SluweMovement.walkTo(config.location().getMiningAreaPoint(), 2);
+          Movement.walk(config.location().getMiningAreaPoint());
+          Time.sleepTicksUntil(
+              () ->
+                  Players.getLocal()
+                      .getWorldLocation()
+                      .equals(config.location().getMiningAreaPoint()),
+              10);
+          break;
         default:
           SluweMovement.walkTo(config.location().getMiningAreaPoint(), 2);
           break;

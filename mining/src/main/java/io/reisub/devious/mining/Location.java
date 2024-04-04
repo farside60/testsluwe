@@ -146,7 +146,7 @@ public enum Location {
       },
       false),
   MONASTERY_IRON(
-      new WorldPoint(2605, 3236, 0),
+      new WorldPoint(2605, 3234, 0),
       5,
       new WorldPoint(2654, 3283, 0),
       ImmutableSet.of(
@@ -156,7 +156,7 @@ public enum Location {
           ObjectID.IRON_ROCKS_42833),
       new ArrayDeque<>() {
         {
-          add(new RockPosition(new WorldPoint(2605, 3237, 0), new WorldPoint(2936, 5807, 0)));
+          add(new RockPosition(new WorldPoint(2605, 3233, 0), new WorldPoint(2936, 5807, 0)));
           add(new RockPosition(new WorldPoint(2605, 3235, 0), new WorldPoint(2937, 5807, 0)));
         }
       },

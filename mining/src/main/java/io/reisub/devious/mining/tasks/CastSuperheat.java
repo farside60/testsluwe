@@ -13,6 +13,7 @@ import net.unethicalite.client.Static;
 
 public class CastSuperheat extends Task {
   @Inject private Config config;
+  @Inject private Mine mineTask;
   private int lastTick;
 
   @Override
@@ -34,6 +35,8 @@ public class CastSuperheat extends Task {
 
   @Override
   public void execute() {
+    mineTask.setCurrentRockPosition(null);
+
     Item ironOre = Inventory.getFirst(ItemID.IRON_ORE);
     if (ironOre == null) {
       return;

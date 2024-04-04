@@ -16,7 +16,6 @@ import net.unethicalite.api.items.Inventory;
 import net.unethicalite.api.movement.Movement;
 
 public class CrushBarronite extends Task {
-
   @Inject private Config config;
   @Inject private Mine mineTask;
 
