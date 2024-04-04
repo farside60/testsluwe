@@ -57,7 +57,7 @@ public abstract class BankTask extends Task {
     }
 
     TileObject bankObject = null;
-    NPC bankNpc;
+    NPC bankNpc = null;
 
     if (name != null) {
       if (bankLocations != null) {
@@ -90,7 +90,9 @@ public abstract class BankTask extends Task {
         bankObject.interact(0);
       }
     } else {
-      bankNpc = getBankNpc();
+      if (bankNpc == null) {
+        bankNpc = getBankNpc();
+      }
 
       if (bankNpc == null) {
         return false;
@@ -159,104 +161,6 @@ public abstract class BankTask extends Task {
     }
 
     return Bank.isOpen();
-  }
-
-  protected boolean open(boolean openMainTab) {
-    return open(15, openMainTab);
-  }
-
-  protected boolean open(int waitTicks) {
-    return open(waitTicks, 3);
-  }
-
-  protected boolean open(int waitTicks, boolean openMainTab) {
-    return open(waitTicks, 3, openMainTab);
-  }
-
-  protected boolean open(int waitTicks, int movingCheck) {
-    return open(waitTicks, movingCheck, false);
-  }
-
-  protected boolean open(int waitTicks, int movingCheck, boolean openMainTab) {
-    return open(waitTicks, movingCheck, openMainTab, null);
-  }
-
-  protected boolean open(
-      int waitTicks, int movingCheck, boolean openMainTab, Set<WorldPoint> bankIgnorePoints) {
-    if (Bank.isOpen()) {
-      if (openMainTab) {
-        Bank.openMainTab();
-
-        Time.sleepTicksUntil(Bank::isMainTabOpen, 2);
-      }
-
-      last = Instant.now();
-      return true;
-    }
-
-    TileObject bankObject = getBankObject();
-    NPC bankNpc;
-
-    if (bankObject != null) {
-      if (bankObject.hasAction("Bank")) {
-        GameThread.invoke(() -> bankObject.interact("Bank"));
-      } else if (bankObject.hasAction("Use")) {
-        GameThread.invoke(() -> bankObject.interact("Use"));
-      } else {
-        GameThread.invoke(() -> bankObject.interact(0));
-      }
-    } else {
-      bankNpc = getBankNpc();
-
-      if (bankNpc == null) {
-        return false;
-      }
-
-      if (bankNpc.hasAction("Bank")) {
-        GameThread.invoke(() -> bankNpc.interact("Bank"));
-      } else {
-        GameThread.invoke(() -> bankNpc.interact(0));
-      }
-    }
-
-    if (movingCheck > 0) {
-      if (!Time.sleepTicksUntil(
-          () -> Bank.isOpen() || Players.getLocal().isMoving(), movingCheck)) {
-        return false;
-      }
-    }
-
-    Time.sleepTicksUntil(Bank::isOpen, waitTicks);
-
-    last = Instant.now();
-
-    if (Bank.isOpen() && openMainTab) {
-      Bank.openMainTab();
-
-      Time.sleepTicksUntil(Bank::isMainTabOpen, 2);
-    }
-
-    return Bank.isOpen();
-  }
-
-  protected boolean open(String name) {
-    return open(name, 15, false);
-  }
-
-  protected boolean open(String name, boolean openMainTab) {
-    return open(name, 15, openMainTab);
-  }
-
-  protected boolean open(String name, int waitTicks) {
-    return open(name, waitTicks, false);
-  }
-
-  protected boolean open(String name, int waitTicks, boolean openMainTab) {
-    return open(name, waitTicks, 3, openMainTab);
-  }
-
-  protected boolean open(String name, int waitTicks, int movingCheck) {
-    return open(name, waitTicks, movingCheck, false);
   }
 
   protected void close() {

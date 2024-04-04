@@ -4,14 +4,14 @@ import io.reisub.devious.cooking.Config;
 import io.reisub.devious.cooking.Cooking;
 import io.reisub.devious.utils.tasks.BankTask;
 import java.time.Duration;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import net.unethicalite.api.entities.Players;
 import net.unethicalite.api.entities.TileItems;
 import net.unethicalite.api.items.Bank;
 import net.unethicalite.api.items.Inventory;
 import net.unethicalite.client.Static;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class HandleBank extends BankTask {
   private static final int ROGUES_DEN_REGION = 12109;
 
@@ -29,14 +29,15 @@ public class HandleBank extends BankTask {
   @Override
   public void execute() {
     if (Players.getLocal().getWorldLocation().getRegionID() == ROGUES_DEN_REGION) {
-      open("Emerald Benedict");
+      setName("Emerald Benedict");
+      open();
     } else {
       open();
     }
 
     Bank.depositInventory();
 
-    if (!Bank.contains(config.food())) {
+    if (!Bank.contains(config.food()) || Bank.getFirst(config.food()).isPlaceholder()) {
       plugin.stop("No more raw food to cook, stopping plugin");
     }
 

@@ -19,8 +19,17 @@ import net.unethicalite.api.items.Equipment;
 import net.unethicalite.api.items.Inventory;
 
 public class HandleBank extends BankTask {
-  @Inject private RoguesDen plugin;
-  @Inject private Config config;
+  private final RoguesDen plugin;
+  private final Config config;
+
+  @Inject
+  private HandleBank(RoguesDen plugin, Config config) {
+    this.plugin = plugin;
+    this.config = config;
+
+    setName("Emerald Benedict");
+    setWaitTicks(30);
+  }
 
   @Override
   public boolean validate() {
@@ -38,7 +47,7 @@ public class HandleBank extends BankTask {
       Time.sleepTicksUntil(() -> NPCs.getNearest(NpcID.EMERALD_BENEDICT) != null, 10);
     }
 
-    open("Emerald Benedict", 30);
+    open();
 
     Bank.depositInventory();
     Bank.depositEquipment();

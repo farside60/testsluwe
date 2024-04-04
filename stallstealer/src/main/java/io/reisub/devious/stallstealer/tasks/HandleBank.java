@@ -9,7 +9,14 @@ import net.unethicalite.api.items.Bank;
 import net.unethicalite.api.items.Inventory;
 
 public class HandleBank extends BankTask {
-  @Inject private Config config;
+  private final Config config;
+
+  @Inject
+  private HandleBank(Config config) {
+    this.config = config;
+
+    setWaitTicks(40);
+  }
 
   @Override
   public boolean validate() {
@@ -19,7 +26,7 @@ public class HandleBank extends BankTask {
 
   @Override
   public void execute() {
-    if (!open(40)) {
+    if (!open()) {
       return;
     }
 
