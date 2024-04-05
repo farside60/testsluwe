@@ -25,6 +25,7 @@ import net.runelite.client.plugins.puzzlesolver.solver.PuzzleSolver;
 import net.runelite.client.plugins.puzzlesolver.solver.PuzzleState;
 import net.runelite.client.plugins.puzzlesolver.solver.heuristics.ManhattanDistance;
 import net.runelite.client.plugins.puzzlesolver.solver.pathfinding.IDAStar;
+import net.runelite.client.plugins.puzzlesolver.solver.pathfinding.IDAStarMM;
 import net.unethicalite.api.widgets.Widgets;
 import net.unethicalite.client.Static;
 import org.pf4j.Extension;
@@ -55,7 +56,14 @@ public class CluePuzzleSolver extends Plugin {
 
   @Subscribe
   private void onGameTick(GameTick event) {
-    final ItemContainer container = Static.getClient().getItemContainer(InventoryID.PUZZLE_BOX);
+    boolean useNormalSolver = true;
+
+    ItemContainer container = Static.getClient().getItemContainer(InventoryID.PUZZLE_BOX);
+
+    if (container == null) {
+      container = Static.getClient().getItemContainer(InventoryID.MONKEY_MADNESS_PUZZLE_BOX);
+      useNormalSolver = false;
+    }
 
     final Widget puzzleBox = Widgets.get(WidgetInfo.PUZZLE_BOX);
 
@@ -67,7 +75,7 @@ public class CluePuzzleSolver extends Plugin {
     }
 
     if (solver == null) {
-      solve(getItemIds(container));
+      solve(getItemIds(container, useNormalSolver), useNormalSolver);
     }
 
     if (solver != null) {
@@ -96,19 +104,23 @@ public class CluePuzzleSolver extends Plugin {
     }
   }
 
-  private void solve(int[] items) {
+  private void solve(int[] items, boolean useNormalSolver) {
     if (solverFuture != null) {
       solverFuture.cancel(true);
     }
 
     PuzzleState puzzleState = new PuzzleState(items);
 
-    solver = new PuzzleSolver(new IDAStar(new ManhattanDistance()), puzzleState);
+    if (useNormalSolver) {
+      solver = new PuzzleSolver(new IDAStar(new ManhattanDistance()), puzzleState);
+    } else {
+      solver = new PuzzleSolver(new IDAStarMM(new ManhattanDistance()), puzzleState);
+    }
 
     solverFuture = executorService.submit(solver);
   }
 
-  private int[] getItemIds(ItemContainer container) {
+  private int[] getItemIds(ItemContainer container, boolean useNormalSolver) {
     int[] itemIds = new int[DIMENSION * DIMENSION];
 
     Item[] items = container.getItems();
@@ -122,10 +134,10 @@ public class CluePuzzleSolver extends Plugin {
       itemIds[items.length] = BLANK_TILE_VALUE;
     }
 
-    return convertToSolverFormat(itemIds);
+    return convertToSolverFormat(itemIds, useNormalSolver);
   }
 
-  private int[] convertToSolverFormat(int[] items) {
+  private int[] convertToSolverFormat(int[] items, boolean useNormalSolver) {
     int lowestId = Integer.MAX_VALUE;
 
     int[] convertedItems = new int[items.length];
@@ -143,6 +155,10 @@ public class CluePuzzleSolver extends Plugin {
     for (int i = 0; i < items.length; i++) {
       if (items[i] != BLANK_TILE_VALUE) {
         int value = items[i] - lowestId;
+
+        if (!useNormalSolver) {
+          value /= 2;
+        }
 
         convertedItems[i] = value;
       } else {
