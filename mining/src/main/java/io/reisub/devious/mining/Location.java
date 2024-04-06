@@ -156,8 +156,23 @@ public enum Location {
           ObjectID.IRON_ROCKS_42833),
       new ArrayDeque<>() {
         {
-          add(new RockPosition(new WorldPoint(2605, 3233, 0), new WorldPoint(2936, 5807, 0)));
-          add(new RockPosition(new WorldPoint(2605, 3235, 0), new WorldPoint(2937, 5807, 0)));
+          add(new RockPosition(new WorldPoint(2605, 3233, 0), new WorldPoint(2605, 3234, 0)));
+          add(new RockPosition(new WorldPoint(2605, 3235, 0), new WorldPoint(2605, 3234, 0)));
+        }
+      },
+      false),
+  MISCELLANIA_COAL(
+      new WorldPoint(2528, 3894, 0),
+      3,
+      null,
+      ImmutableSet.of(
+          ObjectID.COAL_ROCKS_11366,
+          ObjectID.COAL_ROCKS_11367),
+      new ArrayDeque<>() {
+        {
+          add(new RockPosition(new WorldPoint(2527, 3894, 0), new WorldPoint(2528, 3894, 0)));
+          add(new RockPosition(new WorldPoint(2528, 3895, 0), new WorldPoint(2528, 3894, 0)));
+          add(new RockPosition(new WorldPoint(2529, 3894, 0), new WorldPoint(2528, 3894, 0)));
         }
       },
       false);

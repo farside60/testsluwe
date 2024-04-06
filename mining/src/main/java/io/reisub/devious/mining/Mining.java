@@ -17,9 +17,13 @@ import javax.inject.Inject;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.Varbits;
+import net.runelite.api.events.VarbitChanged;
 import net.runelite.client.config.ConfigManager;
+import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.PluginDependency;
 import net.runelite.client.plugins.PluginDescriptor;
+import net.unethicalite.api.game.Vars;
 import org.pf4j.Extension;
 import org.slf4j.Logger;
 
@@ -61,5 +65,18 @@ public class Mining extends TickScript {
     addTask(CrushBarronite.class);
     addTask(mine);
     addTask(MoveToRespawning.class);
+  }
+
+  @Subscribe
+  public void onVarbitChanged(VarbitChanged varbitChanged) {
+    if (!isRunning()
+        || config.location() != Location.MISCELLANIA_COAL
+        || varbitChanged.getVarbitId() != Varbits.KINGDOM_APPROVAL) {
+      return;
+    }
+
+    if (Vars.getBit(Varbits.KINGDOM_APPROVAL) == 127) {
+      stop("Reached max approval, stopping plugin");
+    }
   }
 }
