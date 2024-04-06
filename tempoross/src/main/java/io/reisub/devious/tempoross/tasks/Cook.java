@@ -2,6 +2,7 @@ package io.reisub.devious.tempoross.tasks;
 
 import io.reisub.devious.tempoross.Tempoross;
 import io.reisub.devious.utils.api.Activity;
+import io.reisub.devious.utils.api.interaction.Interaction;
 import io.reisub.devious.utils.tasks.Task;
 import javax.inject.Inject;
 import net.runelite.api.ItemID;
@@ -105,15 +106,15 @@ public class Cook extends Task {
     if (Players.getLocal().getWorldLocation().getY() < target.getY() - 5) {
       Movement.walk(target.dx(Rand.nextInt(-2, 3)).dy(Rand.nextInt(-2, 3)));
 
-      if (!Time.sleepUntil(() -> Players.getLocal().isMoving(), 1500)) {
+      if (!Time.sleepTicksUntil(() -> Players.getLocal().isMoving(), 3)) {
         return;
       }
 
-      Time.sleepUntil(
+      Time.sleepTicksUntil(
           () ->
               Players.getLocal().getWorldLocation().getY() >= target.getY() - Rand.nextInt(4, 6)
                   || plugin.isWaveIncoming(),
-          10000);
+          15);
     }
 
     NPC doubleSpot =
@@ -133,16 +134,13 @@ public class Cook extends Task {
     }
 
     TileObject shrine = TileObjects.getNearest(ObjectID.SHRINE_41236);
-    if (shrine == null) {
-      return;
-    }
+    new Interaction(shrine).interact();
 
-    shrine.interact(0);
-    Time.sleepUntil(
+    Time.sleepTicksUntil(
         () ->
             plugin.isCurrentActivity(Tempoross.COOKING)
                 || plugin.isWaveIncoming()
                 || plugin.getLastDoubleSpawn() + 3 >= Static.getClient().getTickCount(),
-        10000);
+        15);
   }
 }

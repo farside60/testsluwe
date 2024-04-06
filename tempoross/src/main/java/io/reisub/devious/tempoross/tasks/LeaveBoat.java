@@ -1,6 +1,7 @@
 package io.reisub.devious.tempoross.tasks;
 
 import io.reisub.devious.tempoross.Tempoross;
+import io.reisub.devious.utils.api.interaction.Interaction;
 import io.reisub.devious.utils.tasks.Task;
 import javax.inject.Inject;
 import net.runelite.api.ObjectID;
@@ -23,12 +24,10 @@ public class LeaveBoat extends Task {
 
   @Override
   public void execute() {
-    TileObject ladder = TileObjects.getNearest(ObjectID.ROPE_LADDER_41305);
-    if (ladder == null) {
-      return;
-    }
+    final TileObject ladder = TileObjects.getNearest(ObjectID.ROPE_LADDER_41305);
 
-    ladder.interact("Quick-climb");
-    Time.sleepUntil(() -> plugin.isInDesert(), 10000);
+    new Interaction(ladder, "Quick-climb").interact();
+
+    Time.sleepTicksUntil(() -> plugin.isInDesert(), 20);
   }
 }

@@ -3,6 +3,8 @@ package io.reisub.devious.tempoross.tasks;
 import io.reisub.devious.tempoross.Tempoross;
 import io.reisub.devious.utils.api.Activity;
 import io.reisub.devious.utils.api.SluweMovement;
+import io.reisub.devious.utils.api.interaction.Interaction;
+import io.reisub.devious.utils.api.interaction.checks.CurrentActivityCheck;
 import io.reisub.devious.utils.tasks.Task;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -109,13 +111,8 @@ public class Fish extends Task {
       spot = getNearestSafeSpot(NpcID.FISHING_SPOT_10565);
     }
 
-    if (spot == null) {
-      return;
-    }
-
-    spot.interact(0);
+    new Interaction(spot, new CurrentActivityCheck(3, plugin, Tempoross.FISHING)).interact();
     plugin.setLastFishLocation(spot.getWorldLocation());
-    Time.sleepTicksUntil(() -> plugin.isCurrentActivity(Tempoross.FISHING), 3);
   }
 
   private NPC getNearestSafeSpot(int id) {

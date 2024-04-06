@@ -2,6 +2,8 @@ package io.reisub.devious.tempoross.tasks;
 
 import io.reisub.devious.tempoross.Tempoross;
 import io.reisub.devious.utils.api.Activity;
+import io.reisub.devious.utils.api.interaction.Interaction;
+import io.reisub.devious.utils.api.interaction.checks.CurrentActivityCheck;
 import io.reisub.devious.utils.tasks.Task;
 import javax.inject.Inject;
 import net.runelite.api.NPC;
@@ -103,8 +105,7 @@ public class Stock extends Task {
           && plugin.isCurrentActivity(Tempoross.STOCKING_CANNON)
           && plugin.getCookedFish() > 0
           && plugin.getCookedFish() < 15
-          && Players.getLocal().distanceTo(northCrate)
-          < Players.getLocal().distanceTo(southCrate);
+          && Players.getLocal().distanceTo(northCrate) < Players.getLocal().distanceTo(southCrate);
     }
 
     return false;
@@ -148,21 +149,14 @@ public class Stock extends Task {
       }
     }
 
-    if (crate == null) {
-      return;
-    }
-
-    crate.interact(0);
-
-    Time.sleepTicksUntil(() -> plugin.isCurrentActivity(Tempoross.STOCKING_CANNON), 3);
+    new Interaction(crate, new CurrentActivityCheck(3, plugin, Tempoross.STOCKING_CANNON))
+        .interact();
   }
 
   private boolean isFireInFrontOfCrate(NPC crate) {
     TileObject fire =
         TileObjects.getNearest(
-            (o) ->
-                o.getId() == NullObjectID.NULL_41006
-                    && plugin.getBoatArea().contains(o));
+            (o) -> o.getId() == NullObjectID.NULL_41006 && plugin.getBoatArea().contains(o));
 
     if (fire == null) {
       return false;

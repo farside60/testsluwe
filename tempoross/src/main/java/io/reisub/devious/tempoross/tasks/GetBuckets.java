@@ -1,6 +1,8 @@
 package io.reisub.devious.tempoross.tasks;
 
 import io.reisub.devious.tempoross.Tempoross;
+import io.reisub.devious.utils.api.interaction.Interaction;
+import io.reisub.devious.utils.api.interaction.checks.InventoryContainsCheck;
 import io.reisub.devious.utils.tasks.Task;
 import java.util.Comparator;
 import java.util.List;
@@ -11,7 +13,6 @@ import net.runelite.api.NPC;
 import net.runelite.api.NpcID;
 import net.runelite.api.ObjectID;
 import net.runelite.api.TileObject;
-import net.unethicalite.api.commons.Time;
 import net.unethicalite.api.entities.NPCs;
 import net.unethicalite.api.entities.Players;
 import net.unethicalite.api.entities.TileObjects;
@@ -50,11 +51,6 @@ public class GetBuckets extends Task {
 
   @Override
   public void execute() {
-    TileObject buckets = TileObjects.getNearest(ObjectID.BUCKETS);
-    if (buckets == null) {
-      return;
-    }
-
     int amountToDrop = 5 - Inventory.getFreeSlots();
 
     if (amountToDrop > 0) {
@@ -66,7 +62,8 @@ public class GetBuckets extends Task {
       }
     }
 
-    buckets.interact("Take-5");
-    Time.sleepTicksUntil(() -> Inventory.contains(ItemID.BUCKET), 20);
+    final TileObject buckets = TileObjects.getNearest(ObjectID.BUCKETS);
+
+    new Interaction(buckets, "Take-5", new InventoryContainsCheck(20, ItemID.BUCKET)).interact();
   }
 }

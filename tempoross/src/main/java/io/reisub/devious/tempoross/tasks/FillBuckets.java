@@ -2,6 +2,9 @@ package io.reisub.devious.tempoross.tasks;
 
 import io.reisub.devious.tempoross.Tempoross;
 import io.reisub.devious.utils.api.Activity;
+import io.reisub.devious.utils.api.interaction.Interaction;
+import io.reisub.devious.utils.api.interaction.checks.CurrentActivityCheck;
+import io.reisub.devious.utils.api.interaction.checks.IdleActivityCheck;
 import io.reisub.devious.utils.tasks.Task;
 import javax.inject.Inject;
 import net.runelite.api.ItemID;
@@ -9,7 +12,6 @@ import net.runelite.api.NpcID;
 import net.runelite.api.ObjectID;
 import net.runelite.api.TileObject;
 import net.runelite.api.coords.WorldPoint;
-import net.unethicalite.api.commons.Time;
 import net.unethicalite.api.entities.NPCs;
 import net.unethicalite.api.entities.Players;
 import net.unethicalite.api.entities.TileObjects;
@@ -61,18 +63,14 @@ public class FillBuckets extends Task {
 
   @Override
   public void execute() {
-    TileObject pump = TileObjects.getNearest(ObjectID.WATER_PUMP_41000, ObjectID.WATER_PUMP_41004);
-    if (pump == null) {
-      return;
-    }
+    final TileObject pump =
+        TileObjects.getNearest(ObjectID.WATER_PUMP_41000, ObjectID.WATER_PUMP_41004);
 
-    pump.interact(0);
-
-    if (!Time.sleepUntil(() -> plugin.isCurrentActivity(Tempoross.FILLING_BUCKETS), 15000)) {
-      return;
-    }
-
-    Time.sleepUntil(() -> plugin.isCurrentActivity(Activity.IDLE), 5000);
+    new Interaction(
+            pump,
+            new CurrentActivityCheck(25, plugin, Tempoross.FILLING_BUCKETS),
+            new IdleActivityCheck(10, plugin))
+        .interact();
 
     if (plugin.isOnBoat()) {
       Movement.walk(new WorldPoint(3137, 2840, 0));
