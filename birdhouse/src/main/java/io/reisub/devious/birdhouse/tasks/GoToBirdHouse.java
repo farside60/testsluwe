@@ -6,6 +6,7 @@ import io.reisub.devious.utils.api.SluweMovement;
 import io.reisub.devious.utils.tasks.Task;
 import lombok.AllArgsConstructor;
 import net.runelite.api.coords.WorldPoint;
+import net.unethicalite.api.commons.Time;
 import net.unethicalite.api.entities.Players;
 
 @AllArgsConstructor
@@ -27,6 +28,11 @@ public class GoToBirdHouse extends Task {
 
   @Override
   public void execute() {
+    final WorldPoint pointPastTree = new WorldPoint(3679, 3866, 0);
+    SluweMovement.walk(pointPastTree, 1);
+
+    Time.sleepTicksUntil(() -> Players.getLocal().distanceTo(pointPastTree) <= 5, 10);
+
     SluweMovement.walkTo(target);
   }
 }
