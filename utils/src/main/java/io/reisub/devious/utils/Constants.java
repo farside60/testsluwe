@@ -92,6 +92,9 @@ public class Constants {
 
   public static final Set<Integer> BIRD_HOUSE_SEED_IDS =
       ImmutableSet.of(
+          ItemID.POTATO_SEED,
+          ItemID.ONION_SEED,
+          ItemID.CABBAGE_SEED,
           ItemID.BARLEY_SEED,
           ItemID.HAMMERSTONE_SEED,
           ItemID.ASGARNIAN_SEED,
