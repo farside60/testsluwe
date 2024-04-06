@@ -2,9 +2,6 @@ package io.reisub.devious.tempoross.tasks;
 
 import io.reisub.devious.tempoross.Tempoross;
 import io.reisub.devious.utils.api.Activity;
-import io.reisub.devious.utils.api.interaction.Interaction;
-import io.reisub.devious.utils.api.interaction.checks.CurrentActivityCheck;
-import io.reisub.devious.utils.api.interaction.checks.IdleActivityCheck;
 import io.reisub.devious.utils.tasks.Task;
 import javax.inject.Inject;
 import net.runelite.api.NullObjectID;
@@ -34,7 +31,7 @@ public class Tether extends Task {
 
   @Override
   public void execute() {
-    final TileObject tetherObject =
+    TileObject tetherObject =
         TileObjects.getNearest(
             NullObjectID.NULL_41352,
             NullObjectID.NULL_41353,
@@ -50,10 +47,9 @@ public class Tether extends Task {
       Time.sleepTicksUntil(() -> plugin.isCurrentActivity(Activity.IDLE), waitTicks);
     }
 
-    new Interaction(
-            tetherObject,
-            new CurrentActivityCheck(20, plugin, Tempoross.TETHERING_MAST),
-            new IdleActivityCheck(35, plugin))
-        .interact();
+    tetherObject.interact(0);
+
+    Time.sleepUntil(() -> plugin.isCurrentActivity(Tempoross.TETHERING_MAST), 10000);
+    Time.sleepUntil(() -> plugin.isCurrentActivity(Activity.IDLE), 20000);
   }
 }

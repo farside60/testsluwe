@@ -1,9 +1,7 @@
 package io.reisub.devious.tempoross.tasks;
 
 import io.reisub.devious.tempoross.Tempoross;
-import io.reisub.devious.utils.api.interaction.Interaction;
-import io.reisub.devious.utils.api.interaction.checks.CurrentActivityCheck;
-import io.reisub.devious.utils.api.interaction.checks.IdleActivityCheck;
+import io.reisub.devious.utils.api.Activity;
 import io.reisub.devious.utils.tasks.Task;
 import javax.inject.Inject;
 import net.runelite.api.ItemID;
@@ -79,10 +77,12 @@ public class DouseFire extends Task {
                       && (plugin.getIslandArea().contains(n) || plugin.getBoatArea().contains(n)));
     }
 
-    new Interaction(
-            fire,
-            new CurrentActivityCheck(4, plugin, Tempoross.DOUSING_FIRE),
-            new IdleActivityCheck(25, plugin))
-        .interact();
+    fire.interact(0);
+
+    if (!Time.sleepUntil(() -> plugin.isCurrentActivity(Tempoross.DOUSING_FIRE), 2500)) {
+      return;
+    }
+
+    Time.sleepUntil(() -> plugin.isCurrentActivity(Activity.IDLE), 15000);
   }
 }

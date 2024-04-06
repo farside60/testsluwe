@@ -39,7 +39,7 @@ public class LeaveGame extends Task {
 
   @Override
   public void execute() {
-    final NPC leaveNpc = NPCs.getNearest(n -> n.hasAction("Forfeit", "Leave"));
+    NPC leaveNpc = NPCs.getNearest(n -> n.hasAction("Forfeit", "Leave"));
     if (leaveNpc == null) {
       return;
     }

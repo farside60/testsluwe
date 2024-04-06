@@ -1,14 +1,13 @@
 package io.reisub.devious.tempoross.tasks;
 
 import io.reisub.devious.tempoross.Tempoross;
-import io.reisub.devious.utils.api.interaction.Interaction;
-import io.reisub.devious.utils.api.interaction.checks.CurrentActivityCheck;
-import io.reisub.devious.utils.api.interaction.checks.IdleActivityCheck;
+import io.reisub.devious.utils.api.Activity;
 import io.reisub.devious.utils.tasks.Task;
 import javax.inject.Inject;
 import net.runelite.api.NullObjectID;
 import net.runelite.api.ObjectID;
 import net.runelite.api.TileObject;
+import net.unethicalite.api.commons.Time;
 import net.unethicalite.api.entities.Players;
 import net.unethicalite.api.entities.TileObjects;
 
@@ -56,11 +55,11 @@ public class Repair extends Task {
 
   @Override
   public void execute() {
-    new Interaction(
-            brokenObject,
-            new IdleActivityCheck(3, plugin),
-            new CurrentActivityCheck(25, plugin, Tempoross.REPAIRING))
-        .interact();
     brokenObject.interact(0);
+    if (!Time.sleepTicksUntil(() -> plugin.isCurrentActivity(Activity.IDLE), 3)) {
+      return;
+    }
+
+    Time.sleepUntil(() -> plugin.isCurrentActivity(Tempoross.REPAIRING), 15000);
   }
 }

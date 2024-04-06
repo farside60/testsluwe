@@ -2,12 +2,11 @@ package io.reisub.devious.tempoross.tasks;
 
 import io.reisub.devious.tempoross.Tempoross;
 import io.reisub.devious.utils.api.Activity;
-import io.reisub.devious.utils.api.interaction.Interaction;
-import io.reisub.devious.utils.api.interaction.checks.CurrentActivityCheck;
 import io.reisub.devious.utils.tasks.Task;
 import javax.inject.Inject;
 import net.runelite.api.NPC;
 import net.runelite.api.NpcID;
+import net.unethicalite.api.commons.Time;
 import net.unethicalite.api.entities.NPCs;
 
 public class Attack extends Task {
@@ -45,6 +44,7 @@ public class Attack extends Task {
 
   @Override
   public void execute() {
-    new Interaction(pool, new CurrentActivityCheck(5, plugin, Activity.ATTACKING)).interact();
+    pool.interact(0);
+    Time.sleepUntil(() -> plugin.isCurrentActivity(Tempoross.FISHING), 50, 5000);
   }
 }
