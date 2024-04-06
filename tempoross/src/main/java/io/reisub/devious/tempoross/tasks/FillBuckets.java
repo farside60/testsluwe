@@ -49,6 +49,9 @@ public class FillBuckets extends Task {
     if ((plugin.isCurrentActivity(Activity.ATTACKING)
             || plugin.wasPreviousActivity(Activity.ATTACKING))
         && Players.getLocal().getInteracting() == null
+        && NPCs.getNearest(
+                (n) -> n.getId() == NpcID.SPIRIT_POOL && plugin.getIslandArea().contains(n))
+            == null
         && Players.getLocal().distanceTo(plugin.getDudiPos()) > 8
         && plugin.getPhase() == 2
         && plugin.getCookedFishRequired() > 0
