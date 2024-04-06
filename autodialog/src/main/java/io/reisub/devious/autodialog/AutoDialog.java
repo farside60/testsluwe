@@ -20,6 +20,7 @@ import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDependency;
 import net.runelite.client.plugins.PluginDescriptor;
+import net.unethicalite.api.exception.InteractionException;
 import net.unethicalite.api.widgets.Dialog;
 import org.pf4j.Extension;
 
@@ -68,7 +69,11 @@ public class AutoDialog extends Plugin implements KeyListener {
 
     for (DialogTask task : tasks) {
       if (task.validate()) {
-        task.execute();
+        try {
+          task.execute();
+        } catch (InteractionException interactionException) {
+          log.info(interactionException.getMessage());
+        }
         return;
       }
     }

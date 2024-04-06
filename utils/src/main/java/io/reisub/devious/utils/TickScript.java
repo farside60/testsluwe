@@ -35,6 +35,7 @@ import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayManager;
 import net.unethicalite.api.commons.Rand;
 import net.unethicalite.api.entities.Players;
+import net.unethicalite.api.exception.InteractionException;
 import net.unethicalite.api.game.Skills;
 import net.unethicalite.api.input.Keyboard;
 import net.unethicalite.api.utils.MessageUtils;
@@ -334,7 +335,11 @@ public abstract class TickScript extends Plugin implements KeyListener {
         if (t.getActivity() != Activity.IDLE) {
           setActivity(t.getActivity());
         }
-        t.execute();
+        try {
+          t.execute();
+        } catch (InteractionException interactionException) {
+          getLogger().warn(interactionException.getMessage());
+        }
         break;
       }
     }
