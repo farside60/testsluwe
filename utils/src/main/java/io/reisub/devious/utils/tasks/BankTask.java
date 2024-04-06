@@ -3,7 +3,6 @@ package io.reisub.devious.utils.tasks;
 import io.reisub.devious.utils.Constants;
 import io.reisub.devious.utils.api.ConfigList;
 import io.reisub.devious.utils.api.SluwePredicates;
-import io.reisub.devious.utils.api.interaction.Interaction;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Map;
@@ -16,13 +15,11 @@ import net.runelite.api.NPC;
 import net.runelite.api.TileObject;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.widgets.WidgetID;
-import net.unethicalite.api.Interactable;
 import net.unethicalite.api.commons.Predicates;
 import net.unethicalite.api.commons.Time;
 import net.unethicalite.api.entities.NPCs;
 import net.unethicalite.api.entities.Players;
 import net.unethicalite.api.entities.TileObjects;
-import net.unethicalite.api.exception.InteractionException;
 import net.unethicalite.api.game.GameThread;
 import net.unethicalite.api.items.Bank;
 import net.unethicalite.api.items.Equipment;
@@ -59,46 +56,59 @@ public abstract class BankTask extends Task {
       return true;
     }
 
-    Interactable interactable;
+    TileObject bankObject = null;
+    NPC bankNpc = null;
 
     if (name != null) {
       if (bankLocations != null) {
-        interactable =
+        bankNpc =
             NPCs.getNearest(
                 n -> n.getName().equals(name) && bankLocations.contains(n.getWorldLocation()));
       } else if (bankIgnoreLocations != null) {
-        interactable =
+        bankNpc =
             NPCs.getNearest(
                 n ->
                     n.getName().equals(name)
                         && !bankIgnoreLocations.contains(n.getWorldLocation()));
       } else {
-        interactable = NPCs.getNearest(name);
+        bankNpc = NPCs.getNearest(name);
       }
 
-      if (interactable == null) {
+      if (bankNpc == null) {
         return false;
       }
     } else {
-      interactable = getBankObject();
+      bankObject = getBankObject();
     }
 
-    if (interactable == null) {
-      interactable = getBankNpc();
-    }
-
-    if (interactable.hasAction("Bank")) {
-      new Interaction(interactable, "Bank").interact();
-    } else if (interactable.hasAction("Use")) {
-      new Interaction(interactable, "Use").interact();
+    if (bankObject != null) {
+      if (bankObject.hasAction("Bank")) {
+        bankObject.interact("Bank");
+      } else if (bankObject.hasAction("Use")) {
+        bankObject.interact("Use");
+      } else {
+        bankObject.interact(0);
+      }
     } else {
-      new Interaction(interactable).interact();
+      if (bankNpc == null) {
+        bankNpc = getBankNpc();
+      }
+
+      if (bankNpc == null) {
+        return false;
+      }
+
+      if (bankNpc.hasAction("Bank")) {
+        bankNpc.interact("Bank");
+      } else {
+        bankNpc.interact(0);
+      }
     }
 
     if (movingCheck > 0) {
       if (!Time.sleepTicksUntil(
           () -> Bank.isOpen() || Players.getLocal().isMoving(), movingCheck)) {
-        throw new InteractionException("Failed to open bank");
+        return false;
       }
     }
 
@@ -224,7 +234,8 @@ public abstract class BankTask extends Task {
 
   protected NPC getBankNpc() {
     if (bankLocations != null) {
-      return NPCs.getNearest(SluwePredicates.idsAtLocations(Constants.BANK_NPC_IDS, bankLocations));
+      return NPCs.getNearest(
+          SluwePredicates.idsAtLocations(Constants.BANK_NPC_IDS, bankLocations));
     } else if (bankIgnoreLocations != null) {
       return NPCs.getNearest(
           SluwePredicates.idsNotAtLocations(Constants.BANK_NPC_IDS, bankIgnoreLocations));
