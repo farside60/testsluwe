@@ -1215,7 +1215,10 @@ public class Constants {
           ObjectID.BANK_CHEST_41493,
           ObjectID.BANK_CHEST_43697,
           NullObjectID.NULL_12308,
-          ObjectID.BANK_CHEST_44630);
+          ObjectID.BANK_CHEST_44630,
+          ObjectID.GRAND_EXCHANGE_BOOTH,
+          ObjectID.GRAND_EXCHANGE_BOOTH_10061,
+          ObjectID.GRAND_EXCHANGE_BOOTH_30390);
 
   public static final Set<Integer> BANK_NPC_IDS =
       ImmutableSet.of(
