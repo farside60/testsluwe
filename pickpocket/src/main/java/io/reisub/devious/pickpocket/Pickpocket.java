@@ -3,13 +3,13 @@ package io.reisub.devious.pickpocket;
 import com.google.inject.Provides;
 import io.reisub.devious.pickpocket.tasks.CastShadowVeil;
 import io.reisub.devious.pickpocket.tasks.ClearInventory;
-import io.reisub.devious.pickpocket.tasks.Eat;
 import io.reisub.devious.pickpocket.tasks.EquipDodgyNecklace;
 import io.reisub.devious.pickpocket.tasks.HandleBank;
 import io.reisub.devious.pickpocket.tasks.TakeWine;
 import io.reisub.devious.utils.TickScript;
 import io.reisub.devious.utils.Utils;
 import io.reisub.devious.utils.api.Activity;
+import io.reisub.devious.utils.tasks.Eat;
 import javax.inject.Inject;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -54,10 +54,12 @@ public class Pickpocket extends TickScript {
     super.onStart();
 
     nearestLocation = config.target().getNearest();
+    Eat eatTask = injector.getInstance(Eat.class);
+    eatTask.setThreshold(config.eatHp());
 
     addTask(ClearInventory.class);
     addTask(TakeWine.class);
-    addTask(Eat.class);
+    addTask(eatTask);
     addTask(CastShadowVeil.class);
     addTask(EquipDodgyNecklace.class);
     addTask(HandleBank.class);

@@ -99,31 +99,34 @@ public class HandleBank extends BankTask {
       return;
     }
 
-    int quantity = Math.floorDiv(Combat.getMissingHealth(), heals(food.getId()));
+    if (config.healAtBank()) {
+      int quantity = Math.floorDiv(Combat.getMissingHealth(), heals(food.getId()));
 
-    if (quantity > 0) {
-      Bank.withdraw(config.food(), quantity, Bank.WithdrawMode.ITEM);
+      if (quantity > 0) {
+        Bank.withdraw(config.food(), quantity, Bank.WithdrawMode.ITEM);
 
-      close();
+        close();
 
-      Time.sleepTicksUntil(() -> Inventory.getCount(config.food()) >= quantity, 5);
-      Time.sleepTick();
+        Time.sleepTicksUntil(() -> Inventory.getCount(config.food()) >= quantity, 5);
+        Time.sleepTick();
 
-      List<Item> allFood = Inventory.getAll(config.food());
+        List<Item> allFood = Inventory.getAll(config.food());
 
-      for (Item foodPiece : allFood) {
-        foodPiece.interact("Eat");
-        Time.sleepTicks(3);
+        for (Item foodPiece : allFood) {
+          foodPiece.interact("Eat");
+          Time.sleepTicks(3);
+        }
       }
     }
 
-    if (!config.healAtBank() && config.foodQuantity() > 0) {
+    if (config.foodQuantity() > 0) {
       if (!Bank.isOpen()) {
         open();
         Time.sleepTicksUntil(Bank::isOpen, 5);
       }
 
       Bank.withdraw(config.food(), config.foodQuantity(), Bank.WithdrawMode.ITEM);
+      Time.sleepTicksUntil(() -> Inventory.contains(config.food()), 3);
     }
   }
 
