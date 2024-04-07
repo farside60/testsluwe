@@ -25,6 +25,14 @@ public class Eat extends Task {
   private int lastTick;
   private Item consumable;
 
+  private final List<Integer> ignoreIds =
+      ImmutableList.of(
+          ItemID.ROCK_CAKE,
+          ItemID.DWARVEN_ROCK_CAKE,
+          ItemID.DWARVEN_ROCK_CAKE_7510,
+          ItemID.BLOOD_PINT,
+          ItemID.LAVA_EEL);
+
   /**
    * Create a task that eats or drinks the first item it finds in the inventory once the player's
    * health drops to 50%.
@@ -55,9 +63,6 @@ public class Eat extends Task {
         return false;
       }
     }
-
-    final List<Integer> ignoreIds =
-        ImmutableList.of(ItemID.ROCK_CAKE, ItemID.DWARVEN_ROCK_CAKE, ItemID.DWARVEN_ROCK_CAKE_7510);
 
     List<Item> consumables =
         Inventory.getAll(i -> i.hasAction("Eat", "Drink") && !ignoreIds.contains(i.getId()));
