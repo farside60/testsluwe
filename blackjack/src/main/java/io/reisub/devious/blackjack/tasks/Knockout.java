@@ -9,7 +9,6 @@ import net.runelite.api.NPC;
 import net.unethicalite.api.commons.Time;
 import net.unethicalite.api.entities.NPCs;
 import net.unethicalite.api.entities.Players;
-import net.unethicalite.api.game.GameThread;
 import net.unethicalite.api.game.Worlds;
 import net.unethicalite.api.items.Inventory;
 import net.unethicalite.api.movement.Reachable;
@@ -39,10 +38,13 @@ public class Knockout extends Task {
     }
 
     target =
-        NPCs.getNearest(n -> n.getId() == config.target().getId() && Reachable.isInteractable(n));
+        NPCs.getNearest(
+            n ->
+                n.getId() == config.target().getId()
+                    && Reachable.isInteractable(n)
+                    && config.target().getRoom().contains(n));
 
-    return target != null
-        && config.target().getRoom().contains(Players.getLocal());
+    return target != null && config.target().getRoom().contains(Players.getLocal());
   }
 
   @Override
@@ -53,8 +55,12 @@ public class Knockout extends Task {
       return;
     }
 
-    GameThread.invoke(() -> target.interact("Knock-Out"));
-    Time.sleepTicksUntil(() -> Players.getLocal().distanceTo(target) <= 1, 5);
+    target.interact("Knock-Out");
+
+    if (Players.getLocal().distanceTo(target) > 1) {
+      Time.sleepTicksUntil(() -> !Players.getLocal().isMoving(), 5);
+    }
+
     Time.sleepTicks(2);
   }
 }

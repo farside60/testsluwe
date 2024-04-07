@@ -9,7 +9,6 @@ import net.runelite.api.NPC;
 import net.unethicalite.api.commons.Time;
 import net.unethicalite.api.entities.NPCs;
 import net.unethicalite.api.entities.Players;
-import net.unethicalite.api.game.GameThread;
 import net.unethicalite.api.items.Inventory;
 
 public class Pickpocket extends Task {
@@ -32,10 +31,11 @@ public class Pickpocket extends Task {
       return false;
     }
 
-    target = NPCs.getNearest(config.target().getId());
+    target =
+        NPCs.getNearest(
+            n -> config.target().getId() == n.getId() && config.target().getRoom().contains(n));
 
-    return target != null
-        && config.target().getRoom().contains(Players.getLocal());
+    return target != null && config.target().getRoom().contains(Players.getLocal());
   }
 
   @Override
@@ -44,7 +44,7 @@ public class Pickpocket extends Task {
       return;
     }
 
-    GameThread.invoke(() -> target.interact("Pickpocket"));
+    target.interact("Pickpocket");
     Time.sleepTicks(2);
   }
 }
