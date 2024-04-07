@@ -24,6 +24,7 @@ import net.unethicalite.api.game.Skills;
 import net.unethicalite.api.items.Inventory;
 import net.unethicalite.api.movement.Movement;
 import net.unethicalite.api.movement.Reachable;
+import net.unethicalite.api.widgets.Dialog;
 import net.unethicalite.client.Static;
 
 public class Pickpocket extends Task {
@@ -71,7 +72,16 @@ public class Pickpocket extends Task {
       }
     }
 
+    if (Dialog.isOpen()) {
+      Dialog.close();
+    }
+
     GameThread.invoke(() -> target.interact("Pickpocket"));
+    if (!Time.sleepTicksUntil(
+        () -> Players.getLocal().isMoving() || Players.getLocal().isAnimating(), 2)) {
+      return;
+    }
+    Time.sleepTicksUntil(() -> Players.getLocal().distanceTo(target) <= 1, 10);
   }
 
   @Subscribe
@@ -88,6 +98,8 @@ public class Pickpocket extends Task {
     } else if (event.getMessage().contains("You've been stunned")) {
       plugin.setActivity(Activity.IDLE);
       lastStun = Static.getClient().getTickCount();
+    } else if (event.getMessage().contains("You can't reach that")) {
+      plugin.setActivity(Activity.IDLE);
     }
   }
 
