@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.AnimationID;
 import net.runelite.api.InventoryID;
 import net.runelite.api.events.AnimationChanged;
+import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.ItemContainerChanged;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
@@ -90,6 +91,17 @@ public class Smithing extends TickScript {
         setActivity(SMITHING);
         break;
       default:
+    }
+  }
+
+  @Subscribe
+  private void onChatMessage(ChatMessage chatMessage) {
+    if (!isRunning()) {
+      return;
+    }
+
+    if (chatMessage.getMessage().startsWith("Congratulations, you've just advanced")) {
+      setActivity(Activity.IDLE);
     }
   }
 }
