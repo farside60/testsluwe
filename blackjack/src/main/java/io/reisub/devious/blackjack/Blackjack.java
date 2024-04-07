@@ -79,6 +79,9 @@ public class Blackjack extends TickScript {
     addTask(CloseDoor.class);
     addTask(Knockout.class);
 
+    successfulKnockOuts = 0;
+    failedKnockOuts = 0;
+
     trackExperience(Skill.THIEVING);
     setOverlay(overlay);
   }
