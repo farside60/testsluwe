@@ -42,6 +42,11 @@ public class GoToIsland extends Task {
 
   @Override
   public void execute() {
+    // intermediate destinations so the pathfinding doesn't use the southern mushroom or digsite
+    // pendant to teleport to the northern mushroom
+    SluweMovement.walkTo(new WorldPoint(3692, 3844, 0));
+    SluweMovement.walkTo(new WorldPoint(3700, 3870, 0));
+
     SluweMovement.walkTo(
         target,
         2,
