@@ -6,3 +6,4 @@ This plugin automatically skips all dialogue in the game.
 * Automatically choose the correct options marked by the Quest Helper plugin
 * Quickly exchange all planks using Phials
 * Quickly sell silk at 60gp each to the silk merchant
+* Quickly buy stews in the Seers' bar

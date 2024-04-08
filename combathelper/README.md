@@ -26,6 +26,6 @@ This plugin aids players in combat with various useful features. Currently offer
 
 The plugin won't work without these dependencies.
 
-* [Item Stats](https://github.com/runelite/runelite)
+* [Item Stats](https://github.com/runelite/runelite/tree/master/runelite-client/src/main/java/net/runelite/client/plugins/itemstats)
 
 All other dependencies should be included in this repo.
