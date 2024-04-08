@@ -76,6 +76,11 @@ public class Pickpocket extends Task {
       Dialog.close();
     }
 
+    if (lastStun + 4 == Static.getClient().getTickCount()
+        && Players.getLocal().distanceTo(target) > 1) {
+      Time.sleepTick();
+    }
+
     GameThread.invoke(() -> target.interact("Pickpocket"));
     if (!Time.sleepTicksUntil(
         () -> Players.getLocal().isMoving() || Players.getLocal().isAnimating(), 2)) {

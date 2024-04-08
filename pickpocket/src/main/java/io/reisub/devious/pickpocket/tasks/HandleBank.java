@@ -53,6 +53,8 @@ public class HandleBank extends BankTask {
 
   @Override
   public void execute() {
+    Time.sleepTick();
+
     if (!open()) {
       if (config.target() == Target.VALLESSIA_VON_PITT) {
         goToSepulchreBank();
