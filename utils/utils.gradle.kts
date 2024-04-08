@@ -1,4 +1,4 @@
-version = "1.17.2"
+version = "1.17.3"
 
 project.extra["PluginName"] = "Sluwe Utils"
 project.extra["PluginDescription"] = "Utilities for Sluwe scripts"

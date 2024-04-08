@@ -497,7 +497,8 @@ public class Constants {
           NullObjectID.NULL_7838,
           NullObjectID.NULL_7839,
           NullObjectID.NULL_27112,
-          NullObjectID.NULL_34631);
+          NullObjectID.NULL_34631,
+          NullObjectID.NULL_50694);
 
   public static final Set<Integer> NOTABLE_PRODUCE_IDS =
       ImmutableSet.of(
@@ -556,7 +557,12 @@ public class Constants {
           ItemID.POTATO_CACTUS);
 
   public static final Set<Integer> TOOL_LEPRECHAUN_IDS =
-      ImmutableSet.of(NpcID.TOOL_LEPRECHAUN, NpcID.TOOL_LEPRECHAUN_757, NpcID.TOOL_LEPRECHAUN_7757);
+      ImmutableSet.of(
+          NpcID.TOOL_LEPRECHAUN,
+          NpcID.TOOL_LEPRECHAUN_757,
+          NpcID.TOOL_LEPRECHAUN_7757,
+          NpcID.TOOL_LEPRECHAUN_12109,
+          NpcID.TOOL_LEPRECHAUN_12765);
 
   public static final Set<Integer> ALLOTMENT_PATCH_IDS =
       ImmutableSet.of(
@@ -572,7 +578,9 @@ public class Constants {
           NullObjectID.NULL_27113,
           NullObjectID.NULL_27114,
           NullObjectID.NULL_33693,
-          NullObjectID.NULL_33694);
+          NullObjectID.NULL_33694,
+          NullObjectID.NULL_50695,
+          NullObjectID.NULL_50696);
 
   public static final Set<Integer> FLOWER_PATCH_IDS =
       ImmutableSet.of(
@@ -581,7 +589,8 @@ public class Constants {
           NullObjectID.NULL_7849,
           NullObjectID.NULL_7850,
           NullObjectID.NULL_27111,
-          NullObjectID.NULL_33649);
+          NullObjectID.NULL_33649,
+          NullObjectID.NULL_50693);
 
   public static final Set<Integer> HERB_PATCH_IDS =
       ImmutableSet.of(
@@ -593,7 +602,8 @@ public class Constants {
           NullObjectID.NULL_18816,
           NullObjectID.NULL_27115,
           NullObjectID.NULL_33176,
-          NullObjectID.NULL_33979);
+          NullObjectID.NULL_33979,
+          NullObjectID.NULL_50697);
 
   public static final Set<Integer> HOPS_PATCH_IDS = ImmutableSet.of();
 
