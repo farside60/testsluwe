@@ -147,7 +147,6 @@ public class Farming extends TickScript implements KeyListener {
     }
   }
 
-  // TODO: put custom entry at the top of the menu
   @Subscribe
   private void onMenuEntryAdded(MenuEntryAdded event) {
     if (!config.oneClickMode()

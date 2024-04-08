@@ -153,7 +153,8 @@ public enum Location {
       11325,
       Varbits.FARMING_4771,
       0,
-      () -> SluweMovement.teleportThroughHouse(HouseTeleport.WEISS, 70));
+      () -> SluweMovement.teleportThroughHouse(HouseTeleport.WEISS, 70)),
+  VARLAMORE("Varlamore", new WorldPoint(1587, 3100, 0), 6192, Varbits.FARMING_4775, 0, () -> false);
 
   private final String name;
   private final WorldPoint patchPoint;
