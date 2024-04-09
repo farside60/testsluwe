@@ -5,7 +5,9 @@ import java.util.Collection;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.GameState;
+import net.runelite.api.Locatable;
 import net.runelite.api.Player;
+import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
@@ -58,6 +60,21 @@ public class Utils extends Plugin {
 
   public static boolean isInMapRegion(Collection<Integer> regionIds) {
     return isInMapRegion(regionIds.stream().mapToInt(i -> i).toArray());
+  }
+
+  public static WorldPoint instanceToWorld(Locatable locatable) {
+    return WorldPoint.fromLocalInstance(Static.getClient(), locatable.getLocalLocation());
+  }
+
+  public static WorldPoint worldToInstance(WorldPoint worldPoint) {
+    final Collection<WorldPoint> points =
+        WorldPoint.toLocalInstance(Static.getClient(), worldPoint);
+
+    if (points.isEmpty()) {
+      return null;
+    }
+
+    return points.iterator().next();
   }
 
   @Provides
