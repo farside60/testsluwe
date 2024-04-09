@@ -7,6 +7,7 @@ import io.reisub.devious.agility.tasks.HandleObstacle;
 import io.reisub.devious.agility.tasks.PickupMark;
 import io.reisub.devious.utils.TickScript;
 import io.reisub.devious.utils.Utils;
+import io.reisub.devious.utils.tasks.Eat;
 import java.util.Set;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +47,7 @@ public class Agility extends TickScript {
   protected void onStart() {
     super.onStart();
 
+    addTask(Eat.class);
     addTask(PickupMark.class);
     addTask(HandleObstacle.class);
     addTask(Alch.class);

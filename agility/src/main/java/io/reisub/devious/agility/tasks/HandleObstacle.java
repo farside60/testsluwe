@@ -56,6 +56,10 @@ public class HandleObstacle extends Task {
       Time.sleepTick();
     }
 
+    if (!Movement.isRunEnabled() && Movement.getRunEnergy() > 70) {
+      Movement.toggleRun();
+    }
+
     if (config.courseSelection() == Course.PRIFDDINAS) {
       TileObject portal =
           TileObjects.getNearest(
