@@ -75,4 +75,13 @@ public interface Config extends net.runelite.client.config.Config {
   default boolean seersStew() {
     return true;
   }
+
+  @ConfigItem(
+      keyName = "payToRemoveTree",
+      name = "Pay to remove tree",
+      description = "Automatically pay 200gp to remove a tree.",
+      position = 5)
+  default boolean payToRemoveTree() {
+    return true;
+  }
 }

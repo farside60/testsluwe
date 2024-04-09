@@ -3,6 +3,7 @@ package io.reisub.devious.autodialog;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Provides;
 import io.reisub.devious.autodialog.tasks.DialogTask;
+import io.reisub.devious.autodialog.tasks.PayToRemoveTree;
 import io.reisub.devious.autodialog.tasks.PhialsExchange;
 import io.reisub.devious.autodialog.tasks.QuestHelper;
 import io.reisub.devious.autodialog.tasks.SeersStew;
@@ -51,6 +52,7 @@ public class AutoDialog extends Plugin implements KeyListener {
             injector.getInstance(SeersStew.class),
             injector.getInstance(SilkMerchant.class),
             injector.getInstance(PhialsExchange.class),
+            injector.getInstance(PayToRemoveTree.class),
             injector.getInstance(QuestHelper.class));
   }
 

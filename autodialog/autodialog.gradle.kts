@@ -1,4 +1,4 @@
-version = "1.3.0"
+version = "1.4.0"
 
 project.extra["PluginName"] = "Sluwe Auto Dialog"
 project.extra["PluginDescription"] = "Automatically continues dialogs"
