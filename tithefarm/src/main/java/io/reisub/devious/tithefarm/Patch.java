@@ -92,13 +92,14 @@ public class Patch {
       currentIndex = 0;
     }
 
-    Movement.walk(patches.get(currentIndex).getInteractPoint());
-    Time.sleepTicksUntil(
+    do {
+      Movement.walk(patches.get(currentIndex).getInteractPoint());
+    } while (!Time.sleepTicksUntil(
         () ->
             Players.getLocal()
                 .getWorldLocation()
                 .equals(patches.get(currentIndex).getInteractPoint()),
-        10);
+        3));
   }
 
   public static boolean isAtEnd() {
