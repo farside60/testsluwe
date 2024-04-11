@@ -11,8 +11,8 @@ public class PayToRemoveTree extends DialogTask {
   @Override
   public boolean validate() {
     return config.payToRemoveTree()
-        && Dialog.canContinue()
-        && Dialog.getText().equals("Pay 200 Coins to have your tree chopped down?");
+        && Dialog.isViewingOptions()
+        && Dialog.getQuestion().equals("Pay 200 Coins to have your tree chopped down?");
   }
 
   @Override
