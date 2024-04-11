@@ -801,7 +801,8 @@ public class Constants {
           ItemID.WATERING_CAN5,
           ItemID.WATERING_CAN6,
           ItemID.WATERING_CAN7,
-          ItemID.WATERING_CAN8);
+          ItemID.WATERING_CAN8,
+          ItemID.GRICOLLERS_CAN);
 
   public static final Set<Integer> GRIMY_HERB_IDS =
       ImmutableSet.of(
