@@ -5,13 +5,16 @@ import io.reisub.devious.utils.Constants;
 import io.reisub.devious.utils.enums.HouseTeleport;
 import io.reisub.devious.utils.enums.HouseTeleport.TeleportItem;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import net.runelite.api.GameState;
 import net.runelite.api.ItemID;
 import net.runelite.api.Locatable;
 import net.runelite.api.MenuAction;
 import net.runelite.api.ObjectID;
 import net.runelite.api.TileObject;
+import net.runelite.api.coords.WorldArea;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.widgets.Widget;
 import net.unethicalite.api.commons.Predicates;
@@ -362,5 +365,20 @@ public class SluweMovement {
     }
 
     return new RectangularArea(sw, ne);
+  }
+
+  public static boolean isInteractable(Locatable locatable) {
+    return getInteractable(locatable).stream().anyMatch(Reachable::isWalkable);
+  }
+
+  public static List<WorldPoint> getInteractable(Locatable locatable) {
+    WorldArea locatableArea = locatable.getWorldArea();
+    WorldArea surrounding = locatableArea.offset(1);
+
+    // List of tiles that can interact with worldArea and can be walked on
+    return surrounding.toWorldPointList().stream()
+        .filter(p -> !locatableArea.contains(p))
+        .filter(p -> !Reachable.isObstacle(p))
+        .collect(Collectors.toList());
   }
 }
