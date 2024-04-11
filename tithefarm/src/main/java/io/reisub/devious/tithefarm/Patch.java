@@ -19,6 +19,13 @@ public class Patch {
   private static List<Patch> patches;
   private static int basePlantId;
   private static int currentIndex;
+  private final WorldPoint patchPoint;
+  private final WorldPoint interactPoint;
+
+  private Patch(int patchX, int patchY, int interactX, int interactY) {
+    patchPoint = Utils.worldToInstance(new WorldPoint(patchX, patchY, 0));
+    interactPoint = Utils.worldToInstance(new WorldPoint(interactX, interactY, 0));
+  }
 
   public static void buildList() {
     currentIndex = 0;
@@ -105,14 +112,6 @@ public class Patch {
   public static boolean isAtEnd() {
     return currentIndex == patches.size() - 1;
   }
-
-  private Patch(int patchX, int patchY, int interactX, int interactY) {
-    patchPoint = Utils.worldToInstance(new WorldPoint(patchX, patchY, 0));
-    interactPoint = Utils.worldToInstance(new WorldPoint(interactX, interactY, 0));
-  }
-
-  private final WorldPoint patchPoint;
-  private final WorldPoint interactPoint;
 
   public TileObject getObject() {
     return TileObjects.getNearest(

@@ -8,6 +8,7 @@ import java.util.Comparator;
 import java.util.List;
 import javax.inject.Inject;
 import net.runelite.api.Item;
+import net.runelite.api.ItemID;
 import net.unethicalite.api.commons.Time;
 import net.unethicalite.api.items.Inventory;
 
@@ -51,6 +52,10 @@ public class Water extends Task {
     }
 
     Patch.takeStep();
+
+    if (Inventory.contains(ItemID.GRICOLLERS_CAN)) {
+      plugin.setGricollersFull(false);
+    }
   }
 
   /**
@@ -60,6 +65,10 @@ public class Water extends Task {
    * @return fullest watering can
    */
   private Item getWateringCan() {
+    if (Inventory.contains(ItemID.GRICOLLERS_CAN)) {
+      return Inventory.getFirst(ItemID.GRICOLLERS_CAN);
+    }
+
     List<Item> cans = Inventory.getAll(i -> i.getName().startsWith("Watering can"));
     if (cans.isEmpty()) {
       return null;

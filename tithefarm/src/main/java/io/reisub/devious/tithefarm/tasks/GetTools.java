@@ -16,6 +16,7 @@ public class GetTools extends Task {
   private static final Supplier<Widget> CLOSE = () -> Widgets.get(TOOL_WIDGET_ID, 1, 11);
   private static final Supplier<Widget> DIBBER = () -> Widgets.get(TOOL_WIDGET_ID, 9);
   private static final Supplier<Widget> SPADE = () -> Widgets.get(TOOL_WIDGET_ID, 10);
+  private static final Supplier<Widget> WATERING_CAN = () -> Widgets.get(TOOL_WIDGET_ID, 12);
 
   @Override
   public String getStatus() {
@@ -24,7 +25,10 @@ public class GetTools extends Task {
 
   @Override
   public boolean validate() {
-    return !Inventory.contains(ItemID.SEED_DIBBER) || !Inventory.contains(ItemID.SPADE);
+    return !Inventory.contains(ItemID.SEED_DIBBER)
+        || !Inventory.contains(ItemID.SPADE)
+        || (!Inventory.contains(ItemID.GRICOLLERS_CAN)
+            && !Inventory.contains(i -> i.getName().startsWith("Watering can")));
   }
 
   @Override
@@ -44,6 +48,11 @@ public class GetTools extends Task {
 
     if (!Inventory.contains(ItemID.SPADE)) {
       SPADE.get().interact("Remove-1");
+    }
+
+    if (!Inventory.contains(ItemID.GRICOLLERS_CAN)
+        && !Inventory.contains(i -> i.getName().startsWith("Watering can"))) {
+      WATERING_CAN.get().interact("Remove-1");
     }
 
     CLOSE.get().interact("Close");

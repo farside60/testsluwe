@@ -11,8 +11,8 @@ import net.unethicalite.api.entities.Players;
 import net.unethicalite.api.movement.Movement;
 
 public class StartRun extends Task {
-  @Inject private TitheFarm plugin;
   private final WorldPoint startPoint = new WorldPoint(1820, 3485, 0);
+  @Inject private TitheFarm plugin;
 
   @Override
   public String getStatus() {

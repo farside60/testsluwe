@@ -1144,6 +1144,21 @@ public class Constants {
           ItemID.GRACEFUL_CAPE_25072,
           ItemID.GRACEFUL_CAPE_25074);
 
+  public static final Set<Integer> GRACEFUL_SET;
+
+  static {
+    ImmutableSet.Builder<Integer> builder = ImmutableSet.builder();
+
+    builder.addAll(GRACEFUL_HOOD);
+    builder.addAll(GRACEFUL_TOP);
+    builder.addAll(GRACEFUL_LEGS);
+    builder.addAll(GRACEFUL_BOOTS);
+    builder.addAll(GRACEFUL_CAPE);
+    builder.addAll(GRACEFUL_GLOVES);
+
+    GRACEFUL_SET = builder.build();
+  }
+
   public static final Set<Integer> BANK_OBJECT_IDS =
       ImmutableSet.of(
           ObjectID.BANK_BOOTH,
