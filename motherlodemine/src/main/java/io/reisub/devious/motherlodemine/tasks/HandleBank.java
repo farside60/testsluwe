@@ -3,10 +3,12 @@ package io.reisub.devious.motherlodemine.tasks;
 import io.reisub.devious.motherlodemine.MotherlodeMine;
 import io.reisub.devious.utils.api.Activity;
 import io.reisub.devious.utils.api.SluweBank;
+import io.reisub.devious.utils.api.SluweInventory;
 import io.reisub.devious.utils.tasks.BankTask;
 import javax.inject.Inject;
 import net.runelite.api.Item;
 import net.runelite.api.ItemID;
+import net.unethicalite.api.commons.Predicates;
 import net.unethicalite.api.commons.Time;
 import net.unethicalite.api.items.Bank;
 import net.unethicalite.api.items.Inventory;
@@ -63,5 +65,11 @@ public class HandleBank extends BankTask {
                 ItemID.UNCUT_DIAMOND,
                 ItemID.UNCUT_DRAGONSTONE),
         3);
+
+    if (!SluweInventory.hasHammer()) {
+      Bank.withdraw(
+          Predicates.ids(ItemID.IMCANDO_HAMMER, ItemID.HAMMER), 1, Bank.WithdrawMode.ITEM);
+      Time.sleepTick();
+    }
   }
 }

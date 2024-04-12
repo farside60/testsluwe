@@ -2,6 +2,7 @@ package io.reisub.devious.motherlodemine.tasks;
 
 import io.reisub.devious.motherlodemine.MotherlodeMine;
 import io.reisub.devious.utils.api.Activity;
+import io.reisub.devious.utils.api.SluweInventory;
 import io.reisub.devious.utils.tasks.Task;
 import javax.inject.Inject;
 import net.runelite.api.ObjectID;
@@ -22,6 +23,7 @@ public class FixWheel extends Task {
     return plugin.isCurrentActivity(Activity.IDLE)
         && !plugin.isUpstairs()
         && plugin.wasPreviousActivity(Activity.DEPOSITING)
+        && SluweInventory.hasHammer()
         && TileObjects.getAll(ObjectID.BROKEN_STRUT).size() == 2;
   }
 

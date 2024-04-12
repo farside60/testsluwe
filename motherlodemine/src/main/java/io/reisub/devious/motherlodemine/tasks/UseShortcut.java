@@ -53,6 +53,7 @@ public class UseShortcut extends Task {
 
   @Override
   public void execute() {
+    plugin.setActivity(MotherlodeMine.ENTERING_TUNNEL);
     final TileObject tunnel = TileObjects.getNearest(ObjectID.DARK_TUNNEL_10047);
 
     if (tunnel == null) {
@@ -71,5 +72,6 @@ public class UseShortcut extends Task {
     tunnel.interact("Enter");
     Time.sleepTicksUntil(() -> Players.getLocal().getWorldLocation().equals(destination), 20);
     Time.sleepTick();
+    plugin.setActivity(Activity.IDLE);
   }
 }

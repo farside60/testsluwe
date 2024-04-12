@@ -54,6 +54,7 @@ public class MotherlodeMine extends TickScript {
 
   public static final Activity MINING = new Activity("Mining");
   public static final Activity REPAIRING = new Activity("Repairing");
+  public static final Activity ENTERING_TUNNEL = new Activity("Entering tunnel");
   private static final Set<Integer> MOTHERLODE_MAP_REGIONS =
       ImmutableSet.of(14679, 14680, 14681, 14935, 14936, 14937, 15191, 15192, 15193);
   private static final int SACK_LARGE_SIZE = 162;
