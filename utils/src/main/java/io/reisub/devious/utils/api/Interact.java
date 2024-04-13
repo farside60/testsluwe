@@ -31,7 +31,7 @@ public class Interact {
    * @param equipmentAction optional override for items with different actions when equipped
    * @param optionIndex optional index of the option to pick when the interaction opens an option
    *     dialog, index starts at 1, not at 0
-   * @return false if the item wasn't found
+   * @return false if the item or action wasn't found
    */
   public static boolean interactWithInventoryOrEquipment(
       Predicate<Item> filter, String action, String equipmentAction, int optionIndex) {
@@ -42,12 +42,24 @@ public class Interact {
         return false;
       }
 
-      if (equipmentAction != null && !equipmentAction.equals("")) {
+      if (equipmentAction != null && !equipmentAction.isEmpty()) {
+        if (!item.hasAction(equipmentAction)) {
+          return false;
+        }
+
         item.interact(equipmentAction);
       } else {
+        if (!item.hasAction(action)) {
+          return false;
+        }
+
         item.interact(action);
       }
     } else {
+      if (!item.hasAction(action)) {
+        return false;
+      }
+
       item.interact(action);
     }
 
