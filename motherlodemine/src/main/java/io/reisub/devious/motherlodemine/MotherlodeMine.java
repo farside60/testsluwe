@@ -61,12 +61,10 @@ public class MotherlodeMine extends TickScript {
   private static final int SACK_SIZE = 81;
   private static final int UPPER_FLOOR_HEIGHT = -490;
 
-  @Inject
-  private Config config;
+  @Inject private Config config;
   private int curSackSize;
   private int maxSackSize;
-  @Getter
-  private boolean sackFull;
+  @Getter private boolean sackFull;
 
   @Provides
   public Config getConfig(ConfigManager configManager) {
@@ -123,8 +121,7 @@ public class MotherlodeMine extends TickScript {
 
   @Subscribe
   private void onGameObjectDespawned(GameObjectDespawned event) {
-    if (isCurrentActivity(REPAIRING)
-        && event.getGameObject().getName().equals("Broken strut")) {
+    if (isCurrentActivity(REPAIRING) && event.getGameObject().getName().equals("Broken strut")) {
       setActivity(Activity.IDLE);
     }
   }
@@ -160,27 +157,31 @@ public class MotherlodeMine extends TickScript {
   private void onVarbitChanged(VarbitChanged event) {
     if (isRunning() && inMlm()) {
       refreshSackValues();
-      if (curSackSize >= maxSackSize - 26) {
+      int inventorySize = config.depositNuggets() ? 27 : 26;
+      if (curSackSize >= maxSackSize - inventorySize) {
         sackFull = true;
       }
     }
   }
 
   public boolean isUpstairs() {
-    return Perspective.getTileHeight(
-        Static.getClient(), Players.getLocal().getLocalLocation(), 0) < UPPER_FLOOR_HEIGHT;
+    return Perspective.getTileHeight(Static.getClient(), Players.getLocal().getLocalLocation(), 0)
+        < UPPER_FLOOR_HEIGHT;
   }
 
   public void mineRockfall(final int x, final int y) {
-    final TileObject rockfall = TileObjects.getFirstAt(x, y, 0,
-        ObjectID.ROCKFALL, ObjectID.ROCKFALL_26680, ObjectID.ROCKFALL_28786);
+    final TileObject rockfall =
+        TileObjects.getFirstAt(
+            x, y, 0, ObjectID.ROCKFALL, ObjectID.ROCKFALL_26680, ObjectID.ROCKFALL_28786);
 
     if (rockfall != null) {
       GameThread.invoke(() -> rockfall.interact("Mine"));
       Time.sleepTicksUntil(
-          () -> TileObjects.getFirstAt(x, y, 0,
-              ObjectID.ROCKFALL, ObjectID.ROCKFALL_26680, ObjectID.ROCKFALL_28786) == null, 50
-      );
+          () ->
+              TileObjects.getFirstAt(
+                      x, y, 0, ObjectID.ROCKFALL, ObjectID.ROCKFALL_26680, ObjectID.ROCKFALL_28786)
+                  == null,
+          50);
     }
   }
 

@@ -54,6 +54,5 @@ public class Deposit extends Task {
 
     hopper.interact("Deposit");
     Time.sleepTicksUntil(() -> plugin.isCurrentActivity(Activity.IDLE), 15);
-    Time.sleepTicks(2);
   }
 }

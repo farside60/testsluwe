@@ -25,6 +25,15 @@ public interface Config extends net.runelite.client.config.Config {
   }
 
   @ConfigItem(
+      keyName = "depositNuggets",
+      name = "Deposit nuggets",
+      description = "Enable to deposit nuggets",
+      position = 2)
+  default boolean depositNuggets() {
+    return true;
+  }
+
+  @ConfigItem(
       keyName = "startButton",
       name = "Start/Stop",
       description = "Start the script",
