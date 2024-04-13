@@ -2,7 +2,6 @@ package io.reisub.devious.birdhouse.tasks;
 
 import io.reisub.devious.birdhouse.BirdHouse;
 import io.reisub.devious.birdhouse.Config;
-import io.reisub.devious.utils.Constants;
 import io.reisub.devious.utils.tasks.BankTask;
 import java.time.Duration;
 import net.runelite.api.EquipmentInventorySlot;
@@ -31,7 +30,7 @@ public class HandleBank extends BankTask {
     return config.farmSeaweed()
         && isLastBankDurationAgo(Duration.ofSeconds(5))
         && Players.getLocal().distanceTo(BirdHouse.ISLAND) < 10
-        && Inventory.contains((i) -> Constants.BIRD_NEST_IDS.contains(i.getId()));
+        && Inventory.contains(ItemID.CHISEL);
   }
 
   @Override
