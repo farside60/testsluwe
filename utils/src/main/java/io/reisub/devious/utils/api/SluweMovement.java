@@ -445,6 +445,110 @@ public class SluweMovement {
     return Time.sleepTicksUntil(() -> !Static.getClient().isInInstancedRegion(), 10);
   }
 
+  public static boolean useFairyRing(FairyRingCode fairyRingCode) {
+    return useFairyRing(fairyRingCode, 0, 0);
+  }
+
+  public static boolean useFairyRing(FairyRingCode fairyRingCode, int xoffset, int yoffset) {
+    if (!Movement.isRunEnabled()) {
+      Movement.toggleRun();
+    }
+
+    if (!goToFairyRing()) {
+      return false;
+    }
+
+    final TileObject fairyRing = TileObjects.getNearest("Fairy ring");
+    final String lastDestinationAction =
+        String.format("Last-destination (%s)", fairyRingCode.getCode());
+    final int regionId = fairyRing.getWorldLocation().getRegionID();
+
+    final Item staff = Inventory.getFirst(ItemID.LUNAR_STAFF, ItemID.DRAMEN_STAFF);
+    final Item originalWeapon = Equipment.fromSlot(EquipmentInventorySlot.WEAPON);
+
+    if (staff != null) {
+      staff.interact("Wield");
+    }
+
+    if (fairyRing.hasAction(lastDestinationAction)) {
+      fairyRing.interact(lastDestinationAction);
+      Time.sleepTicksUntil(() -> !Players.getLocal().isMoving(), 50);
+    } else {
+      fairyRing.interact("Configure");
+      Time.sleepTicksUntil(() -> !Players.getLocal().isMoving(), 50);
+
+      if (!Time.sleepTicksUntil(
+          () -> {
+            final Widget fairyRingFavoritesWidget = Widgets.get(381, 7);
+            return fairyRingFavoritesWidget != null && fairyRingFavoritesWidget.isVisible();
+          },
+          10)) {
+        return false;
+      }
+
+      fairyRingCode
+          .getWidget()
+          .interact(1, MenuAction.CC_OP.getId(), -1, fairyRingCode.getWidget().getId());
+      Time.sleepTicksUntil(
+          () -> {
+            final Widget fairyRingTeleportButton =
+                Widgets.get(WidgetInfo.FAIRY_RING_TELEPORT_BUTTON);
+            return fairyRingTeleportButton != null
+                && fairyRingTeleportButton.isVisible()
+                && !fairyRingTeleportButton.getText().equals("Invalid location");
+          },
+          10);
+
+      final Widget fairyRingTeleportButton = Widgets.get(WidgetInfo.FAIRY_RING_TELEPORT_BUTTON);
+      fairyRingTeleportButton.interact(
+          1, MenuAction.CC_OP.getId(), -1, fairyRingTeleportButton.getId());
+    }
+
+    if (!Time.sleepTicksUntil(
+        () -> Players.getLocal().getWorldLocation().getRegionID() != regionId, 10)) {
+      return false;
+    }
+
+    Time.sleepTick();
+
+    // we walk one tile away from the fairy ring because pathfinding doesn't seem to work
+    // when we're standing on a fairy ring
+    if (xoffset == 0 && yoffset == 0) {
+      xoffset = fairyRingCode.getDefaultXoffset();
+      yoffset = fairyRingCode.getDefaultYoffset();
+    }
+
+    Movement.walk(Players.getLocal().getWorldLocation().dx(xoffset).dy(yoffset));
+
+    if (originalWeapon != null && staff != null) {
+      final Item originalWeaponInventory = Inventory.getFirst(originalWeapon.getId());
+      if (originalWeaponInventory != null) {
+        originalWeaponInventory.interact("Wield");
+      }
+    }
+
+    Time.sleepTick();
+
+    return true;
+  }
+
+  public static boolean goToFairyRing() {
+    if (TileObjects.getNearest("Fairy ring") != null) {
+      return true;
+    }
+
+    final Item ardougneCloak = Inventory.getFirst(Predicates.ids(Constants.ARDOUGNE_CLOAK_IDS));
+    if (ardougneCloak != null) {
+      ardougneCloak.interact("Monastery Teleport");
+      Time.sleepTicksUntil(() -> Utils.isInRegion(10290), 10);
+      Time.sleepTick();
+
+      SluweMovement.walkTo(new WorldPoint(2655, 3229, 0));
+    }
+
+    return TileObjects.getNearest("Fairy ring") != null;
+  }
+
   public static WorldPoint toInstance(final WorldPoint point) {
     final Collection<WorldPoint> instancePoints =
         WorldPoint.toLocalInstance(Static.getClient(), point);
