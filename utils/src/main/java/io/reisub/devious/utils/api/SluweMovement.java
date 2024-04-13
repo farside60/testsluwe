@@ -472,9 +472,15 @@ public class SluweMovement {
 
     if (fairyRing.hasAction(lastDestinationAction)) {
       fairyRing.interact(lastDestinationAction);
+      if (!Interact.waitUntilActive()) {
+        return false;
+      }
       Time.sleepTicksUntil(() -> !Players.getLocal().isMoving(), 50);
     } else {
       fairyRing.interact("Configure");
+      if (!Interact.waitUntilActive()) {
+        return false;
+      }
       Time.sleepTicksUntil(() -> !Players.getLocal().isMoving(), 50);
 
       if (!Time.sleepTicksUntil(
