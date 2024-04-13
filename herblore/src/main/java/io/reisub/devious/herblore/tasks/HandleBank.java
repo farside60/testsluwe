@@ -13,6 +13,7 @@ import net.runelite.api.ItemID;
 import net.unethicalite.api.commons.Time;
 import net.unethicalite.api.items.Bank;
 import net.unethicalite.api.items.Inventory;
+import net.unethicalite.api.widgets.Dialog;
 
 public class HandleBank extends BankTask {
   private final Herblore plugin;
@@ -90,6 +91,10 @@ public class HandleBank extends BankTask {
 
     close();
     Time.sleepTicksUntil(() -> !Bank.isOpen(), 5);
+
+    if (Dialog.isOpen()) {
+      Dialog.close();
+    }
   }
 
   private void deposit() {
