@@ -14,7 +14,6 @@ import net.runelite.client.plugins.timetracking.farming.CropState;
 import net.unethicalite.api.commons.Predicates;
 import net.unethicalite.api.commons.Time;
 import net.unethicalite.api.entities.TileObjects;
-import net.unethicalite.api.game.GameThread;
 import net.unethicalite.api.game.Vars;
 
 public class Clear extends Task {
@@ -35,7 +34,7 @@ public class Clear extends Task {
     getDeadPatches()
         .forEach(
             o -> {
-              GameThread.invoke(() -> o.interact("Clear"));
+              o.interact("Clear");
 
               if (Constants.HERB_PATCH_IDS.contains(o.getId())) {
                 Time.sleepTicksUntil(

@@ -3,6 +3,7 @@ package io.reisub.devious.farming;
 import io.reisub.devious.utils.Constants;
 import io.reisub.devious.utils.api.Interact;
 import io.reisub.devious.utils.api.SluweMovement;
+import io.reisub.devious.utils.enums.FairyRingCode;
 import io.reisub.devious.utils.enums.HouseTeleport;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import net.runelite.api.widgets.Widget;
 import net.unethicalite.api.commons.Predicates;
 import net.unethicalite.api.commons.Time;
 import net.unethicalite.api.items.Inventory;
+import net.unethicalite.api.magic.Magic;
 import net.unethicalite.api.magic.SpellBook;
 import net.unethicalite.api.widgets.Widgets;
 
@@ -29,9 +31,14 @@ public enum Location {
       10548,
       Varbits.FARMING_4774,
       Varbits.FARMING_4773,
-      () ->
-          Interact.interactWithInventoryOrEquipment(
-              Constants.ARDOUGNE_CLOAK_IDS, "Farm Teleport", "Ardougne Farm", 0)),
+      () -> {
+        if (!Interact.interactWithInventoryOrEquipment(
+            Constants.ARDOUGNE_CLOAK_IDS, "Farm Teleport", "Ardougne Farm", 0)) {
+          Magic.cast(SpellBook.Standard.ARDOUGNE_TELEPORT);
+        }
+
+        return true;
+      }),
   CATHERBY(
       "Catherby",
       new WorldPoint(2813, 3465, 0),
@@ -51,9 +58,14 @@ public enum Location {
       12083,
       Varbits.FARMING_4774,
       Varbits.FARMING_4773,
-      () ->
-          Interact.interactWithInventoryOrEquipment(
-              Constants.EXPLORERS_RING_IDS, "Teleport", null, 0)),
+      () -> {
+        if (!Interact.interactWithInventoryOrEquipment(
+            Constants.EXPLORERS_RING_IDS, "Teleport", null, 0)) {
+          Magic.cast(SpellBook.Standard.FALADOR_TELEPORT);
+        }
+
+        return true;
+      }),
   FARMING_GUILD(
       "Farming Guild",
       new WorldPoint(1239, 3728, 0),
@@ -154,7 +166,13 @@ public enum Location {
       Varbits.FARMING_4771,
       0,
       () -> SluweMovement.teleportThroughHouse(HouseTeleport.WEISS, 70)),
-  VARLAMORE("Varlamore", new WorldPoint(1587, 3100, 0), 6192, Varbits.FARMING_4775, 0, () -> false);
+  VARLAMORE(
+      "Varlamore",
+      new WorldPoint(1587, 3100, 0),
+      6192,
+      Varbits.FARMING_4774,
+      Varbits.FARMING_4773,
+      () -> SluweMovement.useFairyRing(FairyRingCode.AJP));
 
   private final String name;
   private final WorldPoint patchPoint;
@@ -189,6 +207,8 @@ public enum Location {
         return config.trollStrongholdHerb();
       case WEISS:
         return config.weissHerb();
+      case VARLAMORE:
+        return config.varlamoreHerb();
       default:
     }
 

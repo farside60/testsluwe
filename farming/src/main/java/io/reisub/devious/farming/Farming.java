@@ -12,6 +12,7 @@ import io.reisub.devious.farming.tasks.PickHerb;
 import io.reisub.devious.farming.tasks.PickLimpwurt;
 import io.reisub.devious.farming.tasks.PlantHerb;
 import io.reisub.devious.farming.tasks.PlantLimpwurt;
+import io.reisub.devious.farming.tasks.WithdrawCompost;
 import io.reisub.devious.farming.tasks.WithdrawTools;
 import io.reisub.devious.utils.Constants;
 import io.reisub.devious.utils.TickScript;
@@ -47,33 +48,31 @@ import net.runelite.client.plugins.timetracking.farming.Produce;
 import net.unethicalite.api.commons.Predicates;
 import net.unethicalite.api.commons.Time;
 import net.unethicalite.api.entities.NPCs;
+import net.unethicalite.api.entities.Players;
 import net.unethicalite.api.entities.TileObjects;
 import net.unethicalite.api.game.GameThread;
 import net.unethicalite.api.game.Vars;
 import net.unethicalite.api.items.Inventory;
+import net.unethicalite.api.movement.Reachable;
 import net.unethicalite.client.Static;
 import org.pf4j.Extension;
 import org.slf4j.Logger;
 
+@Extension
+@PluginDependency(Utils.class)
 @PluginDescriptor(
-    name = "Chaos Farming",
+    name = "Sluwe Farming",
     description = "It's not much but it's honest work",
     enabledByDefault = false)
-@PluginDependency(Utils.class)
 @Slf4j
-@Extension
 public class Farming extends TickScript implements KeyListener {
-
   public static boolean catherbyThroughHouse;
   private static final Set<Integer> ITEM_OPCODES = ImmutableSet.of(1007, 25, 57);
   private static final int INVENTORY_WIDGET_ID = 9764864;
   private static final int FARMING_GUILD_REGION = 4922;
-  @Getter
-  private final Queue<Location> locationQueue = new LinkedList<>();
-  @Inject
-  private Config config;
-  @Getter
-  private Location currentLocation;
+  @Getter private final Queue<Location> locationQueue = new LinkedList<>();
+  @Inject private Config config;
+  @Getter private Location currentLocation;
   private ConfigList compostProduceConfigList;
   private boolean harvestAndCompost;
 
@@ -89,8 +88,6 @@ public class Farming extends TickScript implements KeyListener {
 
   @Override
   protected void onStart() {
-    super.onStart();
-
     catherbyThroughHouse = config.catherbyThroughHouse();
 
     buildLocationQueue();
@@ -98,6 +95,7 @@ public class Farming extends TickScript implements KeyListener {
     addTask(HandleBank.class);
     addTask(GoToPatch.class);
     addTask(WithdrawTools.class);
+    addTask(WithdrawCompost.class);
     addTask(Cure.class);
     addTask(Clear.class);
     addTask(PickLimpwurt.class);
@@ -110,8 +108,6 @@ public class Farming extends TickScript implements KeyListener {
 
   @Override
   protected void onStop() {
-    super.onStop();
-
     for (Location location : Location.values()) {
       location.setSkip(false);
     }
@@ -229,13 +225,27 @@ public class Farming extends TickScript implements KeyListener {
     final CropState compostBinState = getCompostBinState();
 
     if (OneClick.ONE_CLICK_GAME_OBJECTS_MAP.containsKey(itemId)) {
-      final TileObject nearest =
-          TileObjects.getNearest(Predicates.ids(OneClick.ONE_CLICK_GAME_OBJECTS_MAP.get(itemId)));
+      TileObject nearest = null;
+
+      if (Constants.COMPOST_IDS.contains(itemId)) {
+        nearest =
+            TileObjects.getNearest(
+                o ->
+                    OneClick.ONE_CLICK_GAME_OBJECTS_MAP.get(itemId).contains(o.getId())
+                        && Reachable.getInteractable(o)
+                            .contains(Players.getLocal().getWorldLocation()));
+      }
+
+      if (nearest == null) {
+        nearest =
+            TileObjects.getNearest(Predicates.ids(OneClick.ONE_CLICK_GAME_OBJECTS_MAP.get(itemId)));
+      }
+
       if (nearest == null) {
         return;
       }
 
-      GameThread.invoke(() -> item.useOn(nearest));
+      item.useOn(nearest);
     } else if (OneClick.ONE_CLICK_ITEMS_MAP.containsKey(itemId)) {
       final Item other =
           Inventory.getFirst(Predicates.ids(OneClick.ONE_CLICK_ITEMS_MAP.get(itemId)));
@@ -271,7 +281,7 @@ public class Farming extends TickScript implements KeyListener {
 
   @Subscribe
   private void onConfigChanged(ConfigChanged event) {
-    if (!event.getGroup().equals("chaosfarming")) {
+    if (!event.getGroup().equals("sluwefarming")) {
       return;
     }
 
@@ -281,8 +291,7 @@ public class Farming extends TickScript implements KeyListener {
   }
 
   @Override
-  public void keyTyped(KeyEvent e) {
-  }
+  public void keyTyped(KeyEvent e) {}
 
   @Override
   public void keyPressed(KeyEvent e) {
@@ -296,8 +305,7 @@ public class Farming extends TickScript implements KeyListener {
   }
 
   @Override
-  public void keyReleased(KeyEvent e) {
-  }
+  public void keyReleased(KeyEvent e) {}
 
   private void harvestAndCompost() {
     final TileObject patch = TileObjects.getNearest(Predicates.ids(Constants.ALLOTMENT_PATCH_IDS));

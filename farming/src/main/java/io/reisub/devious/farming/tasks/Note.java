@@ -12,7 +12,6 @@ import net.runelite.api.NPC;
 import net.unethicalite.api.commons.Predicates;
 import net.unethicalite.api.commons.Time;
 import net.unethicalite.api.entities.NPCs;
-import net.unethicalite.api.game.GameThread;
 import net.unethicalite.api.items.Inventory;
 
 public class Note extends Task {
@@ -41,17 +40,23 @@ public class Note extends Task {
     herbIds.addAll(Constants.GRIMY_HERB_IDS);
     herbIds.addAll(Constants.CLEAN_HERB_IDS);
 
-    final Item product =
-        Inventory.contains(ItemID.LIMPWURT_ROOT)
-            ? Inventory.getFirst(ItemID.LIMPWURT_ROOT)
-            : Inventory.getFirst(Predicates.ids(herbIds));
-
     final NPC leprechaun = NPCs.getNearest("Tool Leprechaun");
-    if (product == null || leprechaun == null) {
+    if (leprechaun == null) {
       return;
     }
 
-    GameThread.invoke(() -> product.useOn(leprechaun));
-    Time.sleepTicksUntil(() -> !Inventory.contains(product.getId()), 30);
+    final Item limpwurtRoot = Inventory.getFirst(ItemID.LIMPWURT_ROOT);
+
+    if (limpwurtRoot != null) {
+      limpwurtRoot.useOn(leprechaun);
+      Time.sleepTicksUntil(() -> !Inventory.contains(limpwurtRoot.getId()), 30);
+    }
+
+    final Item herb = Inventory.getFirst(Predicates.ids(herbIds));
+
+    if (herb != null) {
+      herb.useOn(leprechaun);
+      Time.sleepTicksUntil(() -> !Inventory.contains(herb.getId()), 30);
+    }
   }
 }

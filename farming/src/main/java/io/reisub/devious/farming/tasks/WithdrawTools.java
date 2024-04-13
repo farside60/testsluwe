@@ -1,19 +1,22 @@
 package io.reisub.devious.farming.tasks;
 
+import io.reisub.devious.farming.Compost;
+import io.reisub.devious.farming.Config;
 import io.reisub.devious.farming.Farming;
 import io.reisub.devious.utils.Constants;
+import io.reisub.devious.utils.api.SluweInventory;
 import io.reisub.devious.utils.tasks.Task;
 import javax.inject.Inject;
 import net.runelite.api.ItemID;
 import net.runelite.api.NPC;
 import net.unethicalite.api.commons.Time;
 import net.unethicalite.api.entities.NPCs;
-import net.unethicalite.api.game.GameThread;
 import net.unethicalite.api.items.Inventory;
 import net.unethicalite.api.widgets.Widgets;
 
 public class WithdrawTools extends Task {
   @Inject private Farming plugin;
+  @Inject private Config config;
 
   @Override
   public String getStatus() {
@@ -24,8 +27,14 @@ public class WithdrawTools extends Task {
   public boolean validate() {
     NPC leprechaun = NPCs.getNearest("Tool Leprechaun");
 
+    boolean hasAll =
+        config.barbarianFarming()
+            ? SluweInventory.hasAllItemsInventoryOrEquipped(ItemID.SPADE, ItemID.MAGIC_SECATEURS)
+            : SluweInventory.hasAllItemsInventoryOrEquipped(
+                ItemID.SEED_DIBBER, ItemID.SPADE, ItemID.MAGIC_SECATEURS);
+
     return !plugin.getLocationQueue().isEmpty()
-        && !Inventory.contains(ItemID.SEED_DIBBER)
+        && !hasAll
         && leprechaun != null;
   }
 
@@ -33,18 +42,27 @@ public class WithdrawTools extends Task {
   public void execute() {
     NPC leprechaun = NPCs.getNearest("Tool Leprechaun");
 
-    GameThread.invoke(() -> leprechaun.interact("Exchange"));
+    leprechaun.interact("Exchange");
     Time.sleepTicksUntil(() -> Widgets.isVisible(Constants.TOOLS_WIDGET.get()), 30);
     Time.sleepTick();
 
     Constants.TOOLS_WITHDRAW_SECATEURS_WIDGET.get().interact(0);
-    Constants.TOOLS_WITHDRAW_DIBBER_WIDGET.get().interact(0);
+    if (!config.barbarianFarming()) {
+      Constants.TOOLS_WITHDRAW_DIBBER_WIDGET.get().interact(0);
+    }
     Constants.TOOLS_WITHDRAW_SPADE_WIDGET.get().interact(0);
-    // TODO support other compost buckets
-    Constants.TOOLS_WITHDRAW_BOTTOMLESS_BUCKET_WIDGET.get().interact(0);
+
+    if (config.compost() == Compost.BOTTOMLESS) {
+      config.compost().getWidget().interact(0);
+    } else {
+      if (config.limpwurt()) {
+        config.compost().getWidget().interact(0);
+      }
+      config.compost().getWidget().interact(0);
+    }
 
     Constants.TOOLS_CLOSE_WIDGET.get().interact("Close");
-    Time.sleepTicksUntil(() -> Inventory.contains(ItemID.SEED_DIBBER), 5);
+    Time.sleepTicksUntil(() -> Inventory.contains(ItemID.SPADE), 5);
 
     if (Inventory.contains(ItemID.MAGIC_SECATEURS)) {
       Inventory.getFirst(ItemID.MAGIC_SECATEURS).interact("Wield");

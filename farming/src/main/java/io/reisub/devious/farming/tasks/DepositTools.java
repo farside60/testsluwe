@@ -2,6 +2,7 @@ package io.reisub.devious.farming.tasks;
 
 import io.reisub.devious.farming.Farming;
 import io.reisub.devious.utils.Constants;
+import io.reisub.devious.utils.api.SluweInventory;
 import io.reisub.devious.utils.tasks.Task;
 import javax.inject.Inject;
 import net.runelite.api.Item;
@@ -10,7 +11,6 @@ import net.runelite.api.NPC;
 import net.unethicalite.api.commons.Predicates;
 import net.unethicalite.api.commons.Time;
 import net.unethicalite.api.entities.NPCs;
-import net.unethicalite.api.game.GameThread;
 import net.unethicalite.api.items.Equipment;
 import net.unethicalite.api.items.Inventory;
 import net.unethicalite.api.widgets.Widgets;
@@ -29,7 +29,8 @@ public class DepositTools extends Task {
 
     return plugin.getLocationQueue().isEmpty()
         && (plugin.getCurrentLocation() == null || plugin.isCurrentLocationDone())
-        && Inventory.contains(ItemID.SEED_DIBBER)
+        && SluweInventory.hasAnyItemInventoryOrEquipped(
+            ItemID.SEED_DIBBER, ItemID.SPADE, ItemID.MAGIC_SECATEURS)
         && leprechaun != null;
   }
 
@@ -41,7 +42,7 @@ public class DepositTools extends Task {
 
     NPC leprechaun = NPCs.getNearest("Tool Leprechaun");
 
-    GameThread.invoke(() -> leprechaun.interact("Exchange"));
+    leprechaun.interact("Exchange");
     Time.sleepTicksUntil(() -> Widgets.isVisible(Constants.TOOLS_WIDGET.get()), 30);
 
     Constants.TOOLS_DEPOSIT_SECATEURS_WIDGET.get().interact(0);
@@ -49,7 +50,7 @@ public class DepositTools extends Task {
     Constants.TOOLS_DEPOSIT_SPADE_WIDGET.get().interact(0);
 
     if (Inventory.contains(ItemID.BUCKET)) {
-      Constants.TOOLS_DEPOSIT_BUCKET_WIDGET.get().interact("Store-5");
+      Constants.TOOLS_DEPOSIT_BUCKET_WIDGET.get().interact("Store-All");
     }
 
     if (Inventory.contains(

@@ -3,6 +3,7 @@ package io.reisub.devious.farming.tasks;
 import io.reisub.devious.farming.Config;
 import io.reisub.devious.farming.Farming;
 import io.reisub.devious.farming.Location;
+import io.reisub.devious.farming.Seed;
 import io.reisub.devious.utils.Constants;
 import io.reisub.devious.utils.api.ConfigList;
 import io.reisub.devious.utils.api.SluweBank;
@@ -54,14 +55,12 @@ public class HandleBank extends BankTask {
         ItemID.BOTTOMLESS_COMPOST_BUCKET,
         ItemID.BOTTOMLESS_COMPOST_BUCKET_22997,
         ItemID.HERB_SACK,
-        ItemID.OPEN_HERB_SACK
-    );
+        ItemID.OPEN_HERB_SACK);
 
     Bank.withdraw(
         net.unethicalite.api.commons.Predicates.ids(ItemID.OPEN_HERB_SACK, ItemID.HERB_SACK),
         1,
-        Bank.WithdrawMode.ITEM
-    );
+        Bank.WithdrawMode.ITEM);
 
     withdrawTeleportItems();
     withdrawSeeds();
@@ -142,8 +141,7 @@ public class HandleBank extends BankTask {
           if (!Inventory.contains(Predicates.ids(Constants.CONSTRUCTION_CAPE_IDS))) {
             if (Bank.contains(Predicates.ids(Constants.CONSTRUCTION_CAPE_IDS))
                 && !withdrawnConstructionCape) {
-              Bank.withdraw(
-                  Predicates.ids(Constants.CONSTRUCTION_CAPE_IDS), 1, WithdrawMode.ITEM);
+              Bank.withdraw(Predicates.ids(Constants.CONSTRUCTION_CAPE_IDS), 1, WithdrawMode.ITEM);
               withdrawnConstructionCape = true;
             } else if (!withdrawnConstructionCape) {
               runes.put(ItemID.AIR_RUNE, runes.get(ItemID.AIR_RUNE) + 1);
@@ -154,6 +152,16 @@ public class HandleBank extends BankTask {
           break;
         case PORT_PHASMATYS:
           Bank.withdraw(ItemID.ECTOPHIAL, 1, Bank.WithdrawMode.ITEM);
+          break;
+        case VARLAMORE:
+          if (config.varlamoreRequireStaff()) {
+            Bank.withdraw(
+                i -> i.getId() == ItemID.LUNAR_STAFF || i.getId() == ItemID.DRAMEN_STAFF,
+                1,
+                WithdrawMode.ITEM);
+          }
+
+          Bank.withdraw(Predicates.ids(Constants.ARDOUGNE_CLOAK_IDS), 1, WithdrawMode.ITEM);
           break;
         default:
       }
@@ -171,10 +179,7 @@ public class HandleBank extends BankTask {
 
     if (Bank.contains(ItemID.CRAFTING_CAPE, ItemID.CRAFTING_CAPET)) {
       Bank.withdraw(
-          Predicates.ids(ItemID.CRAFTING_CAPE, ItemID.CRAFTING_CAPET),
-          1,
-          Bank.WithdrawMode.ITEM
-      );
+          Predicates.ids(ItemID.CRAFTING_CAPE, ItemID.CRAFTING_CAPET), 1, Bank.WithdrawMode.ITEM);
     }
   }
 
@@ -195,15 +200,23 @@ public class HandleBank extends BankTask {
 
       if (config.manualMode()) {
         ConfigList manualSeedsList = ConfigList.parseList(config.manualSeeds());
-        seeds = Bank.getAll(
-            SluwePredicates.itemConfigList(manualSeedsList));
+        seeds = Bank.getAll(SluwePredicates.itemConfigList(manualSeedsList));
 
         wantedPerSeed =
             config.manualSeedsSplit()
                 ? (quantityOfSeedsNeeded + seeds.size() - 1) / seeds.size()
                 : quantityOfSeedsNeeded;
       } else {
-        seeds = Bank.getAll(Predicates.ids(Constants.HERB_SEED_IDS));
+        seeds =
+            Bank.getAll(
+                i -> {
+                  final Seed seed = Seed.getById(i.getId());
+                  if (seed == null) {
+                    return false;
+                  }
+
+                  return seed.canPlant();
+                });
 
         switch (config.seedsMode()) {
           case LOWEST_FIRST:

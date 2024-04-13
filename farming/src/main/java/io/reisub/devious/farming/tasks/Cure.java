@@ -18,7 +18,6 @@ import net.unethicalite.api.commons.Predicates;
 import net.unethicalite.api.commons.Time;
 import net.unethicalite.api.entities.NPCs;
 import net.unethicalite.api.entities.TileObjects;
-import net.unethicalite.api.game.GameThread;
 import net.unethicalite.api.game.Vars;
 import net.unethicalite.api.items.Inventory;
 import net.unethicalite.api.utils.MessageUtils;
@@ -47,7 +46,7 @@ public class Cure extends Task {
         return;
       }
 
-      GameThread.invoke(() -> leprechaun.interact("Exchange"));
+      leprechaun.interact("Exchange");
       Time.sleepTicksUntil(() -> Widgets.isVisible(Constants.TOOLS_WIDGET.get()), 30);
       Time.sleepTick();
 
@@ -68,7 +67,7 @@ public class Cure extends Task {
           Item plantCure = Inventory.getFirst(ItemID.PLANT_CURE);
           int plantCureCount = Inventory.getCount(ItemID.PLANT_CURE);
 
-          GameThread.invoke(() -> plantCure.useOn(o));
+          plantCure.useOn(o);
           Time.sleepTicksUntil(() -> Inventory.getCount(ItemID.PLANT_CURE) < plantCureCount, 30);
         });
   }

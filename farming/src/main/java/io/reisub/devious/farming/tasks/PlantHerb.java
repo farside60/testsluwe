@@ -7,6 +7,7 @@ import io.reisub.devious.farming.PatchImplementation;
 import io.reisub.devious.farming.PatchState;
 import io.reisub.devious.utils.Constants;
 import io.reisub.devious.utils.api.ConfigList;
+import io.reisub.devious.utils.api.Interact;
 import io.reisub.devious.utils.api.SluwePredicates;
 import io.reisub.devious.utils.tasks.Task;
 import java.util.List;
@@ -17,9 +18,7 @@ import net.runelite.client.plugins.timetracking.farming.CropState;
 import net.runelite.client.plugins.timetracking.farming.Produce;
 import net.unethicalite.api.commons.Predicates;
 import net.unethicalite.api.commons.Time;
-import net.unethicalite.api.entities.Players;
 import net.unethicalite.api.entities.TileObjects;
-import net.unethicalite.api.game.GameThread;
 import net.unethicalite.api.game.Vars;
 import net.unethicalite.api.items.Inventory;
 
@@ -95,10 +94,11 @@ public class PlantHerb extends Task {
       return;
     }
 
-    final Item finalSeed = seed;
+    if (!Interact.waitUntilInactive()) {
+      return;
+    }
 
-    Time.sleepTicksUntil(() -> !Players.getLocal().isAnimating(), 3);
-    GameThread.invoke(() -> finalSeed.useOn(patch));
+    seed.useOn(patch);
 
     if (!Time.sleepTicksUntil(() -> Vars.getBit(currentLocation.getHerbVarbit()) > 3, 20)) {
       return;
@@ -109,7 +109,7 @@ public class PlantHerb extends Task {
       return;
     }
 
-    GameThread.invoke(() -> compost.useOn(patch));
+    compost.useOn(patch);
     Time.sleepTicks(3);
   }
 }

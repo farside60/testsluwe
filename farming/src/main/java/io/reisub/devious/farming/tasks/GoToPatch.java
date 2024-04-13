@@ -8,11 +8,11 @@ import io.reisub.devious.utils.tasks.Task;
 import javax.inject.Inject;
 import net.runelite.api.coords.WorldPoint;
 import net.unethicalite.api.commons.Time;
+import net.unethicalite.api.entities.NPCs;
 import net.unethicalite.api.entities.Players;
 
 public class GoToPatch extends Task {
   @Inject private Farming plugin;
-
   @Inject private Config config;
 
   @Override
@@ -29,17 +29,23 @@ public class GoToPatch extends Task {
   @Override
   public void execute() {
     WorldPoint current = Players.getLocal().getWorldLocation();
+    boolean disableTeleports = false;
 
     if (plugin.getCurrentLocation().getTeleportable().teleport()) {
-      Time.sleepTicksUntil(
+      if (!Time.sleepTicksUntil(
           () ->
               Players.getLocal().getWorldLocation() != null
                   && !Players.getLocal().getWorldLocation().equals(current),
-          10);
+          10)) {
+        return;
+      }
+      disableTeleports = true;
     }
 
     if (Players.getLocal().distanceTo(plugin.getCurrentLocation().getPatchPoint()) > 10) {
-      SluweMovement.walkTo(plugin.getCurrentLocation().getPatchPoint());
+      SluweMovement.walkTo(plugin.getCurrentLocation().getPatchPoint(), disableTeleports);
     }
+
+    Time.sleepTicksUntil(() -> NPCs.getNearest("Tool Leprechaun") != null, 10);
   }
 }

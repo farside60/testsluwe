@@ -8,7 +8,7 @@ import net.runelite.client.config.ConfigItem;
 import net.runelite.client.config.ConfigSection;
 import net.runelite.client.config.Keybind;
 
-@ConfigGroup("chaosfarming")
+@ConfigGroup("sluwefarming")
 public interface Config extends net.runelite.client.config.Config {
   @ConfigSection(
       keyName = "seedsConfig",
@@ -18,11 +18,11 @@ public interface Config extends net.runelite.client.config.Config {
   String seedsConfig = "seedsConfig";
 
   @ConfigSection(
-      keyName = "teleportItemsConfig",
-      name = "Teleport items",
-      description = "Configure teleport items",
+      keyName = "teleportOptionsConfig",
+      name = "Teleport options",
+      description = "Configure teleport options",
       position = 100)
-  String teleportItemsConfig = "teleportItemsConfig";
+  String teleportOptionsConfig = "teleportOptionsConfig";
 
   @ConfigSection(
       keyName = "oneClickConfig",
@@ -141,9 +141,23 @@ public interface Config extends net.runelite.client.config.Config {
       keyName = "useExplorersRing",
       name = "Use Explorer's ring",
       description = "Use the Explorer's ring to teleport to Falador",
-      section = "teleportItemsConfig",
-      position = 101)
+      section = "teleportOptionsConfig",
+      position = 101,
+      hidden = true,
+      unhide = "faladorHerb")
   default boolean useExplorersRing() {
+    return false;
+  }
+
+  @ConfigItem(
+      keyName = "catherbyThroughHouse",
+      name = "Catherby through house",
+      description = "Teleport to Catherby through your house",
+      section = "teleportOptionsConfig",
+      position = 102,
+      hidden = true,
+      unhide = "catherbyHerb")
+  default boolean catherbyThroughHouse() {
     return false;
   }
 
@@ -151,8 +165,10 @@ public interface Config extends net.runelite.client.config.Config {
       keyName = "useArdougneCloak",
       name = "Use Ardougne cloak",
       description = "Use the Ardougne cloak to teleport to Ardougne",
-      section = "teleportItemsConfig",
-      position = 102)
+      section = "teleportOptionsConfig",
+      position = 103,
+      hidden = true,
+      unhide = "ardougneHerb")
   default boolean useArdougneCloak() {
     return false;
   }
@@ -161,20 +177,24 @@ public interface Config extends net.runelite.client.config.Config {
       keyName = "useXericsTalisman",
       name = "Use Xeric's talisman",
       description = "Use Xeric's talisman to teleport to Hosidius",
-      section = "teleportItemsConfig",
-      position = 103)
+      section = "teleportOptionsConfig",
+      position = 104,
+      hidden = true,
+      unhide = "hosidiusHerb")
   default boolean useXericsTalisman() {
     return false;
   }
 
   @ConfigItem(
-      keyName = "catherbyThroughHouse",
-      name = "Catherby through house",
-      description = "Teleport to Catherby through your house",
-      section = "teleportItemsConfig",
-      position = 104)
-  default boolean catherbyThroughHouse() {
-    return false;
+      keyName = "varlamoreRequireStaff",
+      name = "Require fairy ring staff",
+      description = "You can disable this if you don't require a staff to access the fairy rings.",
+      section = "teleportOptionsConfig",
+      position = 105,
+      hidden = true,
+      unhide = "varlamoreHerb")
+  default boolean varlamoreRequireStaff() {
+    return true;
   }
 
   @ConfigItem(
@@ -302,16 +322,46 @@ public interface Config extends net.runelite.client.config.Config {
   }
 
   @ConfigItem(
+      keyName = "varlamoreHerb",
+      name = "Varlamore",
+      description =
+          "Enable patch. Note: this requires fairy rings and the Varlamore code to "
+              + "already have been used once before.",
+      section = "herbConfig",
+      position = 310)
+  default boolean varlamoreHerb() {
+    return false;
+  }
+
+  @ConfigItem(
       keyName = "herbOrder",
       name = "Order",
       description =
           "Order in which to do the locations. Any enabled location not in this order list will "
               + "simply be added to the end.",
       section = "herbConfig",
-      position = 310)
+      position = 311)
   default String herbOrder() {
-    return "Farming Guild\nArdougne\nCatherby\nFalador\nPort Phasmatys\nHosidius\nHarmony Island\n"
-        + "Troll Stronghold\nWeiss";
+    return "Farming Guild\nArdougne\nCatherby\nFalador\nPort Phasmatys\nVarlamore\nHosidius\n"
+        + "Harmony Island\nTroll Stronghold\nWeiss";
+  }
+
+  @ConfigItem(
+      keyName = "barbarianFarming",
+      name = "Barbarian farming",
+      description = "Enabling this will omit getting a seed dibber from the leprechaun.",
+      position = Integer.MAX_VALUE - 4)
+  default boolean barbarianFarming() {
+    return false;
+  }
+
+  @ConfigItem(
+      keyName = "compost",
+      name = "Compost",
+      description = "Select the compost bucket you'd like to use.",
+      position = Integer.MAX_VALUE - 3)
+  default Compost compost() {
+    return Compost.BOTTOMLESS;
   }
 
   @ConfigItem(
@@ -326,9 +376,10 @@ public interface Config extends net.runelite.client.config.Config {
   @ConfigItem(
       keyName = "harvestAndCompostHotkey",
       name = "Harvest and compost hotkey",
-      description = "Pressing this hotkey will harvest the nearest allotment patch and put the "
-          + "produce in the compost bin at the same time. Requires at least 1 of the produce "
-          + "in the inventory already",
+      description =
+          "Pressing this hotkey will harvest the nearest allotment patch and put the "
+              + "produce in the compost bin at the same time. Requires at least 1 of the produce "
+              + "in the inventory already",
       position = Integer.MAX_VALUE - 1)
   default Keybind harvestAndCompostHotkey() {
     return new Keybind(KeyEvent.VK_F7, InputEvent.CTRL_DOWN_MASK);
