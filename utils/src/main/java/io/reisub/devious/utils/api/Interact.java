@@ -73,11 +73,20 @@ public class Interact {
   }
 
   public static boolean waitUntilActive() {
+    return waitUntilActive(3);
+  }
+
+  public static boolean waitUntilActive(final int ticks) {
+    return Time.sleepTicksUntil(
+        () -> Players.getLocal().isMoving() || Players.getLocal().isAnimating(), ticks);
+  }
+
+  public static boolean waitUntilInactive() {
     return waitUntilInactive(3);
   }
 
   public static boolean waitUntilInactive(final int ticks) {
     return Time.sleepTicksUntil(
-        () -> Players.getLocal().isMoving() || Players.getLocal().isAnimating(), ticks);
+        () -> !Players.getLocal().isMoving() && !Players.getLocal().isAnimating(), ticks);
   }
 }
