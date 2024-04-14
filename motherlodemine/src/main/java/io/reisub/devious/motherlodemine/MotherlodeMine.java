@@ -20,14 +20,18 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Actor;
 import net.runelite.api.AnimationID;
+import net.runelite.api.ChatMessageType;
 import net.runelite.api.ItemID;
 import net.runelite.api.ObjectID;
 import net.runelite.api.Perspective;
+import net.runelite.api.Skill;
 import net.runelite.api.TileObject;
 import net.runelite.api.Varbits;
 import net.runelite.api.events.AnimationChanged;
+import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameObjectDespawned;
 import net.runelite.api.events.ItemContainerChanged;
+import net.runelite.api.events.StatChanged;
 import net.runelite.api.events.VarbitChanged;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
@@ -43,13 +47,13 @@ import net.unethicalite.client.Static;
 import org.pf4j.Extension;
 import org.slf4j.Logger;
 
+@Extension
+@PluginDependency(Utils.class)
 @PluginDescriptor(
     name = "Sluwe Motherlode Mine",
     description = "Diggy, diggy hole",
     enabledByDefault = false)
-@PluginDependency(Utils.class)
 @Slf4j
-@Extension
 public class MotherlodeMine extends TickScript {
 
   public static final Activity MINING = new Activity("Mining");
@@ -62,9 +66,23 @@ public class MotherlodeMine extends TickScript {
   private static final int UPPER_FLOOR_HEIGHT = -490;
 
   @Inject private Config config;
+  @Inject private MotherlodeMineOverlay overlay;
   private int curSackSize;
   private int maxSackSize;
   @Getter private boolean sackFull;
+  private int lastStatChangedHashcode;
+  @Getter private int strutsFixed;
+  @Getter private int nuggets;
+  @Getter private int payDirt;
+  @Getter private int coal;
+  @Getter private int goldOre;
+  @Getter private int mithrilOre;
+  @Getter private int adamantiteOre;
+  @Getter private int runiteOre;
+  @Getter private int sapphires;
+  @Getter private int emeralds;
+  @Getter private int rubies;
+  @Getter private int diamonds;
 
   @Provides
   public Config getConfig(ConfigManager configManager) {
@@ -78,8 +96,6 @@ public class MotherlodeMine extends TickScript {
 
   @Override
   protected void onStart() {
-    super.onStart();
-
     addTask(WithdrawSack.class);
     addTask(UseShortcut.class);
     addTask(Mine.class);
@@ -89,6 +105,26 @@ public class MotherlodeMine extends TickScript {
     addTask(HandleBank.class);
     addTask(GoToMiningArea.class);
     addTask(GoUp.class);
+
+    trackExperience(Skill.MINING);
+    reset();
+
+    setOverlay(overlay);
+  }
+
+  private void reset() {
+    strutsFixed = 0;
+    nuggets = 0;
+    payDirt = 0;
+    coal = 0;
+    goldOre = 0;
+    mithrilOre = 0;
+    adamantiteOre = 0;
+    runiteOre = 0;
+    sapphires = 0;
+    emeralds = 0;
+    rubies = 0;
+    diamonds = 0;
   }
 
   @Subscribe
@@ -145,6 +181,13 @@ public class MotherlodeMine extends TickScript {
           ItemID.UNCUT_DIAMOND,
           ItemID.UNCUT_DRAGONSTONE)) {
         setActivity(Activity.IDLE);
+
+        coal += Inventory.getCount(ItemID.COAL);
+        goldOre += Inventory.getCount(ItemID.GOLD_ORE);
+        mithrilOre += Inventory.getCount(ItemID.MITHRIL_ORE);
+        adamantiteOre += Inventory.getCount(ItemID.ADAMANTITE_ORE);
+        runiteOre += Inventory.getCount(ItemID.RUNITE_ORE);
+        nuggets += Inventory.getCount(true, ItemID.GOLDEN_NUGGET);
       }
     } else if (isCurrentActivity(MINING)) {
       if (Inventory.isFull()) {
@@ -160,6 +203,47 @@ public class MotherlodeMine extends TickScript {
       int inventorySize = config.depositNuggets() ? 27 : 26;
       if (curSackSize >= maxSackSize - inventorySize) {
         sackFull = true;
+      }
+    }
+  }
+
+  @Subscribe
+  private void onStatChanged(StatChanged statChanged) {
+    if (!isRunning() || lastStatChangedHashcode == statChanged.hashCode()) {
+      return;
+    }
+
+    lastStatChangedHashcode = statChanged.hashCode();
+
+    if (statChanged.getSkill() == Skill.SMITHING) {
+      strutsFixed++;
+    }
+  }
+
+  @Subscribe
+  private void onChatMessage(ChatMessage chatMessage) {
+    if (!isRunning()) {
+      return;
+    }
+
+    if (chatMessage.getType() != ChatMessageType.GAMEMESSAGE
+        && chatMessage.getType() != ChatMessageType.SPAM) {
+      return;
+    }
+
+    final String message = chatMessage.getMessage();
+
+    if (message.equals("You manage to mine some pay-dirt.")) {
+      payDirt++;
+    } else if (message.startsWith("You just found")) {
+      if (message.contains("Sapphire")) {
+        sapphires++;
+      } else if (message.contains("Emerald")) {
+        emeralds++;
+      } else if (message.contains("Ruby")) {
+        rubies++;
+      } else if (message.contains("Diamond")) {
+        diamonds++;
       }
     }
   }
