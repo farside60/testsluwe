@@ -53,6 +53,7 @@ import net.unethicalite.api.entities.TileObjects;
 import net.unethicalite.api.game.GameThread;
 import net.unethicalite.api.game.Vars;
 import net.unethicalite.api.items.Inventory;
+import net.unethicalite.api.movement.Movement;
 import net.unethicalite.api.movement.Reachable;
 import net.unethicalite.client.Static;
 import org.pf4j.Extension;
@@ -310,16 +311,25 @@ public class Farming extends TickScript implements KeyListener {
   private void harvestAndCompost() {
     final TileObject patch = TileObjects.getNearest(Predicates.ids(Constants.ALLOTMENT_PATCH_IDS));
     final TileObject compostBin = TileObjects.getNearest(Predicates.ids(Constants.COMPOST_BIN_IDS));
-    final Item compostable =
-        Inventory.getFirst(SluwePredicates.itemConfigList(compostProduceConfigList));
+    Item compostable = Inventory.getFirst(SluwePredicates.itemConfigList(compostProduceConfigList));
 
-    if (patch == null || compostBin == null || compostable == null) {
+    if (patch == null || compostBin == null) {
       return;
     }
 
-    GameThread.invoke(() -> patch.interact("Harvest"));
+    if (compostable == null) {
+      patch.interact("Harvest");
+      Time.sleepTicksUntil(
+          () -> Inventory.contains(SluwePredicates.itemConfigList(compostProduceConfigList)), 10);
+
+      Movement.walk(Players.getLocal());
+
+      compostable = Inventory.getFirst(SluwePredicates.itemConfigList(compostProduceConfigList));
+    }
+
+    patch.interact("Harvest");
     Time.sleepTick();
-    GameThread.invoke(() -> compostable.useOn(compostBin));
+    compostable.useOn(compostBin);
   }
 
   private CropState getCompostBinState() {
