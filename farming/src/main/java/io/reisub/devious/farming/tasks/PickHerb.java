@@ -14,7 +14,6 @@ import net.runelite.client.plugins.timetracking.farming.CropState;
 import net.unethicalite.api.commons.Predicates;
 import net.unethicalite.api.commons.Time;
 import net.unethicalite.api.entities.TileObjects;
-import net.unethicalite.api.game.GameThread;
 import net.unethicalite.api.game.Vars;
 import net.unethicalite.api.items.Inventory;
 
@@ -54,16 +53,22 @@ public class PickHerb extends Task {
     }
 
     experienceReceived = false;
-    GameThread.invoke(() -> patch.interact("Pick"));
-    Time.sleepTicksUntil(() -> experienceReceived, 20);
+    patch.interact("Pick");
+    if (!Time.sleepTicksUntil(() -> experienceReceived, 20)) {
+      return;
+    }
 
-    GameThread.invoke(() -> patch.interact("Pick"));
+    patch.interact("Pick");
     Time.sleepTick();
-    GameThread.invoke(() -> patch.interact("Pick"));
+    patch.interact("Pick");
 
     Time.sleepTicksUntil(
         () -> Inventory.isFull() || Vars.getBit(plugin.getCurrentLocation().getHerbVarbit()) <= 3,
         100);
+
+    if (Vars.getBit(plugin.getCurrentLocation().getHerbVarbit()) <= 3) {
+      Time.sleepTicks(2);
+    }
   }
 
   @Subscribe

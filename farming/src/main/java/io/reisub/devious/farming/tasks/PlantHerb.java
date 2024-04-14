@@ -7,7 +7,6 @@ import io.reisub.devious.farming.PatchImplementation;
 import io.reisub.devious.farming.PatchState;
 import io.reisub.devious.utils.Constants;
 import io.reisub.devious.utils.api.ConfigList;
-import io.reisub.devious.utils.api.Interact;
 import io.reisub.devious.utils.api.SluwePredicates;
 import io.reisub.devious.utils.tasks.Task;
 import java.util.List;
@@ -91,10 +90,6 @@ public class PlantHerb extends Task {
     }
 
     if (seed == null) {
-      return;
-    }
-
-    if (!Interact.waitUntilInactive()) {
       return;
     }
 
