@@ -46,7 +46,9 @@ public class DepositTools extends Task {
     Time.sleepTicksUntil(() -> Widgets.isVisible(Constants.TOOLS_WIDGET.get()), 30);
 
     Constants.TOOLS_DEPOSIT_SECATEURS_WIDGET.get().interact(0);
-    Constants.TOOLS_DEPOSIT_DIBBER_WIDGET.get().interact(0);
+    if (Inventory.contains(ItemID.SEED_DIBBER)) {
+      Constants.TOOLS_DEPOSIT_DIBBER_WIDGET.get().interact(0);
+    }
     Constants.TOOLS_DEPOSIT_SPADE_WIDGET.get().interact(0);
 
     if (Inventory.contains(ItemID.BUCKET)) {
