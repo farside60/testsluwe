@@ -3,12 +3,15 @@ package io.reisub.devious.farming.tasks;
 import io.reisub.devious.farming.Compost;
 import io.reisub.devious.farming.Config;
 import io.reisub.devious.farming.Farming;
+import io.reisub.devious.farming.Location;
 import io.reisub.devious.utils.Constants;
 import io.reisub.devious.utils.api.SluweInventory;
+import io.reisub.devious.utils.api.SluweMovement;
 import io.reisub.devious.utils.tasks.Task;
 import javax.inject.Inject;
 import net.runelite.api.ItemID;
 import net.runelite.api.NPC;
+import net.runelite.api.coords.WorldPoint;
 import net.unethicalite.api.commons.Time;
 import net.unethicalite.api.entities.NPCs;
 import net.unethicalite.api.items.Inventory;
@@ -40,6 +43,10 @@ public class WithdrawTools extends Task {
 
   @Override
   public void execute() {
+    if (plugin.getCurrentLocation() == Location.FARMING_GUILD && !config.limpwurt()) {
+      SluweMovement.walkTo(new WorldPoint(1238, 3730, 0), 1);
+    }
+
     NPC leprechaun = NPCs.getNearest("Tool Leprechaun");
 
     leprechaun.interact("Exchange");
