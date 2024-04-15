@@ -3,8 +3,11 @@ package io.reisub.devious.cooking.tasks;
 import io.reisub.devious.cooking.Config;
 import io.reisub.devious.cooking.Cooking;
 import io.reisub.devious.utils.api.Activity;
+import io.reisub.devious.utils.api.SluweInventory;
 import io.reisub.devious.utils.tasks.Task;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import net.runelite.api.Item;
 import net.runelite.api.coords.WorldPoint;
 import net.unethicalite.api.commons.Time;
 import net.unethicalite.api.entities.Players;
@@ -45,9 +48,8 @@ public class Drop extends Task {
       }
     }
 
-    Inventory.getAll(config.food()).forEach((i) -> i.interact("Drop"));
-
-    Time.sleepTick();
+    final List<Item> food = Inventory.getAll(config.food());
+    SluweInventory.dropAll(food.subList(0, food.size() - 1));
 
     plugin.setLastDrop(Static.getClient().getTickCount());
   }

@@ -13,6 +13,7 @@ import net.unethicalite.api.entities.Players;
 import net.unethicalite.api.entities.TileItems;
 import net.unethicalite.api.entities.TileObjects;
 import net.unethicalite.api.items.Inventory;
+import net.unethicalite.client.Static;
 
 @RequiredArgsConstructor
 public class SonicCook extends Task {
@@ -32,13 +33,15 @@ public class SonicCook extends Task {
 
   @Override
   public void execute() {
-    TileItem food = TileItems.getFirstAt(Players.getLocal().getWorldLocation(), config.food());
-    if (food == null) {
-      return;
-    }
+    if (Static.getClient().getTickCount() >= plugin.getLastDrop() + 2) {
+      TileItem food = TileItems.getFirstAt(Players.getLocal().getWorldLocation(), config.food());
+      if (food == null) {
+        return;
+      }
 
-    food.interact("Take");
-    Time.sleepTick();
+      food.interact("Take");
+      Time.sleepTick();
+    }
 
     TileObject oven = TileObjects.getNearest(ObjectID.CLAY_OVEN_21302, ObjectID.RANGE_31631);
     TileObject fire = TileObjects.getNearest("Fire");
