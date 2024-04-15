@@ -8,6 +8,7 @@ import java.time.Duration;
 import java.time.Instant;
 import javax.inject.Inject;
 import net.unethicalite.api.items.Bank;
+import net.unethicalite.api.items.Inventory;
 import net.unethicalite.api.movement.Movement;
 import net.unethicalite.client.Static;
 
@@ -34,7 +35,17 @@ public class HandleBank extends BankTask {
       return;
     }
 
-    Bank.depositInventory();
+    final int mouldId = config.product().getMouldId();
+
+    if (mouldId != -1) {
+      Bank.depositAllExcept(mouldId);
+
+      if (!Inventory.contains(mouldId)) {
+        Bank.withdraw(mouldId, 1, Bank.WithdrawMode.ITEM);
+      }
+    } else {
+      Bank.depositInventory();
+    }
 
     config.product().getMaterials().forEach((id, amount) -> {
       if (!Bank.contains(id) || Bank.getFirst(id).isPlaceholder()) {
