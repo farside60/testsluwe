@@ -6,10 +6,8 @@ import io.reisub.devious.utils.Utils;
 import io.reisub.devious.utils.enums.FairyRingCode;
 import io.reisub.devious.utils.enums.HouseTeleport;
 import io.reisub.devious.utils.enums.HouseTeleport.TeleportItem;
-import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +18,6 @@ import net.runelite.api.ItemID;
 import net.runelite.api.Locatable;
 import net.runelite.api.MenuAction;
 import net.runelite.api.ObjectID;
-import net.runelite.api.Player;
 import net.runelite.api.TileObject;
 import net.runelite.api.coords.WorldArea;
 import net.runelite.api.coords.WorldPoint;
@@ -33,15 +30,12 @@ import net.unethicalite.api.coords.RectangularArea;
 import net.unethicalite.api.entities.Players;
 import net.unethicalite.api.entities.TileObjects;
 import net.unethicalite.api.game.Combat;
-import net.unethicalite.api.game.Game;
 import net.unethicalite.api.game.GameThread;
 import net.unethicalite.api.items.Equipment;
 import net.unethicalite.api.items.Inventory;
 import net.unethicalite.api.magic.SpellBook.Standard;
 import net.unethicalite.api.movement.Movement;
 import net.unethicalite.api.movement.Reachable;
-import net.unethicalite.api.movement.pathfinder.Walker;
-import net.unethicalite.api.movement.pathfinder.model.Transport;
 import net.unethicalite.api.widgets.Widgets;
 import net.unethicalite.client.Static;
 
@@ -57,8 +51,10 @@ public class SluweMovement {
     walk(destination, rand, rand);
   }
 
-  public static void walk(WorldPoint destination, final int x, final int y) {
-    destination = destination.dx(Rand.nextInt(-x, x + 1)).dy(Rand.nextInt(-y, y + 1));
+  @SuppressWarnings("checkstyle:ParameterName")
+  public static void walk(WorldPoint destination, final int xOffset, final int yOffset) {
+    destination =
+        destination.dx(Rand.nextInt(-xOffset, xOffset + 1)).dy(Rand.nextInt(-yOffset, yOffset + 1));
 
     Movement.walk(destination);
   }
@@ -68,50 +64,57 @@ public class SluweMovement {
   }
 
   public static void walkTo(WorldPoint destination, boolean disableTeleports) {
-    walkTo(destination, 0, null, DEFAULT_TIMEOUT, DESTINATION_DISTANCE, disableTeleports);
+    walkTo(destination, 0, disableTeleports);
+  }
+
+  public static void walkTo(
+      WorldPoint destination, boolean disableTeleports, boolean disableTransports) {
+    walkTo(destination, 0, disableTeleports, disableTransports);
   }
 
   public static void walkTo(WorldPoint destination, Runnable task) {
     walkTo(destination, 0, task, false);
   }
 
-  public static void walkTo(WorldPoint destination, Runnable task, boolean disableTeleports) {
-    walkTo(destination, 0, task, disableTeleports);
-  }
-
   public static void walkTo(WorldPoint destination, int radius) {
-    walkTo(destination, radius, null, false);
+    walkTo(destination, radius, false);
   }
 
   public static void walkTo(WorldPoint destination, int radius, boolean disableTeleports) {
-    walkTo(destination, radius, null, DEFAULT_TIMEOUT, disableTeleports);
+    walkTo(destination, radius, null, disableTeleports);
   }
 
-  public static void walkTo(WorldPoint destination, int radius, Runnable task) {
-    walkTo(destination, radius, task, false);
+  public static void walkTo(
+      WorldPoint destination, int radius, boolean disableTeleports, boolean disableTransports) {
+    walkTo(
+        destination,
+        radius,
+        null,
+        DEFAULT_TIMEOUT,
+        DESTINATION_DISTANCE,
+        disableTeleports,
+        disableTransports);
   }
 
   public static void walkTo(
       WorldPoint destination, int radius, Runnable task, boolean disableTeleports) {
-    walkTo(destination, radius, task, DEFAULT_TIMEOUT, disableTeleports);
-  }
-
-  public static void walkTo(WorldPoint destination, int radius, Runnable task, int tickTimeout) {
-    walkTo(destination, radius, task, tickTimeout, false);
+    walkTo(destination, radius, task, disableTeleports, false);
   }
 
   public static void walkTo(
       WorldPoint destination,
       int radius,
       Runnable task,
-      int tickTimeout,
-      boolean disableTeleports) {
-    walkTo(destination, radius, task, tickTimeout, DESTINATION_DISTANCE, disableTeleports);
-  }
-
-  public static void walkTo(
-      WorldPoint destination, int radius, Runnable task, int tickTimeout, int destinationDistance) {
-    walkTo(destination, radius, task, tickTimeout, destinationDistance, false);
+      boolean disableTeleports,
+      boolean disableTransports) {
+    walkTo(
+        destination,
+        radius,
+        task,
+        DEFAULT_TIMEOUT,
+        DESTINATION_DISTANCE,
+        disableTeleports,
+        disableTransports);
   }
 
   public static void walkTo(
@@ -120,7 +123,8 @@ public class SluweMovement {
       Runnable task,
       int tickTimeout,
       int destinationDistance,
-      boolean disableTeleports) {
+      boolean disableTeleports,
+      boolean disableTransports) {
     int start = Static.getClient().getTickCount();
 
     if (radius > 0) {
@@ -130,11 +134,7 @@ public class SluweMovement {
 
     do {
       if (!Movement.isWalking() && Static.getClient().getGameState() != GameState.LOADING) {
-        if (disableTeleports) {
-          walkToWithoutTeleports(destination);
-        } else {
-          Movement.walkTo(destination);
-        }
+        Movement.walkTo(destination, disableTeleports, disableTransports);
 
         if (!Players.getLocal().isMoving()) {
           Time.sleepTick();
@@ -151,51 +151,6 @@ public class SluweMovement {
             || Static.getClient().getGameState() == GameState.LOGGED_IN));
 
     interrupted = false;
-  }
-
-  public static boolean walkToWithoutTeleports(WorldPoint destination) {
-    return walkToWithoutTeleports(destination.toWorldArea());
-  }
-
-  public static boolean walkToWithoutTeleports(WorldArea destination) {
-    Player local = Players.getLocal();
-    if (destination.contains(local)) {
-      try {
-        Field field = Walker.class.getDeclaredField("currentDestination");
-        field.setAccessible(true);
-        field.set(null, null);
-      } catch (NoSuchFieldException | IllegalAccessException exception) {
-        log.warn("Failed to set currentDestination in class Walker to null");
-      }
-
-      return true;
-    }
-
-    if (Game.isInCutscene() || Widgets.isVisible(Widgets.get(299, 0))) {
-      Time.sleepTicks(2);
-      return false;
-    }
-
-    final Map<WorldPoint, List<Transport>> transports = Walker.buildTransportLinks();
-    List<WorldPoint> path = Walker.buildPath(destination);
-
-    Static.getEntityRenderer().setCurrentPath(path);
-
-    if (path == null || path.isEmpty()) {
-      return false;
-    }
-
-    WorldPoint localWorldPoint = local.getWorldLocation();
-    boolean offPath =
-        path.stream()
-            .noneMatch(
-                t -> t.distanceTo(localWorldPoint) <= 5 && Walker.canPathTo(localWorldPoint, t));
-
-    if (offPath) {
-      path = Walker.buildPath(destination, true);
-    }
-
-    return Walker.walkAlong(path, transports);
   }
 
   public static boolean openDoor(Locatable target) {
