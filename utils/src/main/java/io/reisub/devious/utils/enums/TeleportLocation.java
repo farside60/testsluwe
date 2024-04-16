@@ -1,6 +1,8 @@
 package io.reisub.devious.utils.enums;
 
 import io.reisub.devious.utils.Constants;
+import io.reisub.devious.utils.api.Interact;
+import io.reisub.devious.utils.api.SluweInventory;
 import io.reisub.devious.utils.api.SluweMovement;
 import java.util.Set;
 import lombok.Getter;
@@ -19,7 +21,6 @@ import net.unethicalite.api.items.Bank.WithdrawMode;
 import net.unethicalite.api.items.Inventory;
 import net.unethicalite.api.magic.Magic;
 import net.unethicalite.api.magic.SpellBook;
-import net.unethicalite.api.widgets.Dialog;
 import net.unethicalite.api.widgets.Widgets;
 
 @Getter
@@ -61,10 +62,12 @@ public enum TeleportLocation {
       return;
     }
 
-    if (Bank.contains(Predicates.ids(teleportItemIds))) {
-      Bank.withdraw(Predicates.ids(teleportItemIds), 1, WithdrawMode.ITEM);
-    } else if (goThroughHouseFallback) {
-      withdrawHouseTeleportItems(useHouseTab);
+    if (!SluweInventory.hasAnyItemInventoryOrEquipped(Predicates.ids(teleportItemIds))) {
+      if (Bank.contains(Predicates.ids(teleportItemIds))) {
+        Bank.withdraw(Predicates.ids(teleportItemIds), 1, WithdrawMode.ITEM);
+      } else if (goThroughHouseFallback) {
+        withdrawHouseTeleportItems(useHouseTab);
+      }
     }
   }
 
@@ -140,17 +143,12 @@ public enum TeleportLocation {
         }
         break;
       case EDGEVILLE:
+        Interact.interactWithInventoryOrEquipment(
+            Predicates.ids(teleportItemIds), "Rub", "Edgeville", 1);
+        break;
       case FEROX_ENCLAVE:
-        tpItem = Inventory.getFirst(Predicates.ids(teleportItemIds));
-
-        if (tpItem == null) {
-          return;
-        }
-
-        tpItem.interact("Rub");
-        Time.sleepTicksUntil(Dialog::isViewingOptions, 5);
-
-        Dialog.chooseOption(optionIndex);
+        Interact.interactWithInventoryOrEquipment(
+            Predicates.ids(teleportItemIds), "Rub", "Ferox Enclave", 3);
         break;
       case HOME_TELEPORT:
         switch (SpellBook.getCurrent()) {
