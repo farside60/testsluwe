@@ -1,8 +1,10 @@
 package io.reisub.devious.utils.api;
 
 import java.util.List;
+import java.util.function.Predicate;
 import net.runelite.api.Item;
 import net.runelite.api.ItemID;
+import net.unethicalite.api.commons.Predicates;
 import net.unethicalite.api.commons.Time;
 import net.unethicalite.api.items.Equipment;
 import net.unethicalite.api.items.Inventory;
@@ -13,28 +15,20 @@ public class SluweInventory {
   }
 
   public static boolean hasAnyItemInventoryOrEquipped(int... ids) {
-    for (int id : ids) {
-      if (hasItemInventoryOrEquipped(id)) {
-        return true;
-      }
-    }
-
-    return false;
+    return hasAnyItemInventoryOrEquipped(Predicates.ids(ids));
   }
 
   public static boolean hasAnyItemInventoryOrEquipped(String... names) {
-    for (String name : names) {
-      if (hasItemInventoryOrEquipped(name)) {
-        return true;
-      }
-    }
+    return hasAnyItemInventoryOrEquipped(Predicates.names(names));
+  }
 
-    return false;
+  public static boolean hasAnyItemInventoryOrEquipped(Predicate<Item> filter) {
+    return Inventory.contains(filter) || Equipment.contains(filter);
   }
 
   public static boolean hasAllItemsInventoryOrEquipped(int... ids) {
     for (int id : ids) {
-      if (!hasItemInventoryOrEquipped(id)) {
+      if (!hasAnyItemInventoryOrEquipped(id)) {
         return false;
       }
     }
@@ -44,7 +38,7 @@ public class SluweInventory {
 
   public static boolean hasAllItemsInventoryOrEquipped(String... names) {
     for (String name : names) {
-      if (!hasItemInventoryOrEquipped(name)) {
+      if (!hasAnyItemInventoryOrEquipped(name)) {
         return false;
       }
     }
@@ -52,12 +46,26 @@ public class SluweInventory {
     return true;
   }
 
-  public static boolean hasItemInventoryOrEquipped(int id) {
-    return Inventory.contains(id) || Equipment.contains(id);
+  public static Item getItemInventoryOrEquipped(int... ids) {
+    return getItemInventoryOrEquipped(Predicates.ids(ids));
   }
 
-  public static boolean hasItemInventoryOrEquipped(String name) {
-    return Inventory.contains(name) || Equipment.contains(name);
+  public static Item getItemInventoryOrEquipped(String... names) {
+    return getItemInventoryOrEquipped(Predicates.names(names));
+  }
+
+  public static Item getItemInventoryOrEquipped(Predicate<Item> filter) {
+    final Item item = Inventory.getFirst(filter);
+
+    if (item != null) {
+      return item;
+    }
+
+    return Equipment.getFirst(filter);
+  }
+
+  public static void dropAll() {
+    dropAll(Inventory.getAll());
   }
 
   /**
