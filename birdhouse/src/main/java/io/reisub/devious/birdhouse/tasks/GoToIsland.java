@@ -42,13 +42,11 @@ public class GoToIsland extends Task {
 
   @Override
   public void execute() {
-    // intermediate destinations so the pathfinding doesn't use the southern mushroom
-    SluweMovement.walkTo(new WorldPoint(3692, 3844, 0));
-
     SluweMovement.walkTo(
         target,
         2,
         () -> Inventory.getAll((i) -> i.hasAction("Search")).forEach((i) -> i.interact("Search")),
+        true,
         true);
 
     TileObject rowBoat = TileObjects.getNearest(ObjectID.ROWBOAT_30915);
