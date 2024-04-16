@@ -104,7 +104,8 @@ public enum TeleportLocation {
   public void teleport(boolean goThroughHouse, boolean goThroughHouseFallback) {
     if (houseTeleport != null) {
       if (goThroughHouse
-          || (!Inventory.contains(Predicates.ids(teleportItemIds)) && goThroughHouseFallback)) {
+          || (!SluweInventory.hasAnyItemInventoryOrEquipped(Predicates.ids(teleportItemIds))
+              && goThroughHouseFallback)) {
         SluweMovement.teleportThroughHouse(houseTeleport);
         return;
       }
