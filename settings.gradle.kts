@@ -25,6 +25,7 @@
 
 rootProject.name = "Sluwe Plugins"
 
+include("dev")
 include("agility")
 include("alchemicalhydra")
 include("autodialog")
@@ -58,6 +59,7 @@ include("stallstealer")
 include("superglassmake")
 include("tempoross")
 include("tithefarm")
+include("tutorialisland")
 include("utils")
 include("wintertodt")
 include("woodcutting")
