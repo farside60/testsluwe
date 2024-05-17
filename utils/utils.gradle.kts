@@ -1,4 +1,4 @@
-version = "1.23.1"
+version = "1.24.0"
 
 project.extra["PluginName"] = "Sluwe Utils"
 project.extra["PluginDescription"] = "Utilities for Sluwe scripts"
@@ -7,13 +7,13 @@ tasks {
     jar {
         manifest {
             attributes(
-                    mapOf(
-                            "Plugin-Version" to project.version,
-                            "Plugin-Id" to nameToId(project.extra["PluginName"] as String),
-                            "Plugin-Provider" to project.extra["PluginProvider"],
-                            "Plugin-Description" to project.extra["PluginDescription"],
-                            "Plugin-License" to project.extra["PluginLicense"]
-                    )
+                mapOf(
+                    "Plugin-Version" to project.version,
+                    "Plugin-Id" to nameToId(project.extra["PluginName"] as String),
+                    "Plugin-Provider" to project.extra["PluginProvider"],
+                    "Plugin-Description" to project.extra["PluginDescription"],
+                    "Plugin-License" to project.extra["PluginLicense"]
+                )
             )
         }
     }

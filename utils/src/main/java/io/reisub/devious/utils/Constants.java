@@ -1146,20 +1146,6 @@ public class Constants {
           ItemID.GRACEFUL_CAPE_25074);
 
   public static final Set<Integer> GRACEFUL_SET;
-
-  static {
-    ImmutableSet.Builder<Integer> builder = ImmutableSet.builder();
-
-    builder.addAll(GRACEFUL_HOOD);
-    builder.addAll(GRACEFUL_TOP);
-    builder.addAll(GRACEFUL_LEGS);
-    builder.addAll(GRACEFUL_BOOTS);
-    builder.addAll(GRACEFUL_CAPE);
-    builder.addAll(GRACEFUL_GLOVES);
-
-    GRACEFUL_SET = builder.build();
-  }
-
   public static final Set<Integer> BANK_OBJECT_IDS =
       ImmutableSet.of(
           ObjectID.BANK_BOOTH,
@@ -1245,7 +1231,6 @@ public class Constants {
           ObjectID.GRAND_EXCHANGE_BOOTH,
           ObjectID.GRAND_EXCHANGE_BOOTH_10061,
           ObjectID.GRAND_EXCHANGE_BOOTH_30390);
-
   public static final Set<Integer> BANK_NPC_IDS =
       ImmutableSet.of(
           NpcID.BANKER,
@@ -1322,7 +1307,6 @@ public class Constants {
           NpcID.BANKER_10735,
           NpcID.BANKER_10736,
           NpcID.BANKER_10737);
-
   public static final Set<Integer> PORTAL_NEXUS_IDS =
       ImmutableSet.of(
           ObjectID.PORTAL_NEXUS,
@@ -1427,4 +1411,17 @@ public class Constants {
           ObjectID.PORTAL_NEXUS_41413,
           ObjectID.PORTAL_NEXUS_41414,
           ObjectID.PORTAL_NEXUS_41415);
+
+  static {
+    ImmutableSet.Builder<Integer> builder = ImmutableSet.builder();
+
+    builder.addAll(GRACEFUL_HOOD);
+    builder.addAll(GRACEFUL_TOP);
+    builder.addAll(GRACEFUL_LEGS);
+    builder.addAll(GRACEFUL_BOOTS);
+    builder.addAll(GRACEFUL_CAPE);
+    builder.addAll(GRACEFUL_GLOVES);
+
+    GRACEFUL_SET = builder.build();
+  }
 }

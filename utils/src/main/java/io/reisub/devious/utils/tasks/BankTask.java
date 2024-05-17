@@ -234,8 +234,7 @@ public abstract class BankTask extends Task {
 
   protected NPC getBankNpc() {
     if (bankLocations != null) {
-      return NPCs.getNearest(
-          SluwePredicates.idsAtLocations(Constants.BANK_NPC_IDS, bankLocations));
+      return NPCs.getNearest(SluwePredicates.idsAtLocations(Constants.BANK_NPC_IDS, bankLocations));
     } else if (bankIgnoreLocations != null) {
       return NPCs.getNearest(
           SluwePredicates.idsNotAtLocations(Constants.BANK_NPC_IDS, bankIgnoreLocations));

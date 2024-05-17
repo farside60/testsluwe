@@ -32,8 +32,7 @@ public class KittenTask extends ParentTask {
       } else {
         int count = config.kittenFoodAmount() - Inventory.getCount(config.kittenFood());
 
-        Bank.withdraw(
-            config.kittenFood(), count, Bank.WithdrawMode.ITEM);
+        Bank.withdraw(config.kittenFood(), count, Bank.WithdrawMode.ITEM);
       }
     }
   }

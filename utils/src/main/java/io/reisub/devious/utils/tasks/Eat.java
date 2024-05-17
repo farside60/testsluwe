@@ -20,11 +20,6 @@ import net.unethicalite.client.Static;
  * food. It simply eats or drinks whatever it finds in the inventory.
  */
 public class Eat extends Task {
-  @Setter private int threshold;
-  @Setter private boolean checkMissing;
-  private int lastTick;
-  private Item consumable;
-
   private final List<Integer> ignoreIds =
       ImmutableList.of(
           ItemID.ROCK_CAKE,
@@ -32,6 +27,10 @@ public class Eat extends Task {
           ItemID.DWARVEN_ROCK_CAKE_7510,
           ItemID.BLOOD_PINT,
           ItemID.LAVA_EEL);
+  @Setter private int threshold;
+  @Setter private boolean checkMissing;
+  private int lastTick;
+  private Item consumable;
 
   /**
    * Create a task that eats or drinks the first item it finds in the inventory once the player's

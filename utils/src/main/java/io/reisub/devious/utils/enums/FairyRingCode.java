@@ -10,16 +10,16 @@ public enum FairyRingCode {
   AJP(19, -1, 1);
 
   private final Supplier<Widget> widgetSupplier;
+
   /**
    * Pathfinding doesn't work when we're standing on a fairy ring, so we should move away from it
-   * after teleporting.
-   * -1 is west, 0 is unchanged, 1 is east
+   * after teleporting. -1 is west, 0 is unchanged, 1 is east
    */
   @Getter private final int defaultXoffset;
+
   /**
    * Pathfinding doesn't work when we're standing on a fairy ring, so we should move away from it
-   * after teleporting.
-   * -1 is south, 0 is unchanged, 1 is north
+   * after teleporting. -1 is south, 0 is unchanged, 1 is north
    */
   @Getter private final int defaultYoffset;
 
@@ -32,7 +32,7 @@ public enum FairyRingCode {
     this.defaultXoffset = defaultXoffset;
     this.defaultYoffset = defaultYoffset;
   }
-  
+
   public String getCode() {
     return name();
   }

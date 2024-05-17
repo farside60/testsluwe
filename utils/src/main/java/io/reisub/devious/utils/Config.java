@@ -52,8 +52,7 @@ public interface Config extends net.runelite.client.config.Config {
   @ConfigItem(
       keyName = "kittenFood",
       name = "Kitten food",
-      description =
-          "Specify the food to feed your kitten",
+      description = "Specify the food to feed your kitten",
       position = 11)
   default String kittenFood() {
     return "Raw karambwanji";
@@ -62,8 +61,7 @@ public interface Config extends net.runelite.client.config.Config {
   @ConfigItem(
       keyName = "kittenFoodAmount",
       name = "Kitten food amount",
-      description =
-          "Specify the amount of food to withdraw from the bank (0 for all)",
+      description = "Specify the amount of food to withdraw from the bank (0 for all)",
       position = 12)
   default int kittenFoodAmount() {
     return 0;
