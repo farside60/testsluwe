@@ -1,6 +1,7 @@
 package io.reisub.devious.utils;
 
 import com.google.inject.Provides;
+import java.awt.Color;
 import java.util.Collection;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,8 @@ import org.pf4j.Extension;
 @Singleton
 @Slf4j
 public class Utils extends Plugin {
+  public static final Color ARCH_BLUE = new Color(23, 147, 208);
+
   /**
    * Check if the current player is logged in the game.
    *
