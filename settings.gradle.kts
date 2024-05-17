@@ -25,12 +25,12 @@
 
 rootProject.name = "Sluwe Plugins"
 
-include("dev")
 include("agility")
 include("alchemicalhydra")
 include("autodialog")
 include("autodropper")
 include("autoflinch")
+include("autopickup")
 include("autoshop")
 include("autowelcomescreen")
 include("barroniteminer")
