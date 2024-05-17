@@ -58,8 +58,7 @@ public class PrayerHelper extends Helper {
       ImmutableSet.of(
           ProjectileID.DEMONIC_GORILLA_RANGED,
           ProjectileID.DEMONIC_GORILLA_MAGIC,
-          ProjectileID.DEMONIC_GORILLA_BOULDER
-      );
+          ProjectileID.DEMONIC_GORILLA_BOULDER);
   private static final int JALTOK_JAD_MAGE_ATTACK = 7592;
   private static final int JALTOK_JAD_RANGE_ATTACK = 7593;
   private boolean toggleFlicking;
@@ -185,8 +184,7 @@ public class PrayerHelper extends Helper {
     }
 
     if (swapPrayers != null && !swapPrayers.isEmpty()) {
-      WidgetPackets.queueWidgetAction2Packet(
-          WidgetInfo.MINIMAP_QUICK_PRAYER_ORB.getPackedId(), -1, -1);
+      quickPrayersWidget.interact("Setup");
 
       for (SluwePrayer quickPrayer : swapPrayers) {
         WidgetPackets.queueWidgetAction1Packet(5046276, -1, quickPrayer.getQuickPrayerId());
@@ -282,7 +280,7 @@ public class PrayerHelper extends Helper {
   }
 
   private void togglePrayer(Widget widget) {
-    GameThread.invoke(() -> WidgetPackets.widgetFirstOption(widget));
+    widget.interact(0);
   }
 
   public void toggleFlicking() {
@@ -354,6 +352,7 @@ public class PrayerHelper extends Helper {
       swapPrayers.addAll(quickPrayers);
     }
   }
+
   // Gorilla code below, taken from DemonicGorilla plugin
 
   private DemonicGorilla getCurrentGorilla() {
@@ -604,7 +603,7 @@ public class PrayerHelper extends Helper {
           && !gorilla.isChangedAttackStyleThisTick()
           && gorilla.getNextPosibleAttackStyles().size() >= 2
           && gorilla.getNextPosibleAttackStyles().stream()
-          .anyMatch(x -> x == DemonicGorilla.AttackStyle.MELEE)) {
+              .anyMatch(x -> x == DemonicGorilla.AttackStyle.MELEE)) {
         // If melee is a possibility, we can check if the gorilla
         // is or isn't moving toward the player to determine if
         // it is actually attempting to melee or not.
@@ -625,37 +624,36 @@ public class PrayerHelper extends Helper {
                         // or other players
                         final WorldArea area1 = new WorldArea(x, 1, 1);
                         return gorillas.values().stream()
-                            .noneMatch(
-                                y -> {
-                                  if (y == gorilla) {
-                                    return false;
-                                  }
-                                  final WorldArea area2 =
-                                      y.getNpc().getIndex() < gorilla.getNpc().getIndex()
-                                          ? y.getNpc().getWorldArea()
-                                          : y.getLastWorldArea();
-                                  return area2 != null && area1.intersectsWith(area2);
-                                })
+                                .noneMatch(
+                                    y -> {
+                                      if (y == gorilla) {
+                                        return false;
+                                      }
+                                      final WorldArea area2 =
+                                          y.getNpc().getIndex() < gorilla.getNpc().getIndex()
+                                              ? y.getNpc().getWorldArea()
+                                              : y.getLastWorldArea();
+                                      return area2 != null && area1.intersectsWith(area2);
+                                    })
                             && memorizedPlayers.values().stream()
-                            .noneMatch(
-                                y -> {
-                                  final WorldArea area2 = y.getLastWorldArea();
-                                  return area2 != null && area1.intersectsWith(area2);
-                                });
+                                .noneMatch(
+                                    y -> {
+                                      final WorldArea area2 = y.getLastWorldArea();
+                                      return area2 != null && area1.intersectsWith(area2);
+                                    });
 
                         // There is a special case where if a player walked through
                         // a gorilla, or a player walked through another player,
                         // the tiles that were walked through becomes
                         // walkable, but I didn't feel like it's necessary to handle
                         // that special case as it should rarely happen.
-                      }
-                  );
+                      });
           if (predictedNewArea != null) {
             int distance = gorilla.getNpc().getWorldArea().distanceTo(mp.getLastWorldArea());
             WorldPoint predictedMovement = predictedNewArea.toWorldPoint();
             if (distance <= DemonicGorilla.MAX_ATTACK_RANGE
                 && mp.getLastWorldArea()
-                .hasLineOfSightTo(Static.getClient(), gorilla.getLastWorldArea())) {
+                    .hasLineOfSightTo(Static.getClient(), gorilla.getLastWorldArea())) {
               if (predictedMovement.distanceTo(gorilla.getLastWorldArea().toWorldPoint()) != 0) {
                 if (predictedMovement.distanceTo(gorilla.getNpc().getWorldLocation()) == 0) {
                   gorilla.setNextPosibleAttackStyles(
@@ -671,7 +669,7 @@ public class PrayerHelper extends Helper {
               } else if (tickCounter >= gorilla.getNextAttackTick()
                   && gorilla.getRecentProjectileId() == -1
                   && recentBoulders.stream()
-                  .noneMatch(x -> x.distanceTo(mp.getLastWorldArea()) == 0)) {
+                      .noneMatch(x -> x.distanceTo(mp.getLastWorldArea()) == 0)) {
                 gorilla.setNextPosibleAttackStyles(
                     gorilla.getNextPosibleAttackStyles().stream()
                         .filter(x -> x == DemonicGorilla.AttackStyle.MELEE)
@@ -725,8 +723,7 @@ public class PrayerHelper extends Helper {
             Static.getClient(),
             projectile.getX1(),
             projectile.getY1(),
-            Static.getClient().getPlane()
-        );
+            Static.getClient().getPlane());
 
     if (projectileId == ProjectileID.DEMONIC_GORILLA_BOULDER) {
       recentBoulders.add(loc);
@@ -795,8 +792,7 @@ public class PrayerHelper extends Helper {
       DemonicGorilla gorilla = gorillas.get(event.getActor());
       int hitsplatType = event.getHitsplat().getHitsplatType();
       if (gorilla != null
-          && (hitsplatType == HitsplatID.BLOCK_ME
-          || hitsplatType == HitsplatID.DAMAGE_ME)) {
+          && (hitsplatType == HitsplatID.BLOCK_ME || hitsplatType == HitsplatID.DAMAGE_ME)) {
         gorilla.setTakenDamageRecently(true);
       }
     }
