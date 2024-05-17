@@ -4,6 +4,7 @@ import io.reisub.devious.farming.Farming;
 import io.reisub.devious.farming.PatchImplementation;
 import io.reisub.devious.farming.PatchState;
 import io.reisub.devious.utils.Constants;
+import io.reisub.devious.utils.api.Interact;
 import io.reisub.devious.utils.tasks.Task;
 import javax.inject.Inject;
 import net.runelite.api.Skill;
@@ -54,13 +55,17 @@ public class PickHerb extends Task {
 
     experienceReceived = false;
     patch.interact("Pick");
-    if (!Time.sleepTicksUntil(() -> experienceReceived, 20)) {
+    if (!Time.sleepTicksUntil(() -> experienceReceived, 30)) {
       return;
     }
 
     patch.interact("Pick");
     Time.sleepTick();
     patch.interact("Pick");
+
+    if (!Interact.waitUntilActive()) {
+      return;
+    }
 
     Time.sleepTicksUntil(
         () -> Inventory.isFull() || Vars.getBit(plugin.getCurrentLocation().getHerbVarbit()) <= 3,
