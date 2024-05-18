@@ -62,7 +62,7 @@ public class FishingTrawler extends TickScript {
 
   @Override
   protected void onStart() {
-    super.onStart();
+    addRandomTasks();
 
     addTask(GoToTentacle.class);
     addTask(Fix.class);
