@@ -14,6 +14,7 @@ import io.reisub.devious.woodcutting.tasks.MoveToBurnLine;
 import io.reisub.devious.woodcutting.tasks.MoveToRespawning;
 import io.reisub.devious.woodcutting.tasks.PickupNest;
 import io.reisub.devious.woodcutting.tasks.UseSpecial;
+import io.reisub.devious.woodcutting.tasks.forestry.Beehive;
 import io.reisub.devious.woodcutting.tasks.forestry.Pheasants;
 import io.reisub.devious.woodcutting.tasks.forestry.Poacher;
 import io.reisub.devious.woodcutting.tasks.forestry.Roots;
@@ -68,6 +69,7 @@ public class Woodcutting extends TickScript {
     addTask(Roots.class);
     addTask(Poacher.class);
     addTask(Pheasants.class);
+    addTask(Beehive.class);
     addTask(MoveToBurnLine.class);
     addTask(Burn.class);
     addTask(Drop.class);

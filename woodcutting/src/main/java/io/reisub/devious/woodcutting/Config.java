@@ -83,6 +83,16 @@ public interface Config extends net.runelite.client.config.Config {
   }
 
   @ConfigItem(
+      keyName = "forestryBeehive",
+      name = "Beehive",
+      description = "Do the beehive event",
+      position = 14,
+      section = forestrySection)
+  default boolean forestryBeehive() {
+    return true;
+  }
+
+  @ConfigItem(
       keyName = "startButton",
       name = "Start/Stop",
       description = "Start the script",

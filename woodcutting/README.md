@@ -14,3 +14,4 @@ b = banking, fm = burning
   * Roots
   * Poacher
   * Pheasants
+  * Beehive
