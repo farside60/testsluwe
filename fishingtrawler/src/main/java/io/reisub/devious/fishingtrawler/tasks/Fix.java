@@ -2,6 +2,7 @@ package io.reisub.devious.fishingtrawler.tasks;
 
 import io.reisub.devious.fishingtrawler.Config;
 import io.reisub.devious.fishingtrawler.FishingTrawler;
+import io.reisub.devious.utils.Utils;
 import io.reisub.devious.utils.tasks.Task;
 import javax.inject.Inject;
 import net.runelite.api.TileObject;
@@ -26,6 +27,10 @@ public class Fix extends Task {
     }
 
     if (plugin.isCurrentActivity(FishingTrawler.FIXING_RAIL)) {
+      return false;
+    }
+
+    if (Utils.isInRegion(FishingTrawler.PORT_REGION)) {
       return false;
     }
 
