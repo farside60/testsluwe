@@ -4,6 +4,11 @@ import io.reisub.devious.utils.api.Activity;
 import io.reisub.devious.utils.api.SluweMovement;
 import io.reisub.devious.utils.api.Stats;
 import io.reisub.devious.utils.tasks.Task;
+import io.reisub.devious.utils.tasks.randoms.CountCheck;
+import io.reisub.devious.utils.tasks.randoms.Frog;
+import io.reisub.devious.utils.tasks.randoms.Genie;
+import io.reisub.devious.utils.tasks.randoms.RandomTask;
+import io.reisub.devious.utils.tasks.randoms.Reward;
 import java.awt.event.KeyEvent;
 import java.time.Duration;
 import java.time.Instant;
@@ -50,30 +55,39 @@ import org.slf4j.Logger;
 public abstract class TickScript extends Plugin implements KeyListener {
   /** List of tasks to be validated and executed. */
   protected final List<Task> tasks = new ArrayList<>();
+
   /**
    * The skills in this map will be checked whenever experience is earned. If the earned experience
    * matches the skill in this map, it will set the current activity to the value of this map entry.
    */
   protected final Map<Skill, Activity> idleCheckSkills = new HashMap<>();
+
   /** The executor service on which the task executions are scheduled. */
   protected ScheduledExecutorService executor;
+
   /** Last game tick on which the player has logged in. */
   protected int lastLoginTick = 0;
+
   /**
    * Last game tick on when an action happened. An action happens when the current activity is set
    * or when the player is not idle (moving or animating).
    */
   protected int lastActionTick = 0;
+
   /** The timeout in ticks after which we should consider the player to be idle. */
   protected int lastActionTimeout = 5;
+
   /** Last game tick the player received experience in a skill added in the idleCheckSkills map. */
   protected int lastExperienceTick = 0;
+
   /** Last game tick when the inventory has been updated. */
   protected int lastInventoryChangeTick = 0;
+
   /**
    * Flag to check if we should take into account inventory changes to check if the player is idle.
    */
   protected boolean idleCheckInventoryChange = false;
+
   @Inject private Config utilsConfig;
   @Inject private KeyManager keyManager;
   @Inject private OverlayManager overlayManager;
@@ -227,11 +241,11 @@ public abstract class TickScript extends Plugin implements KeyListener {
   public void setActivity(Activity activity) {
     if (activity == Activity.IDLE && currentActivity != Activity.IDLE) {
       previousActivity = currentActivity;
-      getLogger().debug("Setting previous activity: " + previousActivity);
+      getLogger().debug("Setting previous activity: {}", previousActivity);
     }
 
     currentActivity = activity;
-    getLogger().debug("Setting current activity: " + currentActivity);
+    getLogger().debug("Setting current activity: {}", currentActivity);
 
     if (activity != Activity.IDLE) {
       lastActionTick = Static.getClient().getTickCount();
@@ -291,7 +305,7 @@ public abstract class TickScript extends Plugin implements KeyListener {
    * entry point for the actual plugin.
    */
   public final void start() {
-    getLogger().info("Starting " + this.getName());
+    getLogger().info("Starting {}", this.getName());
     running = true;
 
     previousActivity = Activity.IDLE;
@@ -322,7 +336,7 @@ public abstract class TickScript extends Plugin implements KeyListener {
    * overlay. Then it calls onStop() so the plugin can do any additional cleanup.
    */
   public final void stop() {
-    getLogger().info("Stopping " + this.getName());
+    getLogger().info("Stopping {}", this.getName());
     running = false;
 
     for (Task task : tasks) {
@@ -382,6 +396,31 @@ public abstract class TickScript extends Plugin implements KeyListener {
    */
   protected final <T extends Task> void addTask(Class<T> type) {
     addTask(injector.getInstance(type));
+  }
+
+  /**
+   * Adds all random tasks which have been enabled in the configuration to the task list and
+   * registers them to the event bus.
+   */
+  protected final void addRandomTasks() {
+    addRandomTask(Reward.class);
+    addRandomTask(CountCheck.class);
+    addRandomTask(Genie.class);
+    addRandomTask(Frog.class);
+  }
+
+  /**
+   * Adds a random task to the tasks list and registers it to the event bus if it's enabled in the
+   * configuration.
+   *
+   * @param type class type extending RandomTask
+   */
+  protected final <T extends RandomTask> void addRandomTask(Class<T> type) {
+    RandomTask task = injector.getInstance(type);
+
+    if (task.isEnabled()) {
+      addTask(task);
+    }
   }
 
   /**

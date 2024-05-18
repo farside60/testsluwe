@@ -10,6 +10,7 @@ public class Activity {
   public static final Activity DEPOSITING = new Activity("Depositing");
   public static final Activity EATING = new Activity("Eating");
   public static final Activity IDLE = new Activity("Idle");
+  public static final Activity RANDOM_EVENT = new Activity("Random event");
   public static final Activity WITHDRAWING = new Activity("Withdrawing");
 
   String name;
