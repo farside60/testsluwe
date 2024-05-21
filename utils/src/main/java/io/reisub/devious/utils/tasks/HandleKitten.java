@@ -36,10 +36,7 @@ public class HandleKitten extends Task {
                     && n.getInteracting() == Players.getLocal()
                     && n.hasAction("Pick-up"));
 
-    return KittenTask.handleKitten
-        && Inventory.contains(config.kittenFood())
-        && kitten != null
-        && Reachable.isInteractable(kitten);
+    return KittenTask.handleKitten && kitten != null && Reachable.isInteractable(kitten);
   }
 
   @Override
@@ -57,7 +54,8 @@ public class HandleKitten extends Task {
     }
 
     final int count = Inventory.getCount(config.kittenFood());
-    final Item food = Inventory.getFirst(config.kittenFood());
+    final Item food =
+        Inventory.getFirst(i -> i.getName().equals(config.kittenFood()) && !i.isNoted());
 
     if (food == null) {
       return;
