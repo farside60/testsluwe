@@ -110,6 +110,9 @@ public abstract class BankTask extends Task {
           () -> Bank.isOpen() || Players.getLocal().isMoving(), movingCheck)) {
         return false;
       }
+
+      Time.sleepTicksUntil(
+          () -> Bank.isOpen() || !Players.getLocal().isMoving(), 100);
     }
 
     Time.sleepTicksUntil(Bank::isOpen, waitTicks);
