@@ -56,7 +56,9 @@ public class HandleBank extends BankTask {
             return true;
           }
 
-          if (utilsConfig.handleKitten() && i.getName().equals(utilsConfig.kittenFood())) {
+          if (utilsConfig.handleKitten()
+              && i.getName().equals(utilsConfig.kittenFood())
+              && !i.isNoted()) {
             return true;
           }
 
