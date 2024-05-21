@@ -87,6 +87,16 @@ public interface Config extends net.runelite.client.config.Config {
   }
 
   @ConfigItem(
+      keyName = "waitUntilSecondMessage",
+      name = "Wait until second message",
+      description = "Wait until the second message pops up warning about hunger or attention",
+      section = kittenConfig,
+      position = 13)
+  default boolean waitUntilSecondMessage() {
+    return true;
+  }
+
+  @ConfigItem(
       keyName = "rewardSkill",
       name = "Reward skill",
       description =
