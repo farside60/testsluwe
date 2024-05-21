@@ -207,4 +207,26 @@ public interface Config extends net.runelite.client.config.Config {
   default boolean dismissRickTurpentine() {
     return true;
   }
+
+  @ConfigItem(
+      keyName = "enableFreakyForester",
+      name = "Enable Freaky Forester",
+      description = "Handle Freaky Forester random events in scripts that support it",
+      section = randomConfig,
+      position = 30)
+  default boolean enableFreakyForester() {
+    return true;
+  }
+
+  @ConfigItem(
+      keyName = "dismissFreakyForester",
+      name = "Dismiss Freaky Forester",
+      description = "Dismiss Freaky Forester instead of completing the event",
+      section = randomConfig,
+      hidden = true,
+      unhide = "enableFreakyForester",
+      position = 30)
+  default boolean dismissFreakyForester() {
+    return false;
+  }
 }

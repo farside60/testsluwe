@@ -5,10 +5,12 @@ import io.reisub.devious.utils.api.SluweMovement;
 import io.reisub.devious.utils.api.Stats;
 import io.reisub.devious.utils.tasks.Task;
 import io.reisub.devious.utils.tasks.randoms.CountCheck;
+import io.reisub.devious.utils.tasks.randoms.FreakyForester;
 import io.reisub.devious.utils.tasks.randoms.Frog;
 import io.reisub.devious.utils.tasks.randoms.Genie;
 import io.reisub.devious.utils.tasks.randoms.RandomTask;
 import io.reisub.devious.utils.tasks.randoms.Reward;
+import io.reisub.devious.utils.tasks.randoms.RickTurpentine;
 import java.awt.event.KeyEvent;
 import java.time.Duration;
 import java.time.Instant;
@@ -407,6 +409,8 @@ public abstract class TickScript extends Plugin implements KeyListener {
     addRandomTask(CountCheck.class);
     addRandomTask(Genie.class);
     addRandomTask(Frog.class);
+    addRandomTask(RickTurpentine.class);
+    addRandomTask(FreakyForester.class);
   }
 
   /**
