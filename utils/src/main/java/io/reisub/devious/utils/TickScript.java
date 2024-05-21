@@ -335,7 +335,8 @@ public abstract class TickScript extends Plugin implements KeyListener {
   /**
    * Stops the plugin by setting the running field to false. It unregisters all the tasks from the
    * event bus, clears the tasks and resets the current activity, previous activity, start time and
-   * overlay. Then it calls onStop() so the plugin can do any additional cleanup.
+   * overlay. It also interrupts any movement that was in progress using SluweMovement.
+   * Then it calls onStop() so the plugin can do any additional cleanup.
    */
   public final void stop() {
     getLogger().info("Stopping {}", this.getName());
@@ -355,6 +356,8 @@ public abstract class TickScript extends Plugin implements KeyListener {
     if (overlay != null) {
       overlayManager.remove(overlay);
     }
+
+    SluweMovement.interrupted = true;
 
     onStop();
   }
