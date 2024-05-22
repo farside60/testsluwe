@@ -37,18 +37,16 @@ import net.unethicalite.client.Static;
 
 public class HandleBank extends BankTask {
   @Inject private ItemStatChanges statChanges;
-
   @Inject private Pickpocket plugin;
-
   @Inject private Config config;
 
   @Override
   public boolean validate() {
     return plugin.isCurrentActivity(Activity.IDLE)
-        && Players.getLocal().getModelHeight() != 1000
-        && (Inventory.isFull()
+            && Players.getLocal().getModelHeight() != 1000
+            && (Inventory.isFull()
             || (!Inventory.contains(config.food())
-                && Skills.getBoostedLevel(Skill.HITPOINTS) <= config.eatHp()));
+            && Skills.getBoostedLevel(Skill.HITPOINTS) <= config.eatHp()));
   }
 
   @Override
@@ -67,13 +65,13 @@ public class HandleBank extends BankTask {
 
     if (config.target() == Target.VALLESSIA_VON_PITT) {
       SluweBank.depositAllExcept(
-          false,
-          i ->
-              i.getName().startsWith("Vyre noble")
-                  || i.getId() == ItemID.COSMIC_RUNE
-                  || i.getId() == ItemID.RUNE_POUCH
-                  || i.getName().startsWith("Rogue")
-                  || i.getName().contains("em bag"));
+              false,
+              i ->
+                      i.getName().startsWith("Vyre noble")
+                              || i.getId() == ItemID.COSMIC_RUNE
+                              || i.getId() == ItemID.RUNE_POUCH
+                              || i.getName().startsWith("Rogue")
+                              || i.getName().contains("em bag"));
     } else {
       Bank.depositInventory();
     }
@@ -85,13 +83,13 @@ public class HandleBank extends BankTask {
     }
 
     Item gemBag =
-        Bank.Inventory.getFirst(
-            Predicates.ids(
-                ImmutableSet.of(
-                    ItemID.GEM_BAG,
-                    ItemID.GEM_BAG_12020,
-                    ItemID.GEM_BAG_25628,
-                    ItemID.OPEN_GEM_BAG)));
+            Bank.Inventory.getFirst(
+                    Predicates.ids(
+                            ImmutableSet.of(
+                                    ItemID.GEM_BAG,
+                                    ItemID.GEM_BAG_12020,
+                                    ItemID.GEM_BAG_25628,
+                                    ItemID.OPEN_GEM_BAG)));
     if (gemBag != null) {
       SluweBank.bankInventoryInteract(gemBag, "Empty");
     }
@@ -148,15 +146,15 @@ public class HandleBank extends BankTask {
 
   private void withdrawNecklaces() {
     int necklacesToWithdraw =
-        config.dodgyNecklacesQuantity()
-            - Inventory.getCount(ItemID.DODGY_NECKLACE)
-            - Equipment.getCount(ItemID.DODGY_NECKLACE);
+            config.dodgyNecklacesQuantity()
+                    - Inventory.getCount(ItemID.DODGY_NECKLACE)
+                    - Equipment.getCount(ItemID.DODGY_NECKLACE);
 
     if (necklacesToWithdraw > 0 && Bank.contains(ItemID.DODGY_NECKLACE)) {
       Bank.withdraw(ItemID.DODGY_NECKLACE, necklacesToWithdraw, Bank.WithdrawMode.ITEM);
 
       if (Equipment.fromSlot(EquipmentInventorySlot.AMULET) == null
-          || Equipment.fromSlot(EquipmentInventorySlot.AMULET).getId() != ItemID.DODGY_NECKLACE) {
+              || Equipment.fromSlot(EquipmentInventorySlot.AMULET).getId() != ItemID.DODGY_NECKLACE) {
         Time.sleepTicksUntil(() -> Inventory.contains(ItemID.DODGY_NECKLACE), 3);
 
         Item necklace = Bank.Inventory.getFirst(ItemID.DODGY_NECKLACE);
@@ -217,8 +215,11 @@ public class HandleBank extends BankTask {
     TileObject mausoleumDoor = TileObjects.getFirstAt(mausoleumDoorLocation, ObjectID.MAUSOLEUM_DOOR); // Update with actual door ID if needed
     if (mausoleumDoor != null) {
       mausoleumDoor.interact("Enter");
+      Time.sleepTicksUntil(
+              () -> Players.getLocal().getWorldLocation().distanceTo(mausoleumDoorLocation) > 1, 10); // Ensure the player has moved away from the door
     }
 
     // Walk to the bank inside the mausoleum
     SluweMovement.walkTo(config.target().getNearest().getBankLocation());
   }
+}
