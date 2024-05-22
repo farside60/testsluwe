@@ -181,26 +181,44 @@ public class HandleBank extends BankTask {
   }
 
   private void goToSepulchreBank() {
+    // Wear Vyre noble outfit
     Inventory.getAll(i -> i.getName().startsWith("Vyre noble")).forEach(i -> i.interact("Wear"));
 
-    WorldPoint doorLocation = new WorldPoint(3662, 3378, 0);
+    WorldPoint firstDoorLocation = new WorldPoint(3662, 3378, 0);
+    WorldPoint secondDoorLocation = firstDoorLocation.dy(-1);
 
-    TileObject door = TileObjects.getFirstAt(doorLocation, ObjectID.DOOR_39406);
-    if (door != null) {
-      door.interact("Open");
+    // Open the first door
+    TileObject firstDoor = TileObjects.getFirstAt(firstDoorLocation, ObjectID.DOOR_39406);
+    if (firstDoor != null) {
+      firstDoor.interact("Open");
       Time.sleepTicksUntil(
-          () -> TileObjects.getFirstAt(doorLocation.dy(-1), ObjectID.DOOR_39408) != null, 10);
+              () -> TileObjects.getFirstAt(secondDoorLocation, ObjectID.DOOR_39408) != null, 10);
     }
 
-    Movement.walk(doorLocation.dy(-1));
+    // Move to the position behind the first door
+    Movement.walk(secondDoorLocation);
     Time.sleepTicksUntil(
-        () -> Players.getLocal().getWorldLocation().equals(doorLocation.dy(-1)), 10);
+            () -> Players.getLocal().getWorldLocation().equals(secondDoorLocation), 10);
 
-    door = TileObjects.getFirstAt(doorLocation.dy(-1), ObjectID.DOOR_39408);
-    if (door != null) {
-      door.interact("Close");
+    // Close the first door behind you
+    TileObject secondDoor = TileObjects.getFirstAt(secondDoorLocation, ObjectID.DOOR_39408);
+    if (secondDoor != null) {
+      secondDoor.interact("Close");
+      Time.sleepTicks(2);
     }
 
+    // Move to the mausoleum door location
+    WorldPoint mausoleumDoorLocation = new WorldPoint(3654, 3385, 0);
+    Movement.walk(mausoleumDoorLocation);
+    Time.sleepTicksUntil(
+            () -> Players.getLocal().getWorldLocation().equals(mausoleumDoorLocation), 10);
+
+    // Interact with the mausoleum door to enter
+    TileObject mausoleumDoor = TileObjects.getFirstAt(mausoleumDoorLocation, ObjectID.MAUSOLEUM_DOOR); // Update with actual door ID if needed
+    if (mausoleumDoor != null) {
+      mausoleumDoor.interact("Enter");
+    }
+
+    // Walk to the bank inside the mausoleum
     SluweMovement.walkTo(config.target().getNearest().getBankLocation());
   }
-}
