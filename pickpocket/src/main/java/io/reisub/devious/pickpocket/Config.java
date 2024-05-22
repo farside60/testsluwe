@@ -27,7 +27,7 @@ public interface Config extends net.runelite.client.config.Config {
   @ConfigItem(
       keyName = "food",
       name = "Food",
-      description = "Choose what food to eat",
+      description = "Choose what food to eat!",
       position = 2)
   default String food() {
     return "Lobster";
